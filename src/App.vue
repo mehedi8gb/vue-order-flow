@@ -1,26 +1,56 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div id="app" class="container">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <a class="navbar-brand" href="#">Order Flow</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link" href="#" @click.prevent="currentComponent = 'ProductDetails'">Product Details</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#" @click.prevent="currentComponent = 'DeliveryDetails'">Delivery Details</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#" @click.prevent="currentComponent = 'YourDetails'">Your Details</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+    <div class="container mt-3">
+      <component :is="currentComponent" />
+    </div>
+  </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import ProductDetails from './components/ProductDetails.vue';
+import DeliveryDetails from './components/DeliveryDetails.vue';
+import YourDetails from './components/YourDetails.vue';
 
 export default {
   name: 'App',
   components: {
-    HelloWorld
+    ProductDetails,
+    DeliveryDetails,
+    YourDetails
+  },
+  data() {
+    return {
+      currentComponent: 'ProductDetails'
+    };
   }
-}
+};
 </script>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+@import '~bootstrap/dist/css/bootstrap.min.css';
+
+/* Add your global styles here */
+body {
+  padding-top: 56px;
 }
 </style>
