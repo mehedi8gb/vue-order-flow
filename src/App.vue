@@ -21,7 +21,7 @@
       </div>
     </nav>
     <div class="container mt-3">
-      <component :is="currentComponent" />
+      <component :is="currentComponent" @next-step="nextStep" />
     </div>
   </div>
 </template>
@@ -42,6 +42,15 @@ export default {
     return {
       currentComponent: 'ProductDetails'
     };
+  },
+  methods: {
+    nextStep() {
+      const steps = ['ProductDetails', 'DeliveryDetails', 'YourDetails'];
+      const currentIndex = steps.indexOf(this.currentComponent);
+      if (currentIndex < steps.length - 1) {
+        this.currentComponent = steps[currentIndex + 1];
+      }
+    }
   }
 };
 </script>
@@ -49,7 +58,6 @@ export default {
 <style>
 @import '~bootstrap/dist/css/bootstrap.min.css';
 
-/* Add your global styles here */
 body {
   padding-top: 56px;
 }

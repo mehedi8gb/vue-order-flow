@@ -149,11 +149,9 @@
                         style="outline: none"></textarea>
                 </div>
                 <div class="mt-4" style="margin-inline: 1rem">
-                    <router-link to="/delivery-details">
-                        <button type="button" class="btn btn-block btn-primary">
-                            Next
-                        </button>
-                    </router-link>
+                    <button type="button" class="btn btn-block btn-primary" @click="$emit('next-step')">
+                        Next
+                    </button>
                 </div>
             </div>
         </div>
