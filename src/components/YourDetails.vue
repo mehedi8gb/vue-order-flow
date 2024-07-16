@@ -21,140 +21,74 @@
                     </div>
                 </div>
             </div>
-            <div class="card-body m-3">
+            <div class="card-body m-3 pb-5">
                 <div class="row g-3 px-3">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="singleSided">Sides</label>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="sides" id="singleSided" checked />
-                                <label class="form-check-label" for="singleSided">Single sided</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="sides" id="doubleSided" />
-                                <label class="form-check-label" for="doubleSided">Double sided</label>
-                            </div>
+                    <div class="form-group mt-4">
+                        <label for="inputName">Your Name*</label>
+                        <input type="text" class="form-control" id="inputName" name="name" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="inputEmail">Your Email*</label>
+                        <input type="email" class="form-control" id="inputEmail" name="email" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="confirmEmail">Confirm Email*</label>
+                        <input type="email" class="form-control" id="confirmEmail" name="confirmEmail" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="inputPhone">Your Phone Number*</label>
+                        <input type="tel" class="form-control" id="inputPhone" name="phone" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Who will receive the order?*</label>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="recipient" id="myself" value="myself"
+                                checked>
+                            <label class="form-check-label" for="myself">Myself</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="recipient" id="someoneElse"
+                                value="someone_else">
+                            <label class="form-check-label" for="someoneElse">Someone else</label>
                         </div>
                     </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="portrait">Orientation</label>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="orientation" id="portrait" />
-                                <label class="form-check-label" for="portrait">Portrait</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="orientation" id="landscape"
-                                    checked />
-                                <label class="form-check-label" for="landscape">Landscape</label>
-                            </div>
-                        </div>
+
+                    <div class="form-group">
+                        <label for="additionalInstructions">Any further instructions or details? (optional)</label>
+                        <textarea class="form-control" id="additionalInstructions" rows="3"
+                            name="instructions"></textarea>
                     </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="gsm130">Paper Thickness
-                                <i class="fa fa-info-circle" aria-hidden="true" style="color: black"></i></label>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="paperThickness" id="gsm130"
-                                    checked />
-                                <label class="form-check-label" for="gsm130">130 GSM</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="paperThickness" id="gsm170" />
-                                <label class="form-check-label" for="gsm170">170 GSM</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="paperThickness" id="gsm250" />
-                                <label class="form-check-label" for="gsm250">250 GSM</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="paperThickness" id="gsm300" />
-                                <label class="form-check-label" for="gsm300">300 GSM</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="paperThickness" id="gsm350" />
-                                <label class="form-check-label" for="gsm350">350 GSM</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="paperThickness"
-                                    id="customThickness" />
-                                <label class="form-check-label" for="customThickness">Custom</label>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="silkMatt">
-                                Paper Type
-                                <i class="fa fa-info-circle" aria-hidden="true" style="color: black"></i>
-                            </label>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="paperType" id="silkMatt" />
-                                <label class="form-check-label" for="silkMatt">Silk (Matt)</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="paperType" id="gloss" checked />
-                                <label class="form-check-label" for="gloss">Gloss</label>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="a6Size">
-                                Finished Size
-                                <i class="fa fa-info-circle" aria-hidden="true" style="color: black"></i>
-                            </label>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="finishedSize" id="a6Size" />
-                                <label class="form-check-label" for="a6Size">A6</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="finishedSize" id="a5Size" checked />
-                                <label class="form-check-label" for="a5Size">A5</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="finishedSize" id="a4Size" />
-                                <label class="form-check-label" for="a4Size">A4</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="finishedSize" id="customSize" />
-                                <label class="form-check-label" for="customSize">Custom</label>
-                            </div>
-                        </div>
-                    </div>
+
+
                 </div>
-                <div class="form-group mt-4" style="margin-inline: 1rem">
-                    <label for="fileUpload" style="margin-bottom: 5px">Upload Design File (multiple files allowed)
-                        [optional]</label>
-                    <div class="p-3 text-center" style="position: relative; border: 1px dashed grey">
-                        <input type="file" class="form-control" id="fileUpload" multiple style="
-                  opacity: 0;
-                  position: absolute;
-                  width: 100%;
-                  height: 100%;
-                  z-index: 100;
-                " />
-                        <label for="fileUpload" class="d-block">
-                            Drop your file here or
-                            <span class="btn btn-primary btn-sm">upload file</span>
-                        </label>
-                    </div>
-                    <small class="form-text text-muted">Accepted file types: pdf, doc, docx, xls, xlsx, eps, ai, ps,
-                        zip, jpg, jpeg, png, gif, Max. file size: 256 MB, Max. files:
-                        100</small>
-                </div>
-                <div class="form-group mt-4" style="margin-inline: 1rem">
-                    <label for="comment" style="margin-bottom: 5px">Comment (optional)</label>
-                    <textarea class="form-control" id="comment" rows="3" placeholder="Write here"
-                        style="outline: none"></textarea>
-                </div>
-                <div class="mt-4" style="margin-inline: 1rem">
+                <div class="my-4 d-flex justify-content-between align-items-center">
                     <router-link to="/delivery-details">
-                        <button type="button" class="btn btn-block btn-primary">
-                            Next
+                        <button type="button" class="btn btn-outline-secondary btn-md"  @click="$emit('previous-step')">
+                            Previous
+                        </button>
+                    </router-link>
+
+                    <router-link to="/success">
+                        <button type="button" class="btn btn-success btn-block">
+                            Submit
                         </button>
                     </router-link>
                 </div>
+
+                <div class="mt-3">
+                    <button type="button" class="btn btn-primary btn-block btn-md" data-bs-toggle="tooltip"
+                        data-bs-placement="top" title="Save your progress and continue later">
+                        Save and Continue Later
+                    </button>
+                </div>
+
+
+
+
             </div>
         </div>
     </div>

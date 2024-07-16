@@ -1,5 +1,5 @@
 <template>
-    <div class="d-flex">
+    <div class="d-flex pb-lg-4">
         <div class="position-relative" style="width: 200px">
             <div class="position-absolute bg-secondary rounded text-white d-flex justify-content-center align-items-center"
                 style="width: 150px; height: 100px; top: 52px; left: 34px">
@@ -21,133 +21,115 @@
                     </div>
                 </div>
             </div>
-            <div class="card-body m-3">
-                <div class="row g-3 px-3">
-                    <div class="col-md-6">
+            <div class="card-body m-3 pb-5">
+                <div class="row g-3">
+                    <div class="col-md-12">
                         <div class="form-group">
-                            <label for="singleSided">Sides</label>
+                            <label>When would you like to receive your item?*</label> 
+                            <small class="d-block mb-3 px-2 text-muted">To receive express same-day delivery, please continue
+                                to fill
+                                out the form and let us know your preferred delivery time in the comment section</small>
+
                             <div class="form-check">
-                                <input class="form-check-input" type="radio" name="sides" id="singleSided" checked />
-                                <label class="form-check-label" for="singleSided">Single sided</label>
+                                <input class="form-check-input" type="radio" checked name="deliveryOption"
+                                    id="priorityTomorrow" value="Priority service tomorrow">
+                                <label class="form-check-label" for="priorityTomorrow">Priority service tomorrow</label>
                             </div>
+
                             <div class="form-check">
-                                <input class="form-check-input" type="radio" name="sides" id="doubleSided" />
-                                <label class="form-check-label" for="doubleSided">Double sided</label>
+                                <input class="form-check-input" type="radio" name="deliveryOption"
+                                    id="superExpressToday"
+                                    value="Super Express Same Day Delivery ( by 6 pm today) *£££ express charges may apply">
+                                <label class="form-check-label" for="superExpressToday">Super Express Same Day Delivery
+                                    (by 6 pm today) *£££ express charges may apply</label>
+                            </div>
+
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="deliveryOption"
+                                    id="superExpressNight"
+                                    value="Super Express Night Delivery (by 11:59 pm today) *£££ express charges may apply">
+                                <label class="form-check-label" for="superExpressNight">Super Express Night Delivery (by
+                                    11:59 pm today) *£££ express charges may apply</label>
+                            </div>
+
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="deliveryOption"
+                                    id="expressTomorrow1030am"
+                                    value="Express Delivery Tomorrow by 10:30 am *£££ express charges may apply">
+                                <label class="form-check-label" for="expressTomorrow1030am">Express Delivery Tomorrow by
+                                    10:30 am *£££ express charges may apply</label>
+                            </div>
+
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="deliveryOption"
+                                    id="expressTomorrow1pm"
+                                    value="Express Delivery Tomorrow by 1 pm *£££ express charges may apply">
+                                <label class="form-check-label" for="expressTomorrow1pm">Express Delivery Tomorrow by 1
+                                    pm *£££ express charges may apply</label>
+                            </div>
+
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="deliveryOption"
+                                    id="expressTomorrow6pm"
+                                    value="Express Delivery Tomorrow by 6 pm *££ express charges may apply">
+                                <label class="form-check-label" for="expressTomorrow6pm">Express Delivery Tomorrow by 6
+                                    pm *££ express charges may apply</label>
+                            </div>
+
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="deliveryOption"
+                                    id="priorityTomorrow1159pm" value="Priority Delivery Tomorrow by 11:59 pm">
+                                <label class="form-check-label" for="priorityTomorrow1159pm">Priority Delivery Tomorrow
+                                    by 11:59 pm</label>
+                            </div>
+
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="deliveryOption" id="standard2days"
+                                    value="Standard 2 Working Days Delivery">
+                                <label class="form-check-label" for="standard2days">Standard 2 Working Days
+                                    Delivery</label>
+                            </div>
+
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="deliveryOption" id="standard3days"
+                                    value="Standard 3 Working Days Delivery">
+                                <label class="form-check-label" for="standard3days">Standard 3 Working Days
+                                    Delivery</label>
+                            </div>
+
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="deliveryOption" id="standard4days"
+                                    value="Standard 4 Working Days Delivery">
+                                <label class="form-check-label" for="standard4days">Standard 4 Working Days
+                                    Delivery</label>
+                            </div>
+
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="deliveryOption" id="standard35days"
+                                    value="Standard (3-5 working days)">
+                                <label class="form-check-label" for="standard35days">Standard (3-5 working days)</label>
+                            </div>
+
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="deliveryOption" id="customDeadline"
+                                    value="I have a custom delivery deadline">
+                                <label class="form-check-label" for="customDeadline">I have a custom delivery
+                                    deadline</label>
                             </div>
                         </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="portrait">Orientation</label>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="orientation" id="portrait" />
-                                <label class="form-check-label" for="portrait">Portrait</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="orientation" id="landscape"
-                                    checked />
-                                <label class="form-check-label" for="landscape">Landscape</label>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="gsm130">Paper Thickness
-                                <i class="fa fa-info-circle" aria-hidden="true" style="color: black"></i></label>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="paperThickness" id="gsm130"
-                                    checked />
-                                <label class="form-check-label" for="gsm130">130 GSM</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="paperThickness" id="gsm170" />
-                                <label class="form-check-label" for="gsm170">170 GSM</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="paperThickness" id="gsm250" />
-                                <label class="form-check-label" for="gsm250">250 GSM</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="paperThickness" id="gsm300" />
-                                <label class="form-check-label" for="gsm300">300 GSM</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="paperThickness" id="gsm350" />
-                                <label class="form-check-label" for="gsm350">350 GSM</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="paperThickness"
-                                    id="customThickness" />
-                                <label class="form-check-label" for="customThickness">Custom</label>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="silkMatt">
-                                Paper Type
-                                <i class="fa fa-info-circle" aria-hidden="true" style="color: black"></i>
-                            </label>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="paperType" id="silkMatt" />
-                                <label class="form-check-label" for="silkMatt">Silk (Matt)</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="paperType" id="gloss" checked />
-                                <label class="form-check-label" for="gloss">Gloss</label>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="a6Size">
-                                Finished Size
-                                <i class="fa fa-info-circle" aria-hidden="true" style="color: black"></i>
-                            </label>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="finishedSize" id="a6Size" />
-                                <label class="form-check-label" for="a6Size">A6</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="finishedSize" id="a5Size" checked />
-                                <label class="form-check-label" for="a5Size">A5</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="finishedSize" id="a4Size" />
-                                <label class="form-check-label" for="a4Size">A4</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="finishedSize" id="customSize" />
-                                <label class="form-check-label" for="customSize">Custom</label>
-                            </div>
-                        </div>
+
                     </div>
                 </div>
-                <div class="form-group mt-4" style="margin-inline: 1rem">
-                    <label for="fileUpload" style="margin-bottom: 5px">Upload Design File (multiple files allowed)
-                        [optional]</label>
-                    <div class="p-3 text-center" style="position: relative; border: 1px dashed grey">
-                        <input type="file" class="form-control" id="fileUpload" multiple style="
-                  opacity: 0;
-                  position: absolute;
-                  width: 100%;
-                  height: 100%;
-                  z-index: 100;
-                " />
-                        <label for="fileUpload" class="d-block">
-                            Drop your file here or
-                            <span class="btn btn-primary btn-sm">upload file</span>
-                        </label>
+                <div class="form-group mt-4">
+                    <label for="deliveryAddress" class="form-label">Delivery Address</label>
+                    <small class="form-text text-muted">Enter postcode and click the Lookup button.</small>
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="deliveryAddress" name="deliveryAddress"
+                            placeholder="Enter postcode...">
+                        <button class="btn btn-warning" type="button" id="lookUpButton">Look Up</button>
                     </div>
-                    <small class="form-text text-muted">Accepted file types: pdf, doc, docx, xls, xlsx, eps, ai, ps,
-                        zip, jpg, jpeg, png, gif, Max. file size: 256 MB, Max. files:
-                        100</small>
                 </div>
-                <div class="form-group mt-4" style="margin-inline: 1rem">
-                    <label for="comment" style="margin-bottom: 5px">Comment (optional)</label>
-                    <textarea class="form-control" id="comment" rows="3" placeholder="Write here"
-                        style="outline: none"></textarea>
-                </div>
+
                 <div class="mt-4" style="margin-inline: 1rem">
                     <button type="button" class="btn btn-block btn-primary" @click="$emit('next-step')">
                         Next

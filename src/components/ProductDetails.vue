@@ -21,7 +21,7 @@
                     </div>
                 </div>
             </div>
-            <div class="card-body m-3">
+            <div class="card-body m-3 pb-5">
                 <div class="row g-3 px-3">
                     <div class="col-md-6">
                         <div class="form-group">
