@@ -67,13 +67,13 @@
                 </div>
                 <div class="my-4 d-flex justify-content-between align-items-center">
                     <router-link to="/delivery-details">
-                        <button type="button" class="btn btn-outline-secondary btn-md"  @click="$emit('previous-step')">
+                        <button type="button" class="btn btn-outline-secondary btn-md">
                             Previous
                         </button>
                     </router-link>
 
-                    <router-link to="/success">
-                        <button type="button" class="btn btn-success btn-block">
+                    <router-link to="/order-success">
+                        <button type="button" class="btn btn-success btn-block" @click="$emit('next-step')">
                             Submit
                         </button>
                     </router-link>

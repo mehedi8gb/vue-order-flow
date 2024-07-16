@@ -30,13 +30,15 @@
 import ProductDetails from './components/ProductDetails.vue';
 import DeliveryDetails from './components/DeliveryDetails.vue';
 import YourDetails from './components/YourDetails.vue';
+import OrderSuccess from "./components/OrderSuccess.vue"
 
 export default {
   name: 'App',
   components: {
     ProductDetails,
     DeliveryDetails,
-    YourDetails
+    YourDetails,
+    OrderSuccess
   },
   data() {
     return {
@@ -45,7 +47,7 @@ export default {
   },
   methods: {
     nextStep() {
-      const steps = ['ProductDetails', 'DeliveryDetails', 'YourDetails'];
+      const steps = ['ProductDetails', 'DeliveryDetails', 'YourDetails', 'OrderSuccess'];
       const currentIndex = steps.indexOf(this.currentComponent);
       if (currentIndex < steps.length - 1) {
         this.currentComponent = steps[currentIndex + 1];
