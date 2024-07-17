@@ -21,146 +21,190 @@
                     </div>
                 </div>
             </div>
-            <div class="card-body m-3 pb-5">
-                <div class="row g-3 px-3">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="singleSided">Sides</label>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="sides" id="singleSided" checked />
-                                <label class="form-check-label" for="singleSided">Single sided</label>
+            <form @submit.prevent="saveDetails">
+                <div class="card-body m-3 pb-5">
+                    <div class="row g-3 px-3">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="singleSided">Sides</label>
+                                <div class="form-check">
+                                    <input v-model="form.slides" class="form-check-input" type="radio" name="sides"
+                                        value="singleSided" id="singleSided"/>
+                                    <label class="form-check-label" for="singleSided">Single sided</label>
+                                </div>
+                                <div class="form-check">
+                                    <input v-model="form.slides" class="form-check-input" type="radio" name="sides"
+                                        value="doubleSided" id="doubleSided"/>
+                                    <label class="form-check-label" for="doubleSided">Double sided</label>
+                                </div>
                             </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="sides" id="doubleSided" />
-                                <label class="form-check-label" for="doubleSided">Double sided</label>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="portrait">Orientation</label>
+                                <div class="form-check">
+                                    <input v-model="form.orientation" class="form-check-input" type="radio"
+                                        name="orientation" id="portrait" value="portrait"/>
+                                    <label class="form-check-label" for="portrait">Portrait</label>
+                                </div>
+                                <div class="form-check">
+                                    <input v-model="form.orientation" class="form-check-input" type="radio"
+                                        name="orientation" id="landscape" value="landscape" />
+                                    <label class="form-check-label" for="landscape">Landscape</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="gsm130">Paper Thickness
+                                    <i class="fa fa-info-circle" aria-hidden="true" style="color: black"></i></label>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" v-model="form.paperThickness"
+                                        name="paperThickness" value="gsm130" id="gsm130" />
+                                    <label class="form-check-label" for="gsm130">130 GSM</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" v-model="form.paperThickness"
+                                        name="paperThickness" value="gsm170" id="gsm170" />
+                                    <label class="form-check-label" for="gsm170">170 GSM</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" v-model="form.paperThickness"
+                                        name="paperThickness" value="gsm250" id="gsm250" />
+                                    <label class="form-check-label" for="gsm250">250 GSM</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" v-model="form.paperThickness"
+                                        name="paperThickness" value="gsm300" id="gsm300" />
+                                    <label class="form-check-label" for="gsm300">300 GSM</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" v-model="form.paperThickness"
+                                        name="paperThickness" value="gsm350" id="gsm350" />
+                                    <label class="form-check-label" for="gsm350">350 GSM</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" v-model="form.paperThickness"
+                                        name="paperThickness" value="customThickness" id="customThickness"/>
+                                    <label class="form-check-label" for="customThickness">Custom</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="silkMatt">
+                                    Paper Type
+                                    <i class="fa fa-info-circle" aria-hidden="true" style="color: black"></i>
+                                </label>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" v-model="form.paperType"
+                                        name="paperType" value="silkMatt" id="silkMatt" />
+                                    <label class="form-check-label" for="silkMatt">Silk (Matt)</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" v-model="form.paperType"
+                                        name="paperType" value="gloss" id="gloss"/>
+                                    <label class="form-check-label" for="gloss">Gloss</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="a6Size">
+                                    Finished Size
+                                    <i class="fa fa-info-circle" aria-hidden="true" style="color: black"></i>
+                                </label>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" v-model="form.finishedSize"
+                                        name="finishedSize" value="a6Size" id="a6Size"/>
+                                    <label class="form-check-label" for="a6Size">A6</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" v-model="form.finishedSize"
+                                        name="finishedSize" value="a5Size" id="a5Size" />
+                                    <label class="form-check-label" for="a5Size">A5</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" v-model="form.finishedSize"
+                                        name="finishedSize" value="a4Size" id="a4Size" />
+                                    <label class="form-check-label" for="a4Size">A4</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" v-model="form.finishedSize"
+                                        name="finishedSize" value="customSize" id="customSize" />
+                                    <label class="form-check-label" for="customSize">Custom</label>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="portrait">Orientation</label>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="orientation" id="portrait" />
-                                <label class="form-check-label" for="portrait">Portrait</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="orientation" id="landscape"
-                                    checked />
-                                <label class="form-check-label" for="landscape">Landscape</label>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="gsm130">Paper Thickness
-                                <i class="fa fa-info-circle" aria-hidden="true" style="color: black"></i></label>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="paperThickness" id="gsm130"
-                                    checked />
-                                <label class="form-check-label" for="gsm130">130 GSM</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="paperThickness" id="gsm170" />
-                                <label class="form-check-label" for="gsm170">170 GSM</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="paperThickness" id="gsm250" />
-                                <label class="form-check-label" for="gsm250">250 GSM</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="paperThickness" id="gsm300" />
-                                <label class="form-check-label" for="gsm300">300 GSM</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="paperThickness" id="gsm350" />
-                                <label class="form-check-label" for="gsm350">350 GSM</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="paperThickness"
-                                    id="customThickness" />
-                                <label class="form-check-label" for="customThickness">Custom</label>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="silkMatt">
-                                Paper Type
-                                <i class="fa fa-info-circle" aria-hidden="true" style="color: black"></i>
+                    <div class="form-group mt-4" style="margin-inline: 1rem">
+                        <label for="fileUpload" style="margin-bottom: 5px">Upload Design File (multiple files allowed)
+                            [optional]</label>
+                        <div class="p-3 text-center" style="position: relative; border: 1px dashed grey">
+                            <input type="file" class="form-control" id="fileUpload" multiple style="
+                      opacity: 0;
+                      position: absolute;
+                      width: 100%;
+                      height: 100%;
+                      z-index: 100;
+                    " />
+                            <label for="fileUpload" class="d-block">
+                                Drop your file here or
+                                <span class="btn btn-primary btn-sm">upload file</span>
                             </label>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="paperType" id="silkMatt" />
-                                <label class="form-check-label" for="silkMatt">Silk (Matt)</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="paperType" id="gloss" checked />
-                                <label class="form-check-label" for="gloss">Gloss</label>
-                            </div>
                         </div>
+                        <small class="form-text text-muted">Accepted file types: pdf, doc, docx, xls, xlsx, eps, ai, ps,
+                            zip, jpg, jpeg, png, gif, Max. file size: 256 MB, Max. files:
+                            100</small>
                     </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="a6Size">
-                                Finished Size
-                                <i class="fa fa-info-circle" aria-hidden="true" style="color: black"></i>
-                            </label>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="finishedSize" id="a6Size" />
-                                <label class="form-check-label" for="a6Size">A6</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="finishedSize" id="a5Size" checked />
-                                <label class="form-check-label" for="a5Size">A5</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="finishedSize" id="a4Size" />
-                                <label class="form-check-label" for="a4Size">A4</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="finishedSize" id="customSize" />
-                                <label class="form-check-label" for="customSize">Custom</label>
-                            </div>
-                        </div>
+                    <div class="form-group mt-4" style="margin-inline: 1rem">
+                        <label for="comment" style="margin-bottom: 5px">Comment (optional)</label>
+                        <textarea v-model="form.comment" class="form-control" id="comment" rows="3"
+                            placeholder="Write here" style="outline: none"></textarea>
+                    </div>
+                    <div class="mt-4" style="margin-inline: 1rem">
+                        <button type="button" class="btn btn-block btn-primary" @click="$emit('next-step')">
+                            Next
+                        </button>
                     </div>
                 </div>
-                <div class="form-group mt-4" style="margin-inline: 1rem">
-                    <label for="fileUpload" style="margin-bottom: 5px">Upload Design File (multiple files allowed)
-                        [optional]</label>
-                    <div class="p-3 text-center" style="position: relative; border: 1px dashed grey">
-                        <input type="file" class="form-control" id="fileUpload" multiple style="
-                  opacity: 0;
-                  position: absolute;
-                  width: 100%;
-                  height: 100%;
-                  z-index: 100;
-                " />
-                        <label for="fileUpload" class="d-block">
-                            Drop your file here or
-                            <span class="btn btn-primary btn-sm">upload file</span>
-                        </label>
-                    </div>
-                    <small class="form-text text-muted">Accepted file types: pdf, doc, docx, xls, xlsx, eps, ai, ps,
-                        zip, jpg, jpeg, png, gif, Max. file size: 256 MB, Max. files:
-                        100</small>
-                </div>
-                <div class="form-group mt-4" style="margin-inline: 1rem">
-                    <label for="comment" style="margin-bottom: 5px">Comment (optional)</label>
-                    <textarea class="form-control" id="comment" rows="3" placeholder="Write here"
-                        style="outline: none"></textarea>
-                </div>
-                <div class="mt-4" style="margin-inline: 1rem">
-                    <button type="button" class="btn btn-block btn-primary" @click="$emit('next-step')">
-                        Next
-                    </button>
-                </div>
-            </div>
+            </form>
         </div>
     </div>
 </template>
 
 <script>
+import { mapActions, mapGetters } from 'vuex';
 export default {
     name: 'ProductDetails',
+    data() {
+        return {
+            form: {
+                slides: '',
+                orientation: '',
+                paperThickness: '',
+                paperType: '',
+                finishedSize: ''
+            }
+        };
+    },
+    computed: {
+        ...mapGetters(['getProductDetails'])
+    },
+    methods: {
+        ...mapActions(['updateProductDetails']),
+        saveDetails() {
+            this.updateProductDetails(this.form); // Use the form data to update the store
+        }
+    },
+    mounted() {
+        this.$nextTick(() => {
+            const details = this.getProductDetails;
+            if (details) {
+                this.form = details; // Populate the form with existing details if available
+            }
+        });
+    }
 };
 </script>
 

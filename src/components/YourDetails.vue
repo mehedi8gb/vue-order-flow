@@ -21,82 +21,117 @@
                     </div>
                 </div>
             </div>
-            <div class="card-body m-3 pb-5">
-                <div class="row g-3 px-3">
-                    <div class="form-group mt-4">
-                        <label for="inputName">Your Name*</label>
-                        <input type="text" class="form-control" id="inputName" name="name" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="inputEmail">Your Email*</label>
-                        <input type="email" class="form-control" id="inputEmail" name="email" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="confirmEmail">Confirm Email*</label>
-                        <input type="email" class="form-control" id="confirmEmail" name="confirmEmail" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="inputPhone">Your Phone Number*</label>
-                        <input type="tel" class="form-control" id="inputPhone" name="phone" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Who will receive the order?*</label>
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="recipient" id="myself" value="myself"
-                                checked>
-                            <label class="form-check-label" for="myself">Myself</label>
+            <form @submit.prevent="saveDetails">
+                <div class="card-body m-3 pb-5">
+                    <div class="row g-3 px-3">
+                        <div class="form-group mt-4">
+                            <label for="inputName">Your Name*</label>
+                            <input type="text" class="form-control" id="inputName" v-model="form.name" required>
                         </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="recipient" id="someoneElse"
-                                value="someone_else">
-                            <label class="form-check-label" for="someoneElse">Someone else</label>
+
+                        <div class="form-group">
+                            <label for="inputEmail">Your Email*</label>
+                            <input type="email" class="form-control" id="inputEmail" v-model="form.email" required>
                         </div>
+
+                        <div class="form-group">
+                            <label for="confirmEmail">Confirm Email*</label>
+                            <input type="email" class="form-control" id="confirmEmail" name="confirmEmail" v-model="form.confirmEmail" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="inputPhone">Your Phone Number*</label>
+                            <input type="tel" class="form-control" id="inputPhone" name="phone" v-model="form.phone" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Who will receive the order?*</label>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="recipient" id="myself" v-model="form.myself" value="myself"
+                                    checked>
+                                <label class="form-check-label" for="myself">Myself</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="recipient" id="someoneElse" v-model="form.someoneElse"
+                                    value="someone_else">
+                                <label class="form-check-label" for="someoneElse">Someone else</label>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="additionalInstructions">Any further instructions or details? (optional)</label>
+                            <textarea v-model="form.additionalInstructions" class="form-control" id="additionalInstructions" rows="3"
+                                name="instructions"></textarea>
+                        </div>
+
+
+                    </div>
+                    <div class="my-4 d-flex justify-content-between align-items-center">
+                        <router-link to="/delivery-details">
+                            <button type="button" class="btn btn-outline-secondary btn-md"
+                                @click="$emit('previous-step')">
+                                Previous
+                            </button>
+                        </router-link>
+
+                        <router-link to="/order-success">
+                            <button type="submit" class="btn btn-success btn-block" @click="$emit('next-step')">
+                                Submit
+                            </button>
+                        </router-link>
                     </div>
 
-                    <div class="form-group">
-                        <label for="additionalInstructions">Any further instructions or details? (optional)</label>
-                        <textarea class="form-control" id="additionalInstructions" rows="3"
-                            name="instructions"></textarea>
+                    <div class="mt-3">
+                        <button type="button" class="btn btn-primary btn-block btn-md" data-bs-toggle="tooltip"
+                            data-bs-placement="top" title="Save your progress and continue later">
+                            Save and Continue Later
+                        </button>
                     </div>
 
 
+
+
                 </div>
-                <div class="my-4 d-flex justify-content-between align-items-center">
-                    <router-link to="/delivery-details">
-                        <button type="button" class="btn btn-outline-secondary btn-md">
-                            Previous
-                        </button>
-                    </router-link>
-
-                    <router-link to="/order-success">
-                        <button type="button" class="btn btn-success btn-block" @click="$emit('next-step')">
-                            Submit
-                        </button>
-                    </router-link>
-                </div>
-
-                <div class="mt-3">
-                    <button type="button" class="btn btn-primary btn-block btn-md" data-bs-toggle="tooltip"
-                        data-bs-placement="top" title="Save your progress and continue later">
-                        Save and Continue Later
-                    </button>
-                </div>
-
-
-
-
-            </div>
+            </form>
         </div>
     </div>
 </template>
 
 <script>
+import { mapActions, mapGetters } from 'vuex';
 export default {
     name: 'YourDetails',
+
+    data() {
+        return {
+            form: {
+                name: '',
+                email: '',
+                confirmEmail: '',
+                phone: '',
+                myself: 'myself',
+                someoneElse: '',
+                additionalInstructions: ''
+            }
+        };
+    },
+    computed: {
+        ...mapGetters(['getYourDetails'])
+    },
+    methods: {
+        ...mapActions(['updateYourDetails']),
+        saveDetails() {
+            this.updateYourDetails(this.form); // Use the form data to update the store
+        }
+    },
+    mounted() {
+        this.$nextTick(() => {
+            const details = this.getYourDetails;
+            if (details) {
+                this.form = details; // Populate the form with existing details if available
+            }
+        });
+    }
 };
 </script>
 

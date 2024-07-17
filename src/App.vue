@@ -21,7 +21,7 @@
       </div>
     </nav>
     <div class="container mt-3">
-      <component :is="currentComponent" @next-step="nextStep" />
+      <component :is="currentComponent" @next-step="nextStep" @previous-step="previousStep"/>
     </div>
   </div>
 </template>
@@ -42,15 +42,23 @@ export default {
   },
   data() {
     return {
-      currentComponent: 'ProductDetails'
+      currentComponent: 'ProductDetails',
+      steps: ['ProductDetails', 'DeliveryDetails', 'YourDetails', 'OrderSuccess'],
+      title: ''
     };
   },
   methods: {
     nextStep() {
-      const steps = ['ProductDetails', 'DeliveryDetails', 'YourDetails', 'OrderSuccess'];
-      const currentIndex = steps.indexOf(this.currentComponent);
-      if (currentIndex < steps.length - 1) {
-        this.currentComponent = steps[currentIndex + 1];
+      
+      const currentIndex = this.steps.indexOf(this.currentComponent);
+      if (currentIndex < this.steps.length - 1) {
+        this.currentComponent = this.steps[currentIndex + 1];
+      }
+    },
+    previousStep() {
+      const currentIndex = this.steps.indexOf(this.currentComponent);
+      if (currentIndex < this.steps.length - 1) {
+        this.currentComponent = this.steps[currentIndex - 1];
       }
     }
   }
