@@ -186,8 +186,12 @@
                             </div>
                         </div>
 
-                        <div class="mt-4" style="margin-inline: 1rem">
-                            <router-link :to="{ name: 'YourDetails' }" class="btn btn-block btn-primary">
+                        <div class="my-4 d-flex justify-content-between align-items-center">
+                            <router-link :to="{ name: 'ProductDetails' }" class="btn btn-outline-secondary btn-md">
+                                Previous
+                            </router-link>
+
+                            <router-link :to="{ name: 'YourDetails' }" class="btn btn-primary btn-block">
                                 Next
                             </router-link>
                         </div>
