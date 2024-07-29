@@ -5,8 +5,8 @@ import YourDetails from "../components/YourDetails.vue";
 import OrderSuccess from "../components/OrderSuccess.vue"
 
 const routes = [
-  { path: "/", redirect: "/product-details" },
-  { path: "/product-details", component: ProductDetails },
+  { path: "/", redirect: "/checkout" },
+  { path: "/checkout", component: ProductDetails },
   { path: "/delivery-details", component: DeliveryDetails },
   { path: "/your-details", component: YourDetails },
   { path: '/order-success', component: OrderSuccess }

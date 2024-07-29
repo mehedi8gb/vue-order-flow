@@ -137,13 +137,43 @@
 
                         </div>
                     </div>
+                    <div v-if="form.deliveryOption === 'I have a custom delivery deadline'" class="form-group mt-4">
+                        <label for="deliveryDeadline" class="form-label">What is your delivery deadline?</label><br>
+                        <small class="form-text text-muted">You can describe deadline here.</small>
+                        <div class="input-group">
+                            <input v-model="form.deliveryDeadline" type="text" class="form-control"
+                                name="deliveryDeadline" placeholder="Enter delivery deadline">
+                        </div>
+                    </div>
                     <div class="form-group mt-4">
-                        <label for="deliveryAddress" class="form-label">Delivery Address</label>
+                        <label for="postcode" class="form-label">Delivery Address</label><br>
                         <small class="form-text text-muted">Enter postcode and click the Lookup button.</small>
                         <div class="input-group">
-                            <input v-model="form.deliveryAddress" type="text" class="form-control" name="deliveryAddress"
+                            <input v-model="form.postcode" type="text" class="form-control" name="postcode"
                                 placeholder="Enter postcode...">
-                            <button class="btn btn-warning" type="button" id="lookUpButton">Look Up</button>
+                            <button class="btn btn-warning" type="button" @click="lookUp">Look
+                                Up</button>
+                        </div>
+                        <div v-if="data == 'error'">
+                            <div class="row mt-4">
+                                <div class="form-group mb-3 col-md-6">
+                                    <label for="nameNumber" class="form-label">Name/Number and Street</label>
+                                    <input v-model="form.nameNumber" type="text" class="form-control" id="nameNumber"
+                                        placeholder="Enter name/number and street">
+                                </div>
+
+                                <div class="form-group mb-3 col-md-6">
+                                    <label for="addressLine2" class="form-label">Address Line 2</label>
+                                    <input v-model="form.addressLine2" type="text" class="form-control"
+                                        id="addressLine2" placeholder="Enter address line 2">
+                                </div>
+
+                                <div class="form-group mb-3">
+                                    <label for="townCity" class="form-label">Town/City</label>
+                                    <input v-model="form.townCity" type="text" class="form-control" id="townCity"
+                                        placeholder="Enter town/city">
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -160,14 +190,24 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
+import axios from 'axios';
+import toast from '@/utils/toast';
 export default {
     name: 'DeliveryDetails',
     data() {
         return {
             form: {
                 deliveryOption: '',
-                deliveryAddress: ''
-            }
+                deliveryAddressResponse: '',
+                postcode: '',
+                nameNumber: '',
+                addressLine2: '',
+                townCity: ''
+            },
+            data: null,
+            apiUrl: 'https://services.3xsoftware.co.uk/Search/ByPostcode/json',
+            username: 'OliuChowdhury788333',
+            key: '8MD1-0O7H-H2TI-FFAL'
         };
     },
     computed: {
@@ -177,6 +217,22 @@ export default {
         ...mapActions(['updateDeliveryDetails']),
         saveDetails() {
             this.updateDeliveryDetails(this.form); // Use the form data to update the store
+        },
+        lookUp() {
+            if (this.form.postcode) {
+                axios
+                    .get(`${this.apiUrl}?username=${this.username}&key=${this.key}&postcode=${this.form.postcode}`)
+                    .then(response => {
+                        this.data = response.data;
+                        console.log(this.data);
+                        
+                    })
+                    .catch(error => {
+                        console.error("There was an error fetching the data!", error);
+                        this.data = 'error';
+                        toast.error("There was an error fetching the data!");
+                    });
+            }
         }
     },
     mounted() {

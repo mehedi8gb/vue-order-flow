@@ -29,12 +29,12 @@
                                 <label for="singleSided">Sides</label>
                                 <div class="form-check">
                                     <input v-model="form.slides" class="form-check-input" type="radio" name="sides"
-                                        value="singleSided" id="singleSided"/>
+                                        value="singleSided" id="singleSided" />
                                     <label class="form-check-label" for="singleSided">Single sided</label>
                                 </div>
                                 <div class="form-check">
                                     <input v-model="form.slides" class="form-check-input" type="radio" name="sides"
-                                        value="doubleSided" id="doubleSided"/>
+                                        value="doubleSided" id="doubleSided" />
                                     <label class="form-check-label" for="doubleSided">Double sided</label>
                                 </div>
                             </div>
@@ -44,7 +44,7 @@
                                 <label for="portrait">Orientation</label>
                                 <div class="form-check">
                                     <input v-model="form.orientation" class="form-check-input" type="radio"
-                                        name="orientation" id="portrait" value="portrait"/>
+                                        name="orientation" id="portrait" value="portrait" />
                                     <label class="form-check-label" for="portrait">Portrait</label>
                                 </div>
                                 <div class="form-check">
@@ -85,7 +85,7 @@
                                 </div>
                                 <div class="form-check">
                                     <input class="form-check-input" type="radio" v-model="form.paperThickness"
-                                        name="paperThickness" value="customThickness" id="customThickness"/>
+                                        name="paperThickness" value="customThickness" id="customThickness" />
                                     <label class="form-check-label" for="customThickness">Custom</label>
                                 </div>
                             </div>
@@ -103,7 +103,7 @@
                                 </div>
                                 <div class="form-check">
                                     <input class="form-check-input" type="radio" v-model="form.paperType"
-                                        name="paperType" value="gloss" id="gloss"/>
+                                        name="paperType" value="gloss" id="gloss" />
                                     <label class="form-check-label" for="gloss">Gloss</label>
                                 </div>
                             </div>
@@ -116,7 +116,7 @@
                                 </label>
                                 <div class="form-check">
                                     <input class="form-check-input" type="radio" v-model="form.finishedSize"
-                                        name="finishedSize" value="a6Size" id="a6Size"/>
+                                        name="finishedSize" value="a6Size" id="a6Size" />
                                     <label class="form-check-label" for="a6Size">A6</label>
                                 </div>
                                 <div class="form-check">
@@ -137,17 +137,33 @@
                             </div>
                         </div>
                     </div>
-                    <div class="form-group mt-4" style="margin-inline: 1rem">
+
+                    <div class="form-group mt-4">
+                        <label class="form-label">Do you have your design file/document/artwork ready?</label>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" id="yes" value="yes"
+                                v-model="form.hasDesignFile" />
+                            <label class="form-check-label" for="yes">Yes</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" id="no" value="no"
+                                v-model="form.hasDesignFile" />
+                            <label class="form-check-label" for="no">No</label>
+                        </div>
+                    </div>
+
+                    <!-- Conditionally rendered file upload field -->
+                    <div v-if="form.hasDesignFile === 'yes'" class="form-group mt-4" style="margin-inline: 1rem">
                         <label for="fileUpload" style="margin-bottom: 5px">Upload Design File (multiple files allowed)
                             [optional]</label>
                         <div class="p-3 text-center" style="position: relative; border: 1px dashed grey">
                             <input type="file" class="form-control" id="fileUpload" multiple style="
-                      opacity: 0;
-                      position: absolute;
-                      width: 100%;
-                      height: 100%;
-                      z-index: 100;
-                    " />
+              opacity: 0;
+              position: absolute;
+              width: 100%;
+              height: 100%;
+              z-index: 100;
+            " />
                             <label for="fileUpload" class="d-block">
                                 Drop your file here or
                                 <span class="btn btn-primary btn-sm">upload file</span>
@@ -157,6 +173,16 @@
                             zip, jpg, jpeg, png, gif, Max. file size: 256 MB, Max. files:
                             100</small>
                     </div>
+
+                    <div v-else class="form-group mt-4" style="margin-inline: 1rem">
+                        <label for="whenArtworkSend" style="margin-bottom: 5px">When can you send us the
+                            artwork?</label><span class="text-danger">*</span>
+                        <input v-model="form.whenArtworkSend" class="form-control" id="whenArtworkSend"
+                            placeholder="Write here">
+                        <small class="text-muted">Please provide the most accurate estimate possible to help us
+                            determine the appropriate quote.</small>
+                    </div>
+
                     <div class="form-group mt-4" style="margin-inline: 1rem">
                         <label for="comment" style="margin-bottom: 5px">Comment (optional)</label>
                         <textarea v-model="form.comment" class="form-control" id="comment" rows="3"
@@ -180,11 +206,14 @@ export default {
     data() {
         return {
             form: {
+                hasDesignFile: 'yes',
                 slides: '',
                 orientation: '',
                 paperThickness: '',
                 paperType: '',
-                finishedSize: ''
+                finishedSize: '',
+                whenArtworkSend: '',
+                comment: '',
             }
         };
     },
