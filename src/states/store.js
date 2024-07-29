@@ -4,8 +4,12 @@ import { createStore } from 'vuex';
 const store = createStore({
   state: {
     deliveryDetails: {},
-    productDetails: {},
-    yourDetails: {}
+    productDetails: {
+      hasDesignFile: 'yes',
+    },
+    yourDetails: {
+      whoWillReceive: 'myself',
+    }
   },
   mutations: {
     setDeliveryDetails(state, details) {

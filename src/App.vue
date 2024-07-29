@@ -1,27 +1,8 @@
-<template>
+<!-- <template>
   <div id="app" class="container">
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-      <a class="navbar-brand" href="#">Checkout</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav">
-          <li class="nav-item">
-            <a class="nav-link" href="#" @click.prevent="currentComponent = 'ProductDetails'">Product Details</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#" @click.prevent="currentComponent = 'DeliveryDetails'">Delivery Details</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#" @click.prevent="currentComponent = 'YourDetails'">Your Details</a>
-          </li>
-        </ul>
-      </div>
-    </nav>
+    <HeaderComponent></HeaderComponent>
     <div class="mt-3">
-      <component :is="currentComponent" @next-step="nextStep" @previous-step="previousStep"/>
+      <component :is="currentComponent" @next-step="nextStep" @previous-step="previousStep" />
     </div>
   </div>
 </template>
@@ -31,6 +12,7 @@ import ProductDetails from './components/ProductDetails.vue';
 import DeliveryDetails from './components/DeliveryDetails.vue';
 import YourDetails from './components/YourDetails.vue';
 import OrderSuccess from "./components/OrderSuccess.vue"
+import HeaderComponent from './components/layout/HeaderComponent.vue';
 
 export default {
   name: 'App',
@@ -38,7 +20,8 @@ export default {
     ProductDetails,
     DeliveryDetails,
     YourDetails,
-    OrderSuccess
+    OrderSuccess,
+    HeaderComponent
   },
   data() {
     return {
@@ -49,7 +32,7 @@ export default {
   },
   methods: {
     nextStep() {
-      
+
       const currentIndex = this.steps.indexOf(this.currentComponent);
       if (currentIndex < this.steps.length - 1) {
         this.currentComponent = this.steps[currentIndex + 1];
@@ -71,4 +54,7 @@ export default {
 body {
   padding-top: 56px;
 }
-</style>
+</style> -->
+<template>
+  <router-view />
+</template>
