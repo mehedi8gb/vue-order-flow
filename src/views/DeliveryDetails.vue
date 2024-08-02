@@ -276,9 +276,7 @@ export default {
 };
 </script>
 
-<style>
-@import '~bootstrap/dist/css/bootstrap.min.css';
-
+<style> 
 /* Add your global styles here */
 body {
   padding-top: 20px !important;

@@ -59,20 +59,25 @@
   }
   
   .navbar .container {
-    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  
+  .navbar-toggler {
+    margin-left: auto;
   }
   
   .navbar-brand {
     font-size: 1.5rem;
     font-weight: bold;
     color: #0078d4;
-    position: absolute;
-    left: 0;
-    transform: translateX(18%);
+    /* Removed absolute positioning */
   }
   
   .navbar-nav {
     flex-direction: row;
+    margin-left: auto; /* Pushes the nav links to the right */
   }
   
   .nav-link {
@@ -108,7 +113,8 @@
   
   @media (max-width: 768px) {
     .navbar-nav {
-      margin-top: 10px;
+      flex-direction: column;
+      align-items: center; /* Center align nav items on small screens */
     }
   }
   </style>
