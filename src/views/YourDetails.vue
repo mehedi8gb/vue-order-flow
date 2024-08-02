@@ -156,5 +156,7 @@ export default {
 </script>
 
 <style scoped>
-/* Add your styles here */
+body {
+    padding-top: 20px !important;
+}
 </style>

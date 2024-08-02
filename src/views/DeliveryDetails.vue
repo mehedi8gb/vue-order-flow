@@ -281,6 +281,6 @@ export default {
 
 /* Add your global styles here */
 body {
-    padding-top: 56px;
+  padding-top: 20px !important;
 }
 </style>

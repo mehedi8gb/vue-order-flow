@@ -94,8 +94,9 @@ export default {
 
 <style scoped>
 body {
-    padding-top: 56px;
+  padding-top: 20px !important;
 }
+
 /* Optional scoped styles */
 /* Optional: Transition for the fade effect */
 .fade-enter-active,

@@ -197,7 +197,8 @@
                                 placeholder="Write here" style="outline: none"></textarea>
                         </div>
                         <div class="mt-4" style="margin-inline: 1rem">
-                            <router-link :to="{ name: 'DeliveryDetails' }"  type="submit" @on:click="saveDetails" class="btn btn-block btn-primary">
+                            <router-link :to="{ name: 'DeliveryDetails' }" type="submit" @on:click="saveDetails"
+                                class="btn btn-block btn-primary">
                                 Next
                             </router-link>
                         </div>
@@ -254,6 +255,6 @@ export default {
 
 <style>
 body {
-    padding-top: 56px;
+    padding-top: 20px !important;
 }
 </style>

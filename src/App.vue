@@ -58,3 +58,9 @@ body {
 <template>
   <router-view />
 </template>
+
+<style scoped>
+body {
+  padding-top: 20px !important;
+}
+</style>
