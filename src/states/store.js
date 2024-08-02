@@ -15,6 +15,9 @@ const store = createStore({
     setDeliveryDetails(state, details) {
       state.deliveryDetails = details;
     },
+    setDeliveryAddressResponse(state, response) {
+      state.deliveryDetails.deliveryAddressResponse = response;
+    },
     setProductDetails(state, details) {
       state.productDetails = details;
     },
@@ -25,6 +28,9 @@ const store = createStore({
   actions: {
     updateDeliveryDetails({ commit }, details) {
       commit('setDeliveryDetails', details);
+    },
+    updateDeliveryAddressResponse({ commit }, response) {
+      commit('setDeliveryAddressResponse', response);
     },
     updateProductDetails({ commit }, details) {
       commit('setProductDetails', details);
