@@ -163,7 +163,7 @@
                                 <button class="btn btn-warning" type="button" @click="lookUp">Look
                                     Up</button>
                             </div>
-                            <div v-if="data == 'error'">
+                            <div v-if="showAddressForm()">
                                 <div class="row mt-4">
                                     <div class="form-group mb-3 col-md-6">
                                         <label for="nameNumber" class="form-label">Name/Number and Street</label>
@@ -220,7 +220,7 @@ export default {
                 postcode: '',
                 nameNumber: '',
                 addressLine2: '',
-                townCity: ''
+                townCity: '',
             },
             data: null,
             apiUrl: 'https://services.3xsoftware.co.uk/Search/ByPostcode/json',
@@ -232,7 +232,7 @@ export default {
         ...mapGetters(['getDeliveryDetails'])
     },
     methods: {
-        ...mapActions(['updateDeliveryDetails']),
+        ...mapActions(['updateDeliveryDetails', 'updateDeliveryAddressResponse']),
         saveDetails() {
             this.updateDeliveryDetails(this.form); // Use the form data to update the store
         },
@@ -243,14 +243,26 @@ export default {
                     .then(response => {
                         this.data = response.data;
                         console.log(this.data);
+                        this.form.deliveryAddressResponse = 'error';
+                        this.updateDeliveryAddressResponse(this.form.deliveryAddressResponse);
 
                     })
                     .catch(error => {
                         console.error("There was an error fetching the data!", error);
-                        this.data = 'error';
                         toast.error("There was an error fetching the data!");
+                        this.data = 'error';
+                        this.form.deliveryAddressResponse = 'error';
+                        this.updateDeliveryAddressResponse(this.form.deliveryAddressResponse);
                     });
+            } else {
+                toast.error("Please enter a postcode!");
+                this.form.deliveryAddressResponse = 'incomplete';
+                this.updateDeliveryAddressResponse(this.form.deliveryAddressResponse);
             }
+        },
+        showAddressForm() {
+            return this.data == 'error' || 
+            this.form.deliveryAddressResponse == 'error' || this.form.deliveryAddressResponse == 'incomplete';
         }
     },
     mounted() {
