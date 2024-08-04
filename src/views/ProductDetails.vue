@@ -1,7 +1,7 @@
 <template>
     <div class="container">
 
-        <HeaderComponent />
+        <!-- <HeaderComponent /> -->
 
 
         <div class="d-flex">
@@ -211,15 +211,16 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
-import HeaderComponent from '@/components/layout/HeaderComponent.vue';
+// import HeaderComponent from '@/components/layout/HeaderComponent.vue';
 export default {
     name: 'ProductDetails',
     components: {
-        HeaderComponent
+        // HeaderComponent
     },
     data() {
         return {
             form: {
+                productName: '',
                 hasDesignFile: '',
                 slides: '',
                 orientation: '',

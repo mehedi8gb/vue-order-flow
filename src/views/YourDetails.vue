@@ -1,6 +1,6 @@
 <template>
     <div class="container">
-        <HeaderComponent></HeaderComponent>
+        <!-- <HeaderComponent></HeaderComponent> -->
         <div class="d-flex">
             <div class="position-relative" style="width: 200px">
                 <div class="position-absolute bg-secondary rounded text-white d-flex justify-content-center align-items-center"
@@ -115,12 +115,12 @@
 </template>
 
 <script>
-import HeaderComponent from '@/components/layout/HeaderComponent.vue';
+// import HeaderComponent from '@/components/layout/HeaderComponent.vue';
 import { mapActions, mapGetters } from 'vuex';
 export default {
     name: 'YourDetails',
     components: {
-        HeaderComponent
+        // HeaderComponent
     },
 
     data() {

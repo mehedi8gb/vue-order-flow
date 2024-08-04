@@ -1,15 +1,16 @@
 // store.js
-import { createStore } from 'vuex';
+import { createStore } from "vuex";
 
 const store = createStore({
   state: {
     deliveryDetails: {},
     productDetails: {
-      hasDesignFile: 'yes',
+      productDetails: "Flyers",
+      hasDesignFile: "yes",
     },
     yourDetails: {
-      whoWillReceive: 'myself',
-    }
+      whoWillReceive: "myself",
+    },
   },
   mutations: {
     setDeliveryDetails(state, details) {
@@ -23,27 +24,27 @@ const store = createStore({
     },
     setYourDetails(state, details) {
       state.yourDetails = details;
-    }
+    },
   },
   actions: {
     updateDeliveryDetails({ commit }, details) {
-      commit('setDeliveryDetails', details);
+      commit("setDeliveryDetails", details);
     },
     updateDeliveryAddressResponse({ commit }, response) {
-      commit('setDeliveryAddressResponse', response);
+      commit("setDeliveryAddressResponse", response);
     },
     updateProductDetails({ commit }, details) {
-      commit('setProductDetails', details);
+      commit("setProductDetails", details);
     },
     updateYourDetails({ commit }, details) {
-      commit('setYourDetails', details);
-    }
+      commit("setYourDetails", details);
+    },
   },
   getters: {
     getDeliveryDetails: (state) => state.deliveryDetails,
     getProductDetails: (state) => state.productDetails,
-    getYourDetails: (state) => state.yourDetails
-  }
+    getYourDetails: (state) => state.yourDetails,
+  },
 });
 
 export default store;

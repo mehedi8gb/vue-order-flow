@@ -2,7 +2,7 @@
   <div>
 
     <div class="container">
-      <HeaderComponent />
+      <!-- <HeaderComponent /> -->
       <CustomLoading :show="isLoading" :texts="loadingTexts" @finished="onLoadingFinished" />
 
       <transition name="fade" @after-leave="onTransitionEnd">
@@ -38,13 +38,13 @@
 import axios from 'axios';
 import { mapGetters } from 'vuex';
 import CustomLoading from '@/components/CustomLoading.vue';
-import HeaderComponent from '@/components/layout/HeaderComponent.vue';
+// import HeaderComponent from '@/components/layout/HeaderComponent.vue';
 
 export default {
   name: 'OrderSuccess',
   components: {
     CustomLoading,
-    HeaderComponent,
+    // HeaderComponent,
   },
   data() {
     return {
@@ -64,7 +64,13 @@ export default {
     async makeOrderRequest() {
       this.isLoading = true;
       try {
-        const response = await axios.post(`${process.env.VUE_APP_API_BASE_URL}/checkout/order`);
+        const payload = {
+          deliveryDetails: this.getDeliveryDetails,
+          productDetails: this.getProductDetails,
+          yourDetails: this.getYourDetails,
+        };
+
+        const response = await axios.post(`${process.env.VUE_APP_API_BASE_URL}/checkout/order`, payload);
         if (response.status === 200) {
           setTimeout(() => {
             this.orderSuccess = true;

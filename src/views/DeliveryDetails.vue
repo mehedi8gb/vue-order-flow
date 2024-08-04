@@ -1,7 +1,7 @@
 <template>
     <div class="container">
 
-        <HeaderComponent></HeaderComponent>
+        <!-- <HeaderComponent></HeaderComponent> -->
         <div class="d-flex pb-lg-4">
             <div class="position-relative" style="width: 200px">
                 <div class="position-absolute bg-secondary rounded text-white d-flex justify-content-center align-items-center"
@@ -206,11 +206,11 @@
 import { mapActions, mapGetters } from 'vuex';
 import axios from 'axios';
 import toast from '@/utils/toast';
-import HeaderComponent from '@/components/layout/HeaderComponent.vue';
+// import HeaderComponent from '@/components/layout/HeaderComponent.vue';
 export default {
     name: 'DeliveryDetails',
     components: {
-        HeaderComponent
+        // HeaderComponent
     },
     data() {
         return {
