@@ -15,7 +15,7 @@
           </div>
         </div>
       </transition>
-      <!-- <div v-if="orderSuccess">
+      <div v-if="orderSuccess">
         <h2>Order Success</h2>
         <div>
           <h3>Delivery Details</h3>
@@ -29,7 +29,7 @@
           <h3>Your Details</h3>
           <p>{{ getYourDetails }}</p>
         </div>
-      </div> -->
+      </div>
     </div>
   </div>
 </template>

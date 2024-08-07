@@ -5,7 +5,7 @@ const store = createStore({
   state: {
     deliveryDetails: {},
     productDetails: {
-      productDetails: "Flyers",
+      productName: "Flyers",
       hasDesignFile: "yes",
     },
     yourDetails: {
