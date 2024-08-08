@@ -6,11 +6,12 @@ const store = createStore({
     deliveryDetails: {},
     productDetails: {
       productName: "Flyers",
-      hasDesignFile: "yes",
+      hasDesignFile: "1",
     },
     yourDetails: {
       whoWillReceive: "myself",
     },
+    validationErrors: {},
   },
   mutations: {
     setDeliveryDetails(state, details) {
@@ -24,6 +25,13 @@ const store = createStore({
     },
     setYourDetails(state, details) {
       state.yourDetails = details;
+    },
+    // vaqliationErrors
+    setValidationErrors(state, errors) {
+      state.validationErrors = errors;
+    },
+    clearValidationErrors(state) {
+      state.validationErrors = {};
     },
   },
   actions: {
@@ -44,6 +52,7 @@ const store = createStore({
     getDeliveryDetails: (state) => state.deliveryDetails,
     getProductDetails: (state) => state.productDetails,
     getYourDetails: (state) => state.yourDetails,
+    getValidationErrors: (state) => state.validationErrors,
   },
 });
 

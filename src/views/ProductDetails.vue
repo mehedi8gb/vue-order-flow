@@ -147,12 +147,12 @@
                         <div class="form-group mt-4">
                             <label class="form-label">Do you have your design file/document/artwork ready?</label>
                             <div class="form-check">
-                                <input class="form-check-input" type="radio" id="yes" value="yes"
+                                <input class="form-check-input" type="radio" id="yes" value="1"
                                     v-model="form.hasDesignFile" />
                                 <label class="form-check-label" for="yes">Yes</label>
                             </div>
                             <div class="form-check">
-                                <input class="form-check-input" type="radio" id="no" value="no"
+                                <input class="form-check-input" type="radio" id="no" value="0"
                                     v-model="form.hasDesignFile" />
                                 <label class="form-check-label" for="no">No</label>
                             </div>

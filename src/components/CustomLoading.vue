@@ -72,7 +72,8 @@ export default {
 
 .loading-content {
   text-align: center;
-  animation: fadeInUp 0.5s ease-in-out;
+  animation: fadeInUp 0.5s forwards;
+  margin-top: 4rem !important;
 }
 
 .progress-bar {
