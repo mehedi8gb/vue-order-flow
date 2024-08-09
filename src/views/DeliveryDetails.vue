@@ -288,7 +288,7 @@ export default {
         };
     },
     computed: {
-        ...mapGetters(['getDeliveryDetails', 'getErrors']),
+        ...mapGetters(['getDeliveryDetails', 'getErrors', 'getAddressLookup']),
     },
     methods: {
         ...mapActions(['updateDeliveryDetails', 'updateDeliveryAddressResponse']),
@@ -330,7 +330,7 @@ export default {
                 'deliveryDetails.postcode'
             ].some(field => this.errors[field] && this.errors[field].length > 0);
 
-            return isAddressResponseError || hasErrors;
+            return isAddressResponseError || hasErrors || this.getAddressLookup;
         }
 
     },

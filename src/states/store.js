@@ -5,6 +5,7 @@ const store = createStore({
   state: {
     deliveryDetails: {
       deliveryAddressResponse: null,
+      showAddressLookup: false,
     },
     productDetails: {
       productName: "Flyers",
@@ -21,6 +22,9 @@ const store = createStore({
     },
     setDeliveryAddressResponse(state, response) {
       state.deliveryDetails.deliveryAddressResponse = response;
+    },
+    setAddressLookup(state, cond) {
+      state.deliveryDetails.showAddressLookup = cond;
     },
     setProductDetails(state, details) {
       state.productDetails = details;
@@ -43,6 +47,9 @@ const store = createStore({
     updateDeliveryAddressResponse({ commit }, response) {
       commit("setDeliveryAddressResponse", response);
     },
+    updateAddressLookup({ commit }, cond) {
+      commit("setAddressLookup", cond);
+    },
     updateProductDetails({ commit }, details) {
       commit("setProductDetails", details);
     },
@@ -61,6 +68,7 @@ const store = createStore({
     getDeliveryDetails: (state) => state.deliveryDetails,
     getProductDetails: (state) => state.productDetails,
     getYourDetails: (state) => state.yourDetails,
+    getAddressLookup: (state) => state.deliveryDetails.showAddressLookup,
     getErrors: (state) => state.errors,
   },
 });
