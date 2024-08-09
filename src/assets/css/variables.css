@@ -1,0 +1,34 @@
+:root {
+    --background-color: #f9f9f9;
+    --border-radius: 12px;
+    --box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    --padding: 2rem;
+    --font-size: 1rem;
+    --focus-border-color: #007bff;
+    --focus-box-shadow: rgba(0, 123, 255, 0.3);
+    --error-border-color: #e74c3c;
+    --error-box-shadow: rgba(231, 76, 60, 0.3);
+    --error-box-shadow-focus: rgba(231, 76, 60, 0.5);
+    --text-danger-color: #e74c3c;
+    --text-color: #294b0b;
+    --border-color: #ccc;
+    --btn-primary-bg: #007bff;
+    --btn-primary-border: #007bff;
+    --btn-primary-bg-hover: #0069d9;
+    --btn-primary-border-hover: #0062cc;
+    --btn-success-bg: #28a745;
+    --btn-success-border: #28a745;
+    --btn-success-bg-hover: #218838;
+    --btn-success-border-hover: #1e7e34;
+    --btn-outline-secondary-border: #6c757d;
+    --btn-outline-secondary-color: #6c757d;
+    --btn-outline-secondary-bg-hover: #6c757d;
+    --btn-outline-secondary-color-hover: #fff;
+    --tooltip-bg: #333;
+    --tooltip-color: #fff;
+    --tooltip-padding: 0.5rem;
+    --tooltip-font-size: 0.875rem;
+    --tooltip-box-shadow: rgba(0, 0, 0, 0.2);
+}
+
+/* Add more variable definitions as needed */
