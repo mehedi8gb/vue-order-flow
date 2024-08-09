@@ -5,11 +5,26 @@
 
       <transition name="fade" @after-leave="onTransitionEnd">
         <div class="card-container" v-if="!isLoading && orderSuccess" key="order-success">
-          <div class="card-body text-center">
+          <div class="text-center">
             <h1 class="card-title">Order Successful!</h1>
             <p class="card-text">Thank you for your order.</p>
             <p class="card-text">Your order will be processed shortly.</p>
+            <!-- Display the Order ID -->
+            <p class="card-text mt-3">
+              <strong>Order ID:</strong> {{ response.data.order.order_id }}
+            </p>
             <p v-if="invoiceUrl"><a class="btn btn-secondary" :href="invoiceUrl">View Invoice</a></p>
+            <router-link to="/" class="btn btn-primary">Back to Home</router-link>
+          </div>
+        </div>
+      </transition>
+
+      <transition name="fade" @after-leave="onTransitionEnd">
+        <div v-if="orderFailed" class="card-container" key="order-failed">
+          <div class="text-center">
+            <h1 class="card-title">Order Failed</h1>
+            <p class="card-text">Something went wrong with your order.</p>
+            <p class="card-text">Please try again later or contact support if the issue persists.</p>
             <router-link to="/" class="btn btn-primary">Back to Home</router-link>
           </div>
         </div>
@@ -20,7 +35,7 @@
 
 <script>
 import axios from 'axios';
-import { mapGetters } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 import CustomLoading from '@/components/CustomLoading.vue';
 
 export default {
@@ -30,10 +45,13 @@ export default {
   },
   data() {
     return {
+      response: null,
       isLoading: false,
       orderSuccess: false,
+      orderFailed: false,
       invoiceUrl: null,
       loadingTexts: [
+        'Checking submitted data...',
         'Processing your order...',
         'Please wait a moment.',
         'Almost done...',
@@ -41,11 +59,13 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['getDeliveryDetails', 'getProductDetails', 'getYourDetails']),
+    ...mapGetters(['getDeliveryDetails', 'getProductDetails', 'getYourDetails', 'getErrors']),
   },
   methods: {
+    ...mapActions(['setErrors', 'clearErrors']),
     async makeOrderRequest() {
       this.isLoading = true;
+      this.clearErrors();
       try {
         const payload = {
           deliveryDetails: this.getDeliveryDetails,
@@ -53,16 +73,14 @@ export default {
           yourDetails: this.getYourDetails,
         };
 
-        const response = await axios.post(`${process.env.VUE_APP_API_BASE_URL}/checkout/order`, payload);
-        if (response.status === 201) {
-          this.invoiceUrl = response.data.invoice_url; // Assume these URLs are returned
-
-          setTimeout(() => {
-            this.orderSuccess = true;
-            this.isLoading = false;
-          }, 2500);
+        this.response = await axios.post(`${process.env.VUE_APP_API_BASE_URL}/checkout/order`, payload);
+        if (this.response.status === 201) {
+          this.invoiceUrl = this.response.data.invoice_url; // Assume these URLs are returned
+          this.orderSuccess = true;
+          this.isLoading = false;
         }
       } catch (error) {
+        this.orderFailed = true;
         if (error.response && error.response.status === 422) {
           this.handleValidationError(error.response.data.errors);
         } else {
@@ -72,23 +90,28 @@ export default {
       }
     },
     handleValidationError(errors) {
+      // Pass errors to the relevant page/component
+      this.clearErrors();
+      this.setErrors(errors);
       // Dynamically detect which page the error belongs to and redirect
       const errorKeys = Object.keys(errors);
       if (errorKeys.length) {
         const firstErrorKey = errorKeys[0];
-        if (firstErrorKey.startsWith('deliveryDetails')) {
-          this.$router.push({ name: 'DeliveryDetails' });
-        } else if (firstErrorKey.startsWith('productDetails')) {
-          this.$router.push({ name: 'ProductDetails' });
-        } else if (firstErrorKey.startsWith('yourDetails')) {
+        console.log('First error key:', firstErrorKey);
+        if (firstErrorKey.startsWith('yourDetails')) {
           this.$router.push({ name: 'YourDetails' });
         }
-        // Pass errors to the relevant page/component
-        this.$store.commit('setValidationErrors', errors);
+        else if (firstErrorKey.startsWith('deliveryDetails')) {
+          this.$router.push({ name: 'DeliveryDetails' });
+        }
+        else if (firstErrorKey.startsWith('productDetails')) {
+          this.$router.push({ name: 'ProductDetails' });
+        }
       }
     },
   },
   mounted() {
+    this.clearErrors();
     this.makeOrderRequest();
   },
 };

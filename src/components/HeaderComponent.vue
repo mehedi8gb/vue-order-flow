@@ -52,7 +52,7 @@
   }
   </script>
   
-  <style scoped>
+  <style>
   .navbar {
     background-color: #f8f9fa; /* Light background color */
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */

@@ -3,7 +3,9 @@ import { createStore } from "vuex";
 
 const store = createStore({
   state: {
-    deliveryDetails: {},
+    deliveryDetails: {
+      deliveryAddressResponse: null,
+    },
     productDetails: {
       productName: "Flyers",
       hasDesignFile: "1",
@@ -11,7 +13,7 @@ const store = createStore({
     yourDetails: {
       whoWillReceive: "myself",
     },
-    validationErrors: {},
+    errors: {},
   },
   mutations: {
     setDeliveryDetails(state, details) {
@@ -26,12 +28,12 @@ const store = createStore({
     setYourDetails(state, details) {
       state.yourDetails = details;
     },
-    // vaqliationErrors
-    setValidationErrors(state, errors) {
-      state.validationErrors = errors;
+    // error mutations
+    SET_ERRORS(state, errors) {
+      state.errors = errors;
     },
-    clearValidationErrors(state) {
-      state.validationErrors = {};
+    CLEAR_ERRORS(state) {
+      state.errors = {};
     },
   },
   actions: {
@@ -47,12 +49,19 @@ const store = createStore({
     updateYourDetails({ commit }, details) {
       commit("setYourDetails", details);
     },
+    // error actions 
+    setErrors({ commit }, errors) {
+      commit('SET_ERRORS', errors);
+    },
+    clearErrors({ commit }) {
+      commit('CLEAR_ERRORS');
+    },
   },
   getters: {
     getDeliveryDetails: (state) => state.deliveryDetails,
     getProductDetails: (state) => state.productDetails,
     getYourDetails: (state) => state.yourDetails,
-    getValidationErrors: (state) => state.validationErrors,
+    getErrors: (state) => state.errors,
   },
 });
 

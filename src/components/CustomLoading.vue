@@ -109,19 +109,23 @@ export default {
 
 .loading-text-item {
   opacity: 0;
-  animation: fadeIn 1.5s forwards;
+  animation: fadeIn 0.2s forwards;
 }
 
 .loading-text-item:nth-child(1) {
-  animation-delay: 0.5s;
+  animation-delay: 0.25s;
 }
 
 .loading-text-item:nth-child(2) {
-  animation-delay: 1.5s;
+  animation-delay: 1s;
 }
 
 .loading-text-item:nth-child(3) {
-  animation-delay: 2.5s;
+  animation-delay: 2s;
+}
+
+.loading-text-item:nth-child(4) {
+  animation-delay: 3s;
 }
 
 @keyframes fadeIn {

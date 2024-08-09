@@ -28,26 +28,44 @@
                         <div class="row g-3 px-3">
                             <div class="form-group mt-4">
                                 <label for="inputName">Your Name*</label>
-                                <input type="text" class="form-control" id="inputName" v-model="form.name" required>
+                                <input type="text" class="form-control"
+                                    :class="{ 'is-invalid': errors['yourDetails.name'] }" id="inputName"
+                                    v-model="form.name" required>
+                                <div v-if="errors['yourDetails.name']" class="text-danger">
+                                    {{ errors['yourDetails.name'][0] }}
+                                </div>
                             </div>
+
                             <div class="row mt-2">
                                 <div class="form-group col-md-6">
                                     <label for="inputEmail">Your Email*</label>
-                                    <input type="email" class="form-control" id="inputEmail" v-model="form.email"
-                                        required>
+                                    <input type="email" class="form-control"
+                                        :class="{ 'is-invalid': errors['yourDetails.email'] }" id="inputEmail"
+                                        v-model="form.email" required>
+                                    <div v-if="errors['yourDetails.email']" class="text-danger">
+                                        {{ errors['yourDetails.email'][0] }}
+                                    </div>
                                 </div>
 
                                 <div class="form-group col-md-6">
                                     <label for="confirmEmail">Confirm Email*</label>
-                                    <input type="email" class="form-control" id="confirmEmail" name="confirmEmail"
+                                    <input type="email" class="form-control"
+                                        :class="{ 'is-invalid': errors['yourDetails.confirmEmail'] }" id="confirmEmail"
                                         v-model="form.confirmEmail" required>
+                                    <div v-if="errors['yourDetails.confirmEmail']" class="text-danger">
+                                        {{ errors['yourDetails.confirmEmail'][0] }}
+                                    </div>
                                 </div>
                             </div>
 
                             <div class="form-group">
                                 <label for="inputPhone">Your Phone Number*</label>
-                                <input type="tel" class="form-control" id="inputPhone" name="phone" v-model="form.phone"
-                                    required>
+                                <input type="tel" class="form-control"
+                                    :class="{ 'is-invalid': errors['yourDetails.phone'] }" id="inputPhone"
+                                    v-model="form.phone" required>
+                                <div v-if="errors['yourDetails.phone']" class="text-danger">
+                                    {{ errors['yourDetails.phone'][0] }}
+                                </div>
                             </div>
 
                             <div class="form-group">
@@ -62,19 +80,30 @@
                                         v-model="form.whoWillReceive" value="someone_else">
                                     <label class="form-check-label" for="someoneElse">Someone else</label>
                                 </div>
+                                <div v-if="errors['yourDetails.whoWillReceive']" class="text-danger">
+                                    {{ errors['yourDetails.whoWillReceive'][0] }}
+                                </div>
                             </div>
 
                             <div v-if="form.whoWillReceive == 'someone_else'" class="form-group">
                                 <div class="form-group">
-                                    <label for="inputName">Recipient's name? *</label>
-                                    <input type="text" class="form-control" id="inputName" name="inputName"
-                                        v-model="form.recipientsName">
+                                    <label for="recipientName">Recipient's name? *</label>
+                                    <input type="text" class="form-control"
+                                        :class="{ 'is-invalid': errors['yourDetails.recipientsName'] }"
+                                        id="recipientName" v-model="form.recipientsName">
+                                    <div v-if="errors['yourDetails.recipientsName']" class="text-danger">
+                                        {{ errors['yourDetails.recipientsName'][0] }}
+                                    </div>
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="inputPhone">Recipient's phone number? *</label>
-                                    <input type="tel" class="form-control" id="inputPhone" name="phone"
-                                        v-model="form.recipientsPhone">
+                                    <label for="recipientPhone">Recipient's phone number? *</label>
+                                    <input type="tel" class="form-control"
+                                        :class="{ 'is-invalid': errors['yourDetails.recipientsPhone'] }"
+                                        id="recipientPhone" v-model="form.recipientsPhone">
+                                    <div v-if="errors['yourDetails.recipientsPhone']" class="text-danger">
+                                        {{ errors['yourDetails.recipientsPhone'][0] }}
+                                    </div>
                                 </div>
                             </div>
 
@@ -82,11 +111,14 @@
                                 <label for="additionalInstructions">Any further instructions or details?
                                     (optional)</label>
                                 <textarea v-model="form.additionalInstructions" class="form-control"
-                                    id="additionalInstructions" rows="3" name="instructions"></textarea>
+                                    :class="{ 'is-invalid': errors['yourDetails.additionalInstructions'] }"
+                                    id="additionalInstructions" rows="3"></textarea>
+                                <div v-if="errors['yourDetails.additionalInstructions']" class="text-danger">
+                                    {{ errors['yourDetails.additionalInstructions'][0] }}
+                                </div>
                             </div>
-
-
                         </div>
+
                         <div class="my-4 d-flex justify-content-between align-items-center">
                             <router-link :to="{ name: 'DeliveryDetails' }" class="btn btn-outline-secondary btn-md">
                                 Previous
@@ -103,10 +135,6 @@
                                 Save and Continue Later
                             </button>
                         </div>
-
-
-
-
                     </div>
                 </form>
             </div>
@@ -115,12 +143,10 @@
 </template>
 
 <script>
-// import HeaderComponent from '@/components/layout/HeaderComponent.vue';
 import { mapActions, mapGetters } from 'vuex';
 export default {
     name: 'YourDetails',
     components: {
-        // HeaderComponent
     },
 
     data() {
@@ -132,11 +158,12 @@ export default {
                 phone: '',
                 whoWillReceive: '',
                 additionalInstructions: ''
-            }
+            },
+            errors: {}
         };
     },
     computed: {
-        ...mapGetters(['getYourDetails'])
+        ...mapGetters(['getYourDetails', 'getErrors']),
     },
     methods: {
         ...mapActions(['updateYourDetails']),
@@ -145,6 +172,7 @@ export default {
         }
     },
     mounted() {
+        this.errors = this.getErrors;
         this.$nextTick(() => {
             const details = this.getYourDetails;
             if (details) {

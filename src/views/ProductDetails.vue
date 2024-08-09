@@ -42,6 +42,8 @@
                                             value="doubleSided" id="doubleSided" />
                                         <label class="form-check-label" for="doubleSided">Double sided</label>
                                     </div>
+                                    <div v-if="errors['productDetails.slides']" class="text-danger">{{
+                                        errors['productDetails.slides'][0] }}</div>
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -57,6 +59,8 @@
                                             name="orientation" id="landscape" value="landscape" />
                                         <label class="form-check-label" for="landscape">Landscape</label>
                                     </div>
+                                    <div v-if="errors['productDetails.orientation']" class="text-danger">{{
+                                        errors['productDetails.orientation'][0] }}</div>
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -94,12 +98,13 @@
                                             name="paperThickness" value="customThickness" id="customThickness" />
                                         <label class="form-check-label" for="customThickness">Custom</label>
                                     </div>
+                                    <div v-if="errors['productDetails.paperThickness']" class="text-danger">{{
+                                        errors['productDetails.paperThickness'][0] }}</div>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="silkMatt">
-                                        Paper Type
+                                    <label for="silkMatt">Paper Type
                                         <i class="fa fa-info-circle" aria-hidden="true" style="color: black"></i>
                                     </label>
                                     <div class="form-check">
@@ -112,12 +117,13 @@
                                             name="paperType" value="gloss" id="gloss" />
                                         <label class="form-check-label" for="gloss">Gloss</label>
                                     </div>
+                                    <div v-if="errors['productDetails.paperType']" class="text-danger">{{
+                                        errors['productDetails.paperType'][0] }}</div>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="a6Size">
-                                        Finished Size
+                                    <label for="a6Size">Finished Size
                                         <i class="fa fa-info-circle" aria-hidden="true" style="color: black"></i>
                                     </label>
                                     <div class="form-check">
@@ -140,6 +146,8 @@
                                             name="finishedSize" value="customSize" id="customSize" />
                                         <label class="form-check-label" for="customSize">Custom</label>
                                     </div>
+                                    <div v-if="errors['productDetails.finishedSize']" class="text-danger">{{
+                                        errors['productDetails.finishedSize'][0] }}</div>
                                 </div>
                             </div>
                         </div>
@@ -156,30 +164,23 @@
                                     v-model="form.hasDesignFile" />
                                 <label class="form-check-label" for="no">No</label>
                             </div>
+                            <div v-if="errors['productDetails.hasDesignFile']" class="text-danger">{{
+                                errors['productDetails.hasDesignFile'][0] }}</div>
                         </div>
 
                         <!-- Conditionally rendered file upload field -->
-                        <div v-if="form.hasDesignFile === 'yes'" class="form-group mt-4" style="margin-inline: 1rem">
+                        <div v-if="form.hasDesignFile === '1'" class="form-group mt-4" style="margin-inline: 1rem">
                             <label for="fileUpload" style="margin-bottom: 5px">Upload Design File (multiple files
-                                allowed)
-                                [optional]</label>
+                                allowed) [optional]</label>
                             <div class="p-3 text-center" style="position: relative; border: 1px dashed grey">
-                                <input type="file" class="form-control" id="fileUpload" multiple style="
-              opacity: 0;
-              position: absolute;
-              width: 100%;
-              height: 100%;
-              z-index: 100;
-            " />
+                                <input type="file" class="form-control" id="fileUpload" multiple
+                                    style="opacity: 0; position: absolute; width: 100%; height: 100%; z-index: 100;" />
                                 <label for="fileUpload" class="d-block">
-                                    Drop your file here or
-                                    <span class="btn btn-primary btn-sm">upload file</span>
+                                    Drop your file here or <span class="btn btn-primary btn-sm">upload file</span>
                                 </label>
                             </div>
                             <small class="form-text text-muted">Accepted file types: pdf, doc, docx, xls, xlsx, eps, ai,
-                                ps,
-                                zip, jpg, jpeg, png, gif, Max. file size: 256 MB, Max. files:
-                                100</small>
+                                ps, zip, jpg, jpeg, png, gif, Max. file size: 256 MB, Max. files: 100</small>
                         </div>
 
                         <div v-else class="form-group mt-4" style="margin-inline: 1rem">
@@ -189,21 +190,26 @@
                                 placeholder="Write here">
                             <small class="text-muted">Please provide the most accurate estimate possible to help us
                                 determine the appropriate quote.</small>
+                            <div v-if="errors['productDetails.whenArtworkSend']" class="text-danger">{{
+                                errors['productDetails.whenArtworkSend'][0] }}</div>
                         </div>
 
                         <div class="form-group mt-4" style="margin-inline: 1rem">
                             <label for="comment" style="margin-bottom: 5px">Comment (optional)</label>
                             <textarea v-model="form.comment" class="form-control" id="comment" rows="3"
                                 placeholder="Write here" style="outline: none"></textarea>
+                            <div v-if="errors['productDetails.comment']" class="text-danger">{{
+                                errors['productDetails.comment'][0] }}</div>
                         </div>
                         <div class="mt-4" style="margin-inline: 1rem">
-                            <router-link :to="{ name: 'DeliveryDetails' }" type="submit" @on:click="saveDetails"
+                            <router-link :to="{ name: 'DeliveryDetails' }" type="submit" @click.prevent="saveDetails"
                                 class="btn btn-block btn-primary">
                                 Next
                             </router-link>
                         </div>
                     </div>
                 </form>
+
             </div>
         </div>
     </div>
@@ -230,10 +236,11 @@ export default {
                 whenArtworkSend: '',
                 comment: '',
             },
+            errors: {},
         };
     },
     computed: {
-        ...mapGetters(['getProductDetails'])
+        ...mapGetters(['getProductDetails', 'getErrors']),
     },
     methods: {
         ...mapActions(['updateProductDetails']),
@@ -244,6 +251,7 @@ export default {
     },
     mounted() {
         this.form.hasDesignFile = this.hasDesignFile;
+        this.errors = this.getErrors;
         this.$nextTick(() => {
             const details = this.getProductDetails;
             if (details) {

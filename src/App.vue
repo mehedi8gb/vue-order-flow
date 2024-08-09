@@ -42,7 +42,11 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
+@import './assets/css/variables.css';
+@import './assets/css/global-form.css';
+@import './assets/css/error.css';
+
 /* Transition styles */
 .fade-slide-enter-active, .fade-slide-leave-active {
   transition: transform 0.5s ease-out, opacity 0.5s ease-out;
@@ -56,4 +60,5 @@ export default {
 body {
   padding-top: 20px !important;
 }
+
 </style>

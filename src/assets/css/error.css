@@ -1,0 +1,57 @@
+/* Error Message Container */
+.error-message {
+    font-size: 0.875rem;
+    color: #e74c3c; /* Red color for error text */
+    margin-top: 0.5rem;
+    padding: 0.75rem;
+    border: 1px solid #e74c3c; /* Border color matches the error text */
+    border-radius: 6px;
+    background: rgba(231, 76, 60, 0.1); /* Light red background for error */
+    display: flex;
+    align-items: center;
+    position: relative;
+    transition: all 0.3s ease-in-out;
+}
+
+/* Error Icon */
+.error-message::before {
+    content: "\u26A0"; /* Warning icon */
+    font-size: 1.25rem; /* Icon size */
+    margin-right: 0.75rem;
+    color: #e74c3c; /* Icon color */
+}
+
+/* Error Hover Effect */
+.error-message:hover {
+    background: rgba(231, 76, 60, 0.2); /* Slightly darker background on hover */
+    border-color: #c0392b; /* Darker border color on hover */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Subtle shadow on hover */
+}
+
+/* Error Message with Animation */
+.error-message {
+    animation: bounceIn 0.5s ease-out; /* Bounce-in effect on load */
+}
+
+/* Keyframes for Animation */
+@keyframes bounceIn {
+    0% {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+    60% {
+        transform: scale(1.05);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .error-message {
+        font-size: 0.8rem;
+        padding: 0.5rem;
+    }
+}
