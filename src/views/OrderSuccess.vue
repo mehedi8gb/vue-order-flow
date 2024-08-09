@@ -62,10 +62,11 @@ export default {
     ...mapGetters(['getDeliveryDetails', 'getProductDetails', 'getYourDetails', 'getErrors']),
   },
   methods: {
-    ...mapActions(['setErrors', 'clearErrors']),
+    ...mapActions(['setErrors', 'clearErrors', 'updateAddressLookup']),
     async makeOrderRequest() {
       this.isLoading = true;
       this.clearErrors();
+      this.updateAddressLookup(true);
       try {
         const payload = {
           deliveryDetails: this.getDeliveryDetails,
