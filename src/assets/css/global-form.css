@@ -1,0 +1,129 @@
+/* Form Container */
+.card-body {
+    background: var(--background-color);
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    padding: var(--padding);
+    position: relative;
+}
+
+/* Form Group */
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    font-weight: bold;
+    color: var(--text-color);
+}
+
+.form-control {
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    padding: 0.75rem;
+    font-size: var(--font-size);
+    transition: all 0.3s ease;
+}
+
+.form-control:focus {
+    border-color: var(--focus-border-color);
+    box-shadow: 0 0 5px var(--focus-box-shadow);
+}
+
+/* Invalid Input */
+.is-invalid {
+    border-color: var(--error-border-color);
+    box-shadow: 0 0 5px var(--error-box-shadow);
+}
+
+.is-invalid:focus {
+    border-color: var(--error-border-color);
+    box-shadow: 0 0 8px var(--error-box-shadow-focus);
+}
+
+/* Error Messages */
+.text-danger {
+    font-size: 0.875rem;
+    color: var(--text-danger-color);
+    margin-top: 0.25rem;
+}
+
+/* Radio Buttons */
+.form-check-input {
+    margin-right: 0.5rem;
+}
+
+.form-check-label {
+    font-weight: normal;
+    color: #555;
+}
+
+/* Textarea */
+textarea.form-control {
+    resize: vertical;
+    min-height: 100px;
+}
+
+/* Buttons */
+.btn {
+    border-radius: 8px;
+    padding: 0.75rem 1.5rem;
+    font-size: var(--font-size);
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-outline-secondary {
+    border-color: var(--btn-outline-secondary-border);
+    color: var(--btn-outline-secondary-color);
+}
+
+.btn-outline-secondary:hover {
+    background-color: var(--btn-outline-secondary-bg-hover);
+    color: var(--btn-outline-secondary-color-hover);
+}
+
+.btn-success {
+    background-color: var(--btn-success-bg);
+    border-color: var(--btn-success-border);
+}
+
+.btn-success:hover {
+    background-color: var(--btn-success-bg-hover);
+    border-color: var(--btn-success-border-hover);
+}
+
+.btn-primary {
+    background-color: var(--btn-primary-bg);
+    border-color: var(--btn-primary-border);
+}
+
+.btn-primary:hover {
+    background-color: var(--btn-primary-bg-hover);
+    border-color: var(--btn-primary-border-hover);
+}
+
+/* Tooltip */
+.tooltip {
+    background-color: var(--tooltip-bg);
+    color: var(--tooltip-color);
+    padding: var(--tooltip-padding);
+    border-radius: 4px;
+    font-size: var(--tooltip-font-size);
+    box-shadow: 0 4px 10px var(--tooltip-box-shadow);
+}
+
+/* Responsiveness */
+@media (max-width: 768px) {
+    .card-body {
+        padding: 1.5rem;
+    }
+    
+    .form-control {
+        font-size: 0.9rem;
+    }
+
+    .btn {
+        font-size: 0.9rem;
+    }
+}
