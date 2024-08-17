@@ -349,7 +349,7 @@ export default {
 
                 if (pondFiles.length > 0) {
                     formData.append('order_id', this.orderId);
-                    formData.append('file_type', 'artwork');
+                    formData.append('file_type', 'item_file');
                     formData.append('user_id', '1');
 
                     this.fileResponse = await axios.post(
