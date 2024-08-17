@@ -26,7 +26,8 @@
                 </div>
 
                 <form @submit.prevent="saveDetails">
-                    <loading v-model:active="isLoading" :can-cancel="false" :is-full-page="false" :loader="'bars'" />
+                    <loading v-model:active="isLoadingValidation" :can-cancel="false" :is-full-page="false"
+                        :loader="'bars'" />
 
                     <div class="card-body m-3 pb-5">
                         <!-- <div class="row g-3">
@@ -271,6 +272,7 @@ export default {
                 addressLine2: '',
                 townCity: '',
             },
+            isLoadingValidation: false,
             data: null,
             apiUrl: 'https://services.3xsoftware.co.uk/Search/ByPostcode/json',
             username: 'OliuChowdhury788333',
@@ -299,6 +301,7 @@ export default {
     methods: {
         ...mapActions(['updateDeliveryDetails', 'updateDeliveryAddressResponse', 'clearErrors', 'setErrors']),
         saveDetails() {
+            this.isLoadingValidation = true;
             this.updateDeliveryDetails(this.form);
             this.validateData();
         },

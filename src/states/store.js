@@ -6,30 +6,35 @@ const store = createStore({
     deliveryDetails: {
       deliveryAddressResponse: null,
       showAddressLookup: false,
+      deliveryDeadline: "",
+      postcode: "",
+      nameNumber: "",
+      addressLine2: "",
+      townCity: "",
     },
     productDetails: {
-      orderId: '',
+      orderId: "",
       productName: "Flyers",
       hasDesignFile: "1",
-      whenArtworkSend: '',
-      comment: '',
-      fileUpload: '',
+      whenArtworkSend: "",
+      comment: "",
+      fileUpload: "",
       files: [],
       design: {
-          slides: 'singleSided',
-          orientation: 'portrait',
-          paperThickness: 'gsm130',
-          paperType: 'silkMatt',
-          finishedSize: 'a6Size',
+        slides: "singleSided",
+        orientation: "portrait",
+        paperThickness: "gsm130",
+        paperType: "silkMatt",
+        finishedSize: "a6Size",
       },
     },
     yourDetails: {
       whoWillReceive: "myself",
     },
     errors: {
-      productDetails:{
-        fileUpload: '',
-      }
+      productDetails: {
+        fileUpload: "",
+      },
     },
   },
   mutations: {
@@ -69,15 +74,17 @@ const store = createStore({
     async fetchAndGenerateOrderId({ commit }) {
       try {
         // Fetch latest order_id from Laravel API
-        const response = await fetch(`${process.env.VUE_APP_BACKOFFICE_API_BASE_URL}/order/latest-order-id`);
+        const response = await fetch(
+          `${process.env.VUE_APP_BACKOFFICE_API_BASE_URL}/order/latest-order-id`
+        );
         const data = await response.json();
         const latestOrderId = parseInt(data.order_id, 10) + 1;
-    
+
         // Commit new order_id to Vuex state
-        console.log('Latest order_id:', latestOrderId);
-        commit('setOrderId', latestOrderId);
+        console.log("Latest order_id:", latestOrderId);
+        commit("setOrderId", latestOrderId);
       } catch (error) {
-        console.error('Error fetching latest order_id:', error);
+        console.error("Error fetching latest order_id:", error);
       }
     },
     updateDeliveryDetails({ commit }, details) {
@@ -96,17 +103,17 @@ const store = createStore({
       commit("setYourDetails", details);
     },
     hasFileAttached({ commit }, cond) {
-        commit("setFileAttached", cond);
+      commit("setFileAttached", cond);
     },
-    // error actions 
-     setFileUploadError({ commit }, errorMessage) {
-      commit('SET_FILE_UPLOAD_ERROR', errorMessage);
+    // error actions
+    setFileUploadError({ commit }, errorMessage) {
+      commit("SET_FILE_UPLOAD_ERROR", errorMessage);
     },
     setErrors({ commit }, errors) {
-      commit('SET_ERRORS', errors);
+      commit("SET_ERRORS", errors);
     },
     clearErrors({ commit }) {
-      commit('CLEAR_ERRORS');
+      commit("CLEAR_ERRORS");
     },
   },
   getters: {
@@ -116,7 +123,7 @@ const store = createStore({
     getAddressLookup: (state) => state.deliveryDetails.showAddressLookup,
     getErrors: (state) => state.errors,
     getOrderId: (state) => state.productDetails.orderId,
-  }
+  },
 });
 
 export default store;

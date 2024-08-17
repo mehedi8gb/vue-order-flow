@@ -8,7 +8,7 @@
             <div class="position-relative" style="width: 200px">
                 <div class="position-absolute bg-secondary rounded text-white d-flex justify-content-center align-items-center"
                     style="width: 150px; height: 100px; top: 52px; left: 34px">
-                    <span class="bg-white text-dark rounded text-center px-2 py-1">Flyers</span>
+                    <span class="bg-white text-dark rounded text-center px-2 py-1">{{ productDetails.productName }}</span>
                 </div>
             </div>
             <div class="col-md-8 border rounded mt-5" style="border-color: rgb(185, 185, 185)">
