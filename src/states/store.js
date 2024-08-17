@@ -26,9 +26,16 @@ const store = createStore({
     yourDetails: {
       whoWillReceive: "myself",
     },
-    errors: {},
+    errors: {
+      productDetails:{
+        fileUpload: '',
+      }
+    },
   },
   mutations: {
+    setFileAttached(state, cond) {
+      state.productDetails.fileUpload = cond;
+    },
     setOrderId(state, orderId) {
       state.productDetails.orderId = orderId;
     },
@@ -48,6 +55,9 @@ const store = createStore({
       state.yourDetails = details;
     },
     // error mutations
+    SET_FILE_UPLOAD_ERROR(state, message) {
+      state.errors['productDetails']['fileUpload'] = message;
+    },
     SET_ERRORS(state, errors) {
       state.errors = errors;
     },
@@ -85,7 +95,13 @@ const store = createStore({
     updateYourDetails({ commit }, details) {
       commit("setYourDetails", details);
     },
+    hasFileAttached({ commit }, cond) {
+        commit("setFileAttached", cond);
+    },
     // error actions 
+     setFileUploadError({ commit }, errorMessage) {
+      commit('SET_FILE_UPLOAD_ERROR', errorMessage);
+    },
     setErrors({ commit }, errors) {
       commit('SET_ERRORS', errors);
     },

@@ -190,15 +190,20 @@
                                 Upload Design File (multiple files allowed) [optional]
                             </label>
                             <file-pond v-model="productDetails.fileUpload" ref="pond" name="fileUpload"
-                                allow-multiple="true" max-file-size="256MB" max-files="100" @addfile="handleProcessFile" />
+                                allow-multiple="true" max-file-size="256MB" max-files="100"
+                                @addfile="handleProcessFile" />
 
 
-                            <small class="form-text text-muted">
+                            <small class="px-2 form-text text-muted">
                                 Accepted file types: pdf, doc, docx, xls, xlsx, eps, ai, ps, zip, jpg, jpeg, png, gif,
                                 Max. file size: 256 MB, Max. files: 100
                             </small>
-                            <div v-if="errors['productDetails.fileUpload']" class="text-danger">{{
+
+                            <div v-if="errors['productDetails.fileUpload']" class="text-danger px-2">{{
                                 errors['productDetails.fileUpload'][0] }}</div>
+
+                            <div v-if="errors['files'] && uploadedFilesList == false" class="text-danger px-2">{{
+                                errors['files'][0] }}</div>
 
 
                             <uploaded-files-list ref="uploadedFilesList"></uploaded-files-list>
@@ -285,7 +290,7 @@ export default {
         ...mapState({
             productDetails: (state) => state.productDetails,
             orderId: (state) => state.productDetails.orderId,
-            errors: (state) => state.errors,
+            // errors: (state) => state.errors,
         }),
         acceptedFileTypes() {
             return [
@@ -308,6 +313,8 @@ export default {
             'setErrors',
             'clearErrors',
             'updateProductDetails',
+            'hasFileAttached',
+            // 'setFileUploadError'
         ]),
 
         saveDetails() {
@@ -323,25 +330,35 @@ export default {
             }
             await this.uploadFiles();
             console.log('File processed:', file);
-            this.$refs.uploadedFilesList.fetchFiles();  // Re-fetch the files after processing
+            this.$refs.uploadedFilesList.fetchFiles();
+            this.hasFileAttached('yes');
+            // this.setFileUploadError('');
         },
         async uploadFiles() {
             try {
                 const formData = new FormData();
 
-                const files = this.$refs.pond.getFiles();
-                files.forEach(file => {
-                    formData.append('files[]', file.file);
+                const pondFiles = this.$refs.pond.getFiles();
+
+                pondFiles.forEach(fileItem => {
+                    const file = fileItem.file; // Extract the actual file object
+                    formData.append('files[]', file); // Append file to FormData
                 });
 
-                if (files.length > 0) {
+                console.log('Files to upload:', pondFiles);
+
+                if (pondFiles.length > 0) {
                     formData.append('order_id', this.orderId);
                     formData.append('file_type', 'artwork');
                     formData.append('user_id', '1');
 
                     this.fileResponse = await axios.post(
                         `${process.env.VUE_APP_FILESYSTEM_API_URL}/files/upload`,
-                        formData
+                        formData, {
+                        headers: {
+                            'Content-Type': 'multipart/form-data',
+                        },
+                    }
                     );
 
                     console.log('File uploaded successfully:', this.fileResponse.data);
@@ -351,7 +368,13 @@ export default {
                     console.log('No new files to upload.');
                 }
             } catch (error) {
-                console.error('Error uploading file:', error.response || error.message);
+                if (error.response && error.response.status === 422) {
+                    Toast.error(error.response.data.message);
+                    this.setErrors(error.response.data.errors);
+                    this.errors = this.getErrors;
+                } else {
+                    console.error('Error uploading file:', error.response || error.message);
+                }
             }
         },
 
@@ -367,6 +390,7 @@ export default {
 
                 if (response.status === 200) {
                     this.$router.push({ name: 'DeliveryDetails' });
+                    console.log('Product details validated successfully:', response.data);
                 }
             } catch (error) {
                 if (error.response.status === 422) {
@@ -400,10 +424,14 @@ export default {
         },
     },
     mounted() {
+        this.clearErrors();
         this.removePQINAText();
         this.errors = this.getErrors;
         console.log("order id from parent", this.productDetails.orderId);
-        if (this.$refs.uploadedFilesList.orderId) { this.$refs.uploadedFilesList.fetchFiles(); }
+        // if (this.$refs.uploadedFilesList.orderId) {
+        //     this.$refs.uploadedFilesList.fetchFiles();
+        // }
+        console.log('ProductDetails created', this.$refs.uploadedFilesList.files);
     }
 };
 </script>

@@ -69,7 +69,7 @@
                             <p>Uploaded on: {{ file.created_at }}</p>
                         </div>
                         <div class="delete-container">
-                            <button @click.prevent="deleteFile(file.id)" class="delete-button">
+                            <button @click.prevent="confirmDelete(file.id)" class="delete-button">
                                 <span class="material-icons">delete</span>
                             </button>
                         </div>
@@ -94,6 +94,8 @@ import axios from 'axios';
 import Loading from 'vue-loading-overlay';
 import 'material-icons/iconfont/material-icons.css';
 import Toast from '../utils/toast.js';
+import Swal from 'sweetalert2';
+import { mapActions } from 'vuex';
 
 export default {
     components: {
@@ -115,11 +117,11 @@ export default {
         orderId(newOrderId) {
             if (newOrderId) {
                 this.fetchFiles();  
-                this.fetchFiles();  
             }
         }
     },
     methods: {
+        ...mapActions(['hasFileAttached', 'clearErrors']),
         async fetchFiles() {
             if (!this.$store.getters.getOrderId) {
                 console.error('Order ID is not available');
@@ -136,11 +138,39 @@ export default {
                     }
                 });
                 this.files = this.fileResponse.data.data || [];
+                if (this.files.length > 0) {
+                    this.hasFileAttached('yes');
+                    this.clearErrors();
+                }
             } catch (error) {
                 console.error('Error fetching files:', error);
+                this.hasFileAttached('');
             } finally {
                 this.isLoading = false;
             }
+        },
+        confirmDelete(fileId) {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "Do you really want to delete this file? This action cannot be undone.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, delete it!',
+                cancelButtonText: 'Cancel',
+                toast: true,
+                position: 'center',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    this.deleteFile(fileId);
+                    Swal.fire({
+                        title: 'Deleted!',
+                        text: 'Your file has been deleted.',
+                        icon: 'success',
+                        toast: true,
+                        position: 'top-end',
+                    });
+                }
+            });
         },
         async deleteFile(fileId) {
             // if (!confirm('Are you sure you want to delete this file?')) return;
@@ -149,6 +179,7 @@ export default {
                 await axios.post(`${process.env.VUE_APP_FILESYSTEM_API_URL}/file/destroy/${fileId}`);
                 this.files = this.files.filter(file => file.id !== fileId);
                 Toast.success('File deleted successfully');
+                this.hasFileAttached('');
             } catch (error) {
                 console.error('Error deleting file:', error);
             }
