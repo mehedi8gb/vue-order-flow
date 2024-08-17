@@ -134,7 +134,7 @@ export default {
                 this.fileResponse = await axios.get(`${process.env.VUE_APP_FILESYSTEM_API_URL}/files`, {
                     params: {
                         order_id: this.$store.getters.getOrderId,
-                        file_type: 'artwork'
+                        file_type: 'item_file'
                     }
                 });
                 this.files = this.fileResponse.data.data || [];
