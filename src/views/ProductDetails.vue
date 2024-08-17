@@ -190,18 +190,8 @@
                                 Upload Design File (multiple files allowed) [optional]
                             </label>
                             <file-pond v-model="productDetails.fileUpload" ref="pond" name="fileUpload"
-                                allow-multiple="true" :accepted-file-types="[
-                                    'application/pdf',
-                                    'application/msword',
-                                    'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-                                    'application/vnd.ms-excel',
-                                    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-                                    'application/postscript',
-                                    'application/zip',
-                                    'image/jpeg',
-                                    'image/png',
-                                    'image/gif'
-                                ]" max-file-size="256MB" max-files="100" @addfile="handleProcessFile" />
+                                allow-multiple="true" max-file-size="256MB" max-files="100" @addfile="handleProcessFile" />
+
 
                             <small class="form-text text-muted">
                                 Accepted file types: pdf, doc, docx, xls, xlsx, eps, ai, ps, zip, jpg, jpeg, png, gif,
@@ -262,14 +252,14 @@ import 'filepond/dist/filepond.min.css';
 import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.css";
 
 // Import FilePond plugins
-import FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type';
+// import FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type';
 import FilePondPluginFileValidateSize from 'filepond-plugin-file-validate-size';
 import FilePondPluginFileEncode from 'filepond-plugin-file-encode';
 import FilePondPluginImagePreview from "filepond-plugin-image-preview";
 import Toast from '../utils/toast.js';
 
 // Create a FilePond component instance
-const FilePond = vueFilePond(FilePondPluginFileValidateType, FilePondPluginFileValidateSize, FilePondPluginFileEncode, FilePondPluginImagePreview);
+const FilePond = vueFilePond(FilePondPluginFileValidateSize, FilePondPluginFileEncode, FilePondPluginImagePreview);
 
 export default {
     name: 'ProductDetails',
@@ -282,6 +272,9 @@ export default {
         return {
             errors: {},
             isLoadingValidation: false,
+            fileResponse: [
+                { success: false },
+            ],
         };
     },
     created() {
@@ -322,13 +315,13 @@ export default {
             this.updateProductDetails(this.productDetails);
             this.validateData();
         },
-        handleProcessFile(error, file) {
+        async handleProcessFile(error, file) {
             if (error) {
                 console.error('Error processing file:', error);
                 Toast.error(error.main);
                 return;
             }
-            this.uploadFiles();
+            await this.uploadFiles();
             console.log('File processed:', file);
             this.$refs.uploadedFilesList.fetchFiles();  // Re-fetch the files after processing
         },
@@ -346,12 +339,12 @@ export default {
                     formData.append('file_type', 'artwork');
                     formData.append('user_id', '1');
 
-                    const response = await axios.post(
+                    this.fileResponse = await axios.post(
                         `${process.env.VUE_APP_FILESYSTEM_API_URL}/files/upload`,
                         formData
                     );
 
-                    console.log('File uploaded successfully:', response.data);
+                    console.log('File uploaded successfully:', this.fileResponse.data);
 
                     this.productDetails.fileUpload = 'file uploaded';
                 } else {
