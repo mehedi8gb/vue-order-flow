@@ -17,10 +17,10 @@ const store = createStore({
       files: [],
       design: {
           slides: 'singleSided',
-          orientation: '',
+          orientation: 'portrait',
           paperThickness: 'gsm130',
-          paperType: '',
-          finishedSize: '',
+          paperType: 'silkMatt',
+          finishedSize: 'a6Size',
       },
     },
     yourDetails: {
@@ -56,7 +56,7 @@ const store = createStore({
     },
     // error mutations
     SET_FILE_UPLOAD_ERROR(state, message) {
-      state.errors['productDetails']['fileUpload'] = message;
+      state.errors.productDetails.fileUpload = message;
     },
     SET_ERRORS(state, errors) {
       state.errors = errors;
