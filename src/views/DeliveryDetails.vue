@@ -26,6 +26,8 @@
                 </div>
 
                 <form @submit.prevent="saveDetails">
+                    <loading v-model:active="isLoading" :can-cancel="false" :is-full-page="false" :loader="'bars'" />
+
                     <div class="card-body m-3 pb-5">
                         <!-- <div class="row g-3">
                             <div class="col-md-12">
@@ -235,9 +237,8 @@
                                 Previous
                             </router-link>
 
-                            <router-link :to="{ name: 'YourDetails' }" class="btn btn-primary btn-block">
-                                Next
-                            </router-link>
+                            <input type="submit" @click.prevent="saveDetails" value="Next"
+                                class="btn btn-block btn-primary">
                         </div>
                     </div>
                 </form>
@@ -248,11 +249,16 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
+
+import Loading from 'vue-loading-overlay';
+import 'vue-loading-overlay/dist/css/index.css';
+
 import axios from 'axios';
 import toast from '@/utils/toast';
 export default {
     name: 'DeliveryDetails',
     components: {
+        Loading,
     },
     data() {
         return {
@@ -291,9 +297,35 @@ export default {
         ...mapGetters(['getDeliveryDetails', 'getErrors', 'getAddressLookup']),
     },
     methods: {
-        ...mapActions(['updateDeliveryDetails', 'updateDeliveryAddressResponse']),
+        ...mapActions(['updateDeliveryDetails', 'updateDeliveryAddressResponse', 'clearErrors', 'setErrors']),
         saveDetails() {
-            this.updateDeliveryDetails(this.form); // Use the form data to update the store
+            this.updateDeliveryDetails(this.form);
+            this.validateData();
+        },
+        async validateData() {
+            this.clearErrors();
+            try {
+                const payload = {
+                    deliveryDetails: this.getDeliveryDetails,
+                };
+                const response = await axios.post(`${process.env.VUE_APP_BACKOFFICE_API_BASE_URL}/checkout/validate/delivery-details`, payload);
+
+                console.log('Response Status:', response.status);
+
+                if (response.status === 200) {
+                    this.$router.push({ name: 'YourDetails' });
+                    console.log('Product details validated successfully:', response.data);
+                }
+            } catch (error) {
+                if (error.response.status === 422) {
+                    console.log('errors', error.response.data.errors);
+                    this.clearErrors();
+                    this.setErrors(error.response.data.errors);
+                    this.errors = this.getErrors;
+                }
+            } finally {
+                this.isLoadingValidation = false;
+            }
         },
         lookUp() {
             if (this.form.postcode) {
