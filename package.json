@@ -11,9 +11,20 @@
     "axios": "^1.7.3",
     "bootstrap": "^5.3.3",
     "core-js": "^3.8.3",
+    "filepond": "^4.31.2",
+    "filepond-plugin-file-encode": "^2.1.14",
+    "filepond-plugin-file-validate-size": "^2.2.8",
+    "filepond-plugin-file-validate-type": "^1.2.9",
+    "filepond-plugin-image-preview": "^4.6.12",
+    "material-icons": "^1.13.12",
+    "pdf-viewer": "^0.8.1",
+    "pdf-viewer-vue": "^0.2.7",
+    "pdfjs-dist": "^4.5.136",
     "sweetalert2": "^11.12.3",
     "vue": "^3.2.13",
+    "vue-filepond": "^7.0.4",
     "vue-loading-overlay": "^6.0.4",
+    "vue-pdf": "^4.3.0",
     "vue-router": "^4.4.0",
     "vue-sweetalert2": "^5.0.11",
     "vuex": "^4.0.2"
@@ -25,7 +36,8 @@
     "@vue/cli-plugin-eslint": "~5.0.0",
     "@vue/cli-service": "~5.0.0",
     "eslint": "^7.32.0",
-    "eslint-plugin-vue": "^8.0.3"
+    "eslint-plugin-vue": "^8.0.3",
+    "worker-loader": "^3.0.8"
   },
   "eslintConfig": {
     "root": true,

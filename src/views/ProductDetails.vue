@@ -27,40 +27,43 @@
                     </div>
                 </div>
                 <form @submit.prevent="saveDetails">
+                    <loading v-model:active="isLoadingValidation" :can-cancel="false" :is-full-page="false"
+                        :loader="'bars'" />
+
                     <div class="card-body m-3 pb-5">
                         <div class="row g-3 px-3">
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="singleSided">Sides</label>
                                     <div class="form-check">
-                                        <input v-model="form.slides" class="form-check-input" type="radio" name="sides"
-                                            value="singleSided" id="singleSided" />
+                                        <input v-model="productDetails.design.slides" class="form-check-input"
+                                            type="radio" name="sides" value="singleSided" id="singleSided" />
                                         <label class="form-check-label" for="singleSided">Single sided</label>
                                     </div>
                                     <div class="form-check">
-                                        <input v-model="form.slides" class="form-check-input" type="radio" name="sides"
-                                            value="doubleSided" id="doubleSided" />
+                                        <input v-model="productDetails.design.slides" class="form-check-input"
+                                            type="radio" name="sides" value="doubleSided" id="doubleSided" />
                                         <label class="form-check-label" for="doubleSided">Double sided</label>
                                     </div>
-                                    <div v-if="errors['productDetails.slides']" class="text-danger">{{
-                                        errors['productDetails.slides'][0] }}</div>
+                                    <div v-if="errors['productDetails.design.slides']" class="text-danger">{{
+                                        errors['productDetails.design.slides'][0] }}</div>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="portrait">Orientation</label>
                                     <div class="form-check">
-                                        <input v-model="form.orientation" class="form-check-input" type="radio"
-                                            name="orientation" id="portrait" value="portrait" />
+                                        <input v-model="productDetails.design.orientation" class="form-check-input"
+                                            type="radio" name="orientation" id="portrait" value="portrait" />
                                         <label class="form-check-label" for="portrait">Portrait</label>
                                     </div>
                                     <div class="form-check">
-                                        <input v-model="form.orientation" class="form-check-input" type="radio"
-                                            name="orientation" id="landscape" value="landscape" />
+                                        <input v-model="productDetails.design.orientation" class="form-check-input"
+                                            type="radio" name="orientation" id="landscape" value="landscape" />
                                         <label class="form-check-label" for="landscape">Landscape</label>
                                     </div>
-                                    <div v-if="errors['productDetails.orientation']" class="text-danger">{{
-                                        errors['productDetails.orientation'][0] }}</div>
+                                    <div v-if="errors['productDetails.design.orientation']" class="text-danger">{{
+                                        errors['productDetails.design.orientation'][0] }}</div>
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -69,37 +72,43 @@
                                         <i class="fa fa-info-circle" aria-hidden="true"
                                             style="color: black"></i></label>
                                     <div class="form-check">
-                                        <input class="form-check-input" type="radio" v-model="form.paperThickness"
-                                            name="paperThickness" value="gsm130" id="gsm130" />
+                                        <input class="form-check-input" type="radio"
+                                            v-model="productDetails.design.paperThickness" name="paperThickness"
+                                            value="gsm130" id="gsm130" />
                                         <label class="form-check-label" for="gsm130">130 GSM</label>
                                     </div>
                                     <div class="form-check">
-                                        <input class="form-check-input" type="radio" v-model="form.paperThickness"
-                                            name="paperThickness" value="gsm170" id="gsm170" />
+                                        <input class="form-check-input" type="radio"
+                                            v-model="productDetails.design.paperThickness" name="paperThickness"
+                                            value="gsm170" id="gsm170" />
                                         <label class="form-check-label" for="gsm170">170 GSM</label>
                                     </div>
                                     <div class="form-check">
-                                        <input class="form-check-input" type="radio" v-model="form.paperThickness"
-                                            name="paperThickness" value="gsm250" id="gsm250" />
+                                        <input class="form-check-input" type="radio"
+                                            v-model="productDetails.design.paperThickness" name="paperThickness"
+                                            value="gsm250" id="gsm250" />
                                         <label class="form-check-label" for="gsm250">250 GSM</label>
                                     </div>
                                     <div class="form-check">
-                                        <input class="form-check-input" type="radio" v-model="form.paperThickness"
-                                            name="paperThickness" value="gsm300" id="gsm300" />
+                                        <input class="form-check-input" type="radio"
+                                            v-model="productDetails.design.paperThickness" name="paperThickness"
+                                            value="gsm300" id="gsm300" />
                                         <label class="form-check-label" for="gsm300">300 GSM</label>
                                     </div>
                                     <div class="form-check">
-                                        <input class="form-check-input" type="radio" v-model="form.paperThickness"
-                                            name="paperThickness" value="gsm350" id="gsm350" />
+                                        <input class="form-check-input" type="radio"
+                                            v-model="productDetails.design.paperThickness" name="paperThickness"
+                                            value="gsm350" id="gsm350" />
                                         <label class="form-check-label" for="gsm350">350 GSM</label>
                                     </div>
                                     <div class="form-check">
-                                        <input class="form-check-input" type="radio" v-model="form.paperThickness"
-                                            name="paperThickness" value="customThickness" id="customThickness" />
+                                        <input class="form-check-input" type="radio"
+                                            v-model="productDetails.design.paperThickness" name="paperThickness"
+                                            value="customThickness" id="customThickness" />
                                         <label class="form-check-label" for="customThickness">Custom</label>
                                     </div>
-                                    <div v-if="errors['productDetails.paperThickness']" class="text-danger">{{
-                                        errors['productDetails.paperThickness'][0] }}</div>
+                                    <div v-if="errors['productDetails.design.paperThickness']" class="text-danger">{{
+                                        errors['productDetails.design.paperThickness'][0] }}</div>
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -108,17 +117,19 @@
                                         <i class="fa fa-info-circle" aria-hidden="true" style="color: black"></i>
                                     </label>
                                     <div class="form-check">
-                                        <input class="form-check-input" type="radio" v-model="form.paperType"
-                                            name="paperType" value="silkMatt" id="silkMatt" />
+                                        <input class="form-check-input" type="radio"
+                                            v-model="productDetails.design.paperType" name="paperType" value="silkMatt"
+                                            id="silkMatt" />
                                         <label class="form-check-label" for="silkMatt">Silk (Matt)</label>
                                     </div>
                                     <div class="form-check">
-                                        <input class="form-check-input" type="radio" v-model="form.paperType"
-                                            name="paperType" value="gloss" id="gloss" />
+                                        <input class="form-check-input" type="radio"
+                                            v-model="productDetails.design.paperType" name="paperType" value="gloss"
+                                            id="gloss" />
                                         <label class="form-check-label" for="gloss">Gloss</label>
                                     </div>
-                                    <div v-if="errors['productDetails.paperType']" class="text-danger">{{
-                                        errors['productDetails.paperType'][0] }}</div>
+                                    <div v-if="errors['productDetails.design.paperType']" class="text-danger">{{
+                                        errors['productDetails.design.paperType'][0] }}</div>
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -127,27 +138,31 @@
                                         <i class="fa fa-info-circle" aria-hidden="true" style="color: black"></i>
                                     </label>
                                     <div class="form-check">
-                                        <input class="form-check-input" type="radio" v-model="form.finishedSize"
-                                            name="finishedSize" value="a6Size" id="a6Size" />
+                                        <input class="form-check-input" type="radio"
+                                            v-model="productDetails.design.finishedSize" name="finishedSize"
+                                            value="a6Size" id="a6Size" />
                                         <label class="form-check-label" for="a6Size">A6</label>
                                     </div>
                                     <div class="form-check">
-                                        <input class="form-check-input" type="radio" v-model="form.finishedSize"
-                                            name="finishedSize" value="a5Size" id="a5Size" />
+                                        <input class="form-check-input" type="radio"
+                                            v-model="productDetails.design.finishedSize" name="finishedSize"
+                                            value="a5Size" id="a5Size" />
                                         <label class="form-check-label" for="a5Size">A5</label>
                                     </div>
                                     <div class="form-check">
-                                        <input class="form-check-input" type="radio" v-model="form.finishedSize"
-                                            name="finishedSize" value="a4Size" id="a4Size" />
+                                        <input class="form-check-input" type="radio"
+                                            v-model="productDetails.design.finishedSize" name="finishedSize"
+                                            value="a4Size" id="a4Size" />
                                         <label class="form-check-label" for="a4Size">A4</label>
                                     </div>
                                     <div class="form-check">
-                                        <input class="form-check-input" type="radio" v-model="form.finishedSize"
-                                            name="finishedSize" value="customSize" id="customSize" />
+                                        <input class="form-check-input" type="radio"
+                                            v-model="productDetails.design.finishedSize" name="finishedSize"
+                                            value="customSize" id="customSize" />
                                         <label class="form-check-label" for="customSize">Custom</label>
                                     </div>
-                                    <div v-if="errors['productDetails.finishedSize']" class="text-danger">{{
-                                        errors['productDetails.finishedSize'][0] }}</div>
+                                    <div v-if="errors['productDetails.design.finishedSize']" class="text-danger">{{
+                                        errors['productDetails.design.finishedSize'][0] }}</div>
                                 </div>
                             </div>
                         </div>
@@ -156,37 +171,54 @@
                             <label class="form-label">Do you have your design file/document/artwork ready?</label>
                             <div class="form-check">
                                 <input class="form-check-input" type="radio" id="yes" value="1"
-                                    v-model="form.hasDesignFile" />
+                                    v-model="productDetails.hasDesignFile" />
                                 <label class="form-check-label" for="yes">Yes</label>
                             </div>
                             <div class="form-check">
                                 <input class="form-check-input" type="radio" id="no" value="0"
-                                    v-model="form.hasDesignFile" />
+                                    v-model="productDetails.hasDesignFile" />
                                 <label class="form-check-label" for="no">No</label>
                             </div>
                             <div v-if="errors['productDetails.hasDesignFile']" class="text-danger">{{
                                 errors['productDetails.hasDesignFile'][0] }}</div>
                         </div>
 
-                        <!-- Conditionally rendered file upload field -->
-                        <div v-if="form.hasDesignFile === '1'" class="form-group mt-4" style="margin-inline: 1rem">
-                            <label for="fileUpload" style="margin-bottom: 5px">Upload Design File (multiple files
-                                allowed) [optional]</label>
-                            <div class="p-3 text-center" style="position: relative; border: 1px dashed grey">
-                                <input type="file" class="form-control" id="fileUpload" multiple
-                                    style="opacity: 0; position: absolute; width: 100%; height: 100%; z-index: 100;" />
-                                <label for="fileUpload" class="d-block">
-                                    Drop your file here or <span class="btn btn-primary btn-sm">upload file</span>
-                                </label>
-                            </div>
-                            <small class="form-text text-muted">Accepted file types: pdf, doc, docx, xls, xlsx, eps, ai,
-                                ps, zip, jpg, jpeg, png, gif, Max. file size: 256 MB, Max. files: 100</small>
+
+                        <div v-if="productDetails.hasDesignFile === '1'" class="form-group mt-4"
+                            style="margin-inline: 1rem">
+                            <label for="fileUpload" style="margin-bottom: 5px">
+                                Upload Design File (multiple files allowed) [optional]
+                            </label>
+                            <file-pond v-model="productDetails.fileUpload" ref="pond" name="fileUpload"
+                                allow-multiple="true" :accepted-file-types="[
+                                    'application/pdf',
+                                    'application/msword',
+                                    'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                                    'application/vnd.ms-excel',
+                                    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                                    'application/postscript',
+                                    'application/zip',
+                                    'image/jpeg',
+                                    'image/png',
+                                    'image/gif'
+                                ]" max-file-size="256MB" max-files="100" @addfile="handleProcessFile" />
+
+                            <small class="form-text text-muted">
+                                Accepted file types: pdf, doc, docx, xls, xlsx, eps, ai, ps, zip, jpg, jpeg, png, gif,
+                                Max. file size: 256 MB, Max. files: 100
+                            </small>
+                            <div v-if="errors['productDetails.fileUpload']" class="text-danger">{{
+                                errors['productDetails.fileUpload'][0] }}</div>
+
+
+                            <uploaded-files-list ref="uploadedFilesList"></uploaded-files-list>
                         </div>
+
 
                         <div v-else class="form-group mt-4" style="margin-inline: 1rem">
                             <label for="whenArtworkSend" style="margin-bottom: 5px">When can you send us the
                                 artwork?</label><span class="text-danger">*</span>
-                            <input v-model="form.whenArtworkSend" class="form-control" id="whenArtworkSend"
+                            <input v-model="productDetails.whenArtworkSend" class="form-control" id="whenArtworkSend"
                                 placeholder="Write here">
                             <small class="text-muted">Please provide the most accurate estimate possible to help us
                                 determine the appropriate quote.</small>
@@ -194,18 +226,19 @@
                                 errors['productDetails.whenArtworkSend'][0] }}</div>
                         </div>
 
+
                         <div class="form-group mt-4" style="margin-inline: 1rem">
                             <label for="comment" style="margin-bottom: 5px">Comment (optional)</label>
-                            <textarea v-model="form.comment" class="form-control" id="comment" rows="3"
+                            <textarea v-model="productDetails.comment" class="form-control" id="comment" rows="3"
                                 placeholder="Write here" style="outline: none"></textarea>
                             <div v-if="errors['productDetails.comment']" class="text-danger">{{
                                 errors['productDetails.comment'][0] }}</div>
                         </div>
                         <div class="mt-4" style="margin-inline: 1rem">
-                            <router-link :to="{ name: 'DeliveryDetails' }" type="submit" @click.prevent="saveDetails"
+                            <input type="submit" @click.prevent="saveDetails" value="Next"
                                 class="btn btn-block btn-primary">
-                                Next
-                            </router-link>
+
+
                         </div>
                     </div>
                 </form>
@@ -216,48 +249,168 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex';
-// import HeaderComponent from '@/components/layout/HeaderComponent.vue';
+import { mapState, mapActions, mapGetters } from 'vuex';
+import axios from 'axios';
+
+import UploadedFilesList from '@/components/UploadedFilesList.vue';
+
+import Loading from 'vue-loading-overlay';
+import 'vue-loading-overlay/dist/css/index.css';
+
+import vueFilePond from 'vue-filepond';
+import 'filepond/dist/filepond.min.css';
+import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.css";
+
+// Import FilePond plugins
+import FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type';
+import FilePondPluginFileValidateSize from 'filepond-plugin-file-validate-size';
+import FilePondPluginFileEncode from 'filepond-plugin-file-encode';
+import FilePondPluginImagePreview from "filepond-plugin-image-preview";
+import Toast from '../utils/toast.js';
+
+// Create a FilePond component instance
+const FilePond = vueFilePond(FilePondPluginFileValidateType, FilePondPluginFileValidateSize, FilePondPluginFileEncode, FilePondPluginImagePreview);
+
 export default {
     name: 'ProductDetails',
     components: {
-        // HeaderComponent
+        FilePond,
+        Loading,
+        UploadedFilesList,
     },
     data() {
         return {
-            form: {
-                productName: '',
-                hasDesignFile: '',
-                slides: '',
-                orientation: '',
-                paperThickness: '',
-                paperType: '',
-                finishedSize: '',
-                whenArtworkSend: '',
-                comment: '',
-            },
             errors: {},
+            isLoadingValidation: false,
         };
     },
+    created() {
+        this.fetchAndGenerateOrderId();
+    },
     computed: {
-        ...mapGetters(['getProductDetails', 'getErrors']),
+        ...mapGetters(['getErrors']),
+        ...mapState({
+            productDetails: (state) => state.productDetails,
+            orderId: (state) => state.productDetails.orderId,
+            errors: (state) => state.errors,
+        }),
+        acceptedFileTypes() {
+            return [
+                'application/pdf',
+                'application/msword',
+                'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                'application/vnd.ms-excel',
+                'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                'application/postscript',
+                'application/zip',
+                'image/jpeg',
+                'image/png',
+                'image/gif'
+            ];
+        },
     },
     methods: {
-        ...mapActions(['updateProductDetails']),
+        ...mapActions([
+            'fetchAndGenerateOrderId',
+            'setErrors',
+            'clearErrors',
+            'updateProductDetails',
+        ]),
+
         saveDetails() {
-            console.log(this.form);
-            this.updateProductDetails(this.form); // Use the form data to update the store
-        }
+            this.isLoadingValidation = true;
+            this.updateProductDetails(this.productDetails);
+            this.validateData();
+        },
+        handleProcessFile(error, file) {
+            if (error) {
+                console.error('Error processing file:', error);
+                Toast.error(error.main);
+                return;
+            }
+            this.uploadFiles();
+            console.log('File processed:', file);
+            this.$refs.uploadedFilesList.fetchFiles();  // Re-fetch the files after processing
+        },
+        async uploadFiles() {
+            try {
+                const formData = new FormData();
+
+                const files = this.$refs.pond.getFiles();
+                files.forEach(file => {
+                    formData.append('files[]', file.file);
+                });
+
+                if (files.length > 0) {
+                    formData.append('order_id', this.orderId);
+                    formData.append('file_type', 'artwork');
+                    formData.append('user_id', '1');
+
+                    const response = await axios.post(
+                        `${process.env.VUE_APP_FILESYSTEM_API_URL}/files/upload`,
+                        formData
+                    );
+
+                    console.log('File uploaded successfully:', response.data);
+
+                    this.productDetails.fileUpload = 'file uploaded';
+                } else {
+                    console.log('No new files to upload.');
+                }
+            } catch (error) {
+                console.error('Error uploading file:', error.response || error.message);
+            }
+        },
+
+        async validateData() {
+            this.clearErrors();
+            try {
+                const payload = {
+                    productDetails: this.productDetails,
+                };
+                const response = await axios.post(`${process.env.VUE_APP_BACKOFFICE_API_BASE_URL}/checkout/validate/product-details`, payload);
+
+                console.log('Response Status:', response.status);
+
+                if (response.status === 200) {
+                    this.$router.push({ name: 'DeliveryDetails' });
+                }
+            } catch (error) {
+                if (error.response.status === 422) {
+                    console.log('errors', error.response.data.errors);
+                    this.clearErrors();
+                    this.setErrors(error.response.data.errors);
+                    this.errors = this.getErrors;
+                }
+            } finally {
+                this.isLoadingValidation = false;
+            }
+        },
+
+        removePQINAText() {
+            const observer = new MutationObserver((mutationsList) => {
+                for (const mutation of mutationsList) {
+                    if (mutation.type === 'childList') {
+                        const pqinaElement = document.querySelector('.filepond--credits');
+                        if (pqinaElement) {
+                            pqinaElement.remove();
+                        }
+                    }
+                }
+            });
+
+            // Start observing the document body for changes
+            observer.observe(document.body, { childList: true, subtree: true });
+
+            // Optionally, stop observing after a certain time or condition
+            setTimeout(() => observer.disconnect(), 5000); // Stop observing after 5 seconds
+        },
     },
     mounted() {
-        this.form.hasDesignFile = this.hasDesignFile;
+        this.removePQINAText();
         this.errors = this.getErrors;
-        this.$nextTick(() => {
-            const details = this.getProductDetails;
-            if (details) {
-                this.form = details; // Populate the form with existing details if available
-            }
-        });
+        console.log("order id from parent", this.productDetails.orderId);
+        if (this.$refs.uploadedFilesList.orderId) { this.$refs.uploadedFilesList.fetchFiles(); }
     }
 };
 </script>

@@ -74,7 +74,7 @@ export default {
           yourDetails: this.getYourDetails,
         };
 
-        this.response = await axios.post(`${process.env.VUE_APP_API_BASE_URL}/checkout/order`, payload);
+        this.response = await axios.post(`${process.env.VUE_APP_BACKOFFICE_API_BASE_URL}/checkout/order`, payload);
         if (this.response.status === 201) {
           this.invoiceUrl = this.response.data.invoice_url; // Assume these URLs are returned
           this.orderSuccess = true;
