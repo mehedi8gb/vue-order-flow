@@ -8,7 +8,8 @@
             <div class="position-relative" style="width: 200px">
                 <div class="position-absolute bg-secondary rounded text-white d-flex justify-content-center align-items-center"
                     style="width: 150px; height: 100px; top: 52px; left: 34px">
-                    <span class="bg-white text-dark rounded text-center px-2 py-1">{{ productDetails.productName }}</span>
+                    <span class="bg-white text-dark rounded text-center px-2 py-1">{{ productDetails.productName
+                        }}</span>
                 </div>
             </div>
             <div class="col-md-8 border rounded mt-5" style="border-color: rgb(185, 185, 185)">
@@ -190,8 +191,9 @@
                                 Upload Design File (multiple files allowed) [optional]
                             </label>
                             <file-pond v-model="productDetails.fileUpload" ref="pond" name="fileUpload"
-                                allow-multiple="true" max-file-size="256MB" max-files="100"
-                                @addfile="handleProcessFile" />
+                                allow-multiple="true" max-file-size="256MB" max-files="100" :instant-upload="false"
+                                @addfile="handleFileAdd" />
+
 
 
                             <small class="px-2 form-text text-muted">
@@ -322,22 +324,17 @@ export default {
             this.updateProductDetails(this.productDetails);
             this.validateData();
         },
-        async handleProcessFile(error, file) {
-            if (error) {
-                console.error('Error processing file:', error);
-                Toast.error(error.main);
-                return;
-            }
-            await this.uploadFiles();
-            console.log('File processed:', file);
-            this.$refs.uploadedFilesList.fetchFiles();
-            this.hasFileAttached('yes');
-            // this.setFileUploadError('');
+        handleFileAdd() {
+            clearTimeout(this.uploadTimeout);
+
+            // Set a timeout to trigger the upload after a short delay
+            this.uploadTimeout = setTimeout(() => {
+                this.uploadFiles();
+            }, 500);
         },
         async uploadFiles() {
             try {
                 const formData = new FormData();
-
                 const pondFiles = this.$refs.pond.getFiles();
 
                 pondFiles.forEach(fileItem => {
@@ -363,7 +360,11 @@ export default {
 
                     console.log('File uploaded successfully:', this.fileResponse.data);
 
+                    // Clear FilePond's file list after successful upload
+                    // this.$refs.pond.removeFiles();
+
                     this.productDetails.fileUpload = 'file uploaded';
+                    this.$refs.uploadedFilesList.fetchFiles();
                 } else {
                     console.log('No new files to upload.');
                 }
@@ -377,7 +378,6 @@ export default {
                 }
             }
         },
-
         async validateData() {
             this.clearErrors();
             try {
