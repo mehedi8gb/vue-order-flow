@@ -21,11 +21,11 @@ const store = createStore({
       fileUpload: "",
       files: [],
       design: {
-        slides: "singleSided",
+        slides: "doubleSided",
         orientation: "portrait",
-        paperThickness: "gsm130",
+        paperThickness: "gsm170",
         paperType: "silkMatt",
-        finishedSize: "a6Size",
+        finishedSize: "a4Size",
       },
     },
     yourDetails: {
