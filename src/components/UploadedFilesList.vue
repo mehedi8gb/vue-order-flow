@@ -109,13 +109,13 @@ export default {
         };
     },
     computed: {
-        orderId() {
-            return this.$store.getters.getOrderId;
+        sessionId() {
+            return this.$store.getters.getSessionId;
         }
     },
     watch: {
-        orderId(newOrderId) {
-            if (newOrderId) {
+        sessionId(newsessionId) {
+            if (newsessionId) {
                 this.fetchFiles();  
             }
         }
@@ -123,7 +123,7 @@ export default {
     methods: {
         ...mapActions(['hasFileAttached', 'clearErrors']),
         async fetchFiles() {
-            if (!this.$store.getters.getOrderId) {
+            if (!this.$store.getters.getSessionId) {
                 console.error('Order ID is not available');
                 return;
             }
@@ -133,7 +133,7 @@ export default {
             try {
                 this.fileResponse = await axios.get(`${process.env.VUE_APP_FILESYSTEM_API_URL}/files`, {
                     params: {
-                        order_id: this.$store.getters.getOrderId,
+                        session_id: this.$store.getters.getSessionId,
                         file_type: 'item_file'
                     }
                 });
@@ -214,7 +214,7 @@ export default {
         },
     },
     mounted() {
-        if (this.orderId) {
+        if (this.sessionId) {
             this.fetchFiles();
         }
     }

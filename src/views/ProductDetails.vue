@@ -285,7 +285,7 @@ export default {
         };
     },
     created() {
-        this.fetchAndGenerateOrderId();
+        this.fetchAndGenerateSessionId();
     },
     computed: {
         ...mapGetters(['getErrors']),
@@ -311,7 +311,7 @@ export default {
     },
     methods: {
         ...mapActions([
-            'fetchAndGenerateOrderId',
+            'fetchAndGenerateSessionId',
             'setErrors',
             'clearErrors',
             'updateProductDetails',
@@ -345,12 +345,11 @@ export default {
                 console.log('Files to upload:', pondFiles);
 
                 if (pondFiles.length > 0) {
-                    formData.append('order_id', this.orderId);
+                    formData.append('session_id', this.$store.getters.getSessionId);
                     formData.append('file_type', 'item_file');
-                    formData.append('user_id', '1');
 
                     this.fileResponse = await axios.post(
-                        `${process.env.VUE_APP_FILESYSTEM_API_URL}/files/upload`,
+                        `${process.env.VUE_APP_FILESYSTEM_API_URL}/temp/files/upload`,
                         formData, {
                         headers: {
                             'Content-Type': 'multipart/form-data',
@@ -427,10 +426,6 @@ export default {
         this.clearErrors();
         this.removePQINAText();
         this.errors = this.getErrors;
-        console.log("order id from parent", this.productDetails.orderId);
-        // if (this.$refs.uploadedFilesList.orderId) {
-        //     this.$refs.uploadedFilesList.fetchFiles();
-        // }
         console.log('ProductDetails created', this.$refs.uploadedFilesList.files);
     }
 };

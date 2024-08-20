@@ -3,6 +3,7 @@ import { createStore } from "vuex";
 
 const store = createStore({
   state: {
+    sessionId: null,
     deliveryDetails: {
       deliveryAddressResponse: null,
       showAddressLookup: false,
@@ -13,7 +14,6 @@ const store = createStore({
       townCity: "",
     },
     productDetails: {
-      orderId: "",
       productName: "Flyers",
       hasDesignFile: "1",
       whenArtworkSend: "",
@@ -41,8 +41,8 @@ const store = createStore({
     setFileAttached(state, cond) {
       state.productDetails.fileUpload = cond;
     },
-    setOrderId(state, orderId) {
-      state.productDetails.orderId = orderId;
+    setSessionId(state, sessionId) {
+      state.sessionId = sessionId;
     },
     setDeliveryDetails(state, details) {
       state.deliveryDetails = details;
@@ -71,22 +71,46 @@ const store = createStore({
     },
   },
   actions: {
-    async fetchAndGenerateOrderId({ commit }) {
+    async fetchAndGenerateSessionId({ commit }) {
       try {
-        // Fetch latest order_id from Laravel API
-        const response = await fetch(
-          `${process.env.VUE_APP_BACKOFFICE_API_BASE_URL}/order/latest-order-id`
-        );
-        const data = await response.json();
-        const latestOrderId = parseInt(data.order_id, 10) + 1;
+        let sessionId = localStorage.getItem("sessionId");
 
-        // Commit new order_id to Vuex state
-        console.log("Latest order_id:", latestOrderId);
-        commit("setOrderId", latestOrderId);
+        if (!sessionId) {
+          sessionId = (
+            Math.random().toString(36).substr(2, 11) +
+            Date.now().toString(36).substr(-11)
+          ).substr(0, 22);
+          
+          localStorage.setItem("sessionId", sessionId);
+          console.log("Generated new sessionId:", sessionId);
+        } else {
+
+          this.state.sessionId = sessionId;
+          console.log(
+            "Retrieved sessionId from localStorage:",
+            this.state.sessionId
+          );
+        }
+        commit("setSessionId", sessionId);
       } catch (error) {
-        console.error("Error fetching latest order_id:", error);
+        console.error("Error generating or retrieving sessionId:", error);
       }
     },
+
+    async clearSessionId({ commit }) {
+      try {
+        // Remove the session ID from localStorage
+        localStorage.removeItem("sessionId");
+        console.log("SessionId removed from localStorage");
+    
+        // Clear the session ID from Vuex state
+        commit("setSessionId", null);
+        console.log("SessionId cleared from Vuex state");
+      } catch (error) {
+        console.error("Error clearing sessionId:", error);
+      }
+    },
+
     updateDeliveryDetails({ commit }, details) {
       commit("setDeliveryDetails", details);
     },
@@ -122,7 +146,7 @@ const store = createStore({
     getYourDetails: (state) => state.yourDetails,
     getAddressLookup: (state) => state.deliveryDetails.showAddressLookup,
     getErrors: (state) => state.errors,
-    getOrderId: (state) => state.productDetails.orderId,
+    getSessionId: (state) => state.sessionId,
   },
 });
 

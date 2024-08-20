@@ -69,6 +69,7 @@ export default {
       this.updateAddressLookup(true);
       try {
         const payload = {
+          sessionId: this.$store.state.sessionId,
           deliveryDetails: this.getDeliveryDetails,
           productDetails: this.getProductDetails,
           yourDetails: this.getYourDetails,
@@ -79,6 +80,7 @@ export default {
           this.invoiceUrl = this.response.data.invoice_url; // Assume these URLs are returned
           this.orderSuccess = true;
           this.isLoading = false;
+          this.$store.dispatch('clearSessionId');
         }
       } catch (error) {
         this.orderFailed = true;
