@@ -61,7 +61,10 @@ export default {
       };
     },
     getPrice() {
-      return this.getProductDetails.price;
+      return new Intl.NumberFormat('en-UK', {
+        style: 'currency',
+        currency: 'GBP',
+      }).format(this.getProductDetails.price);
     }
   },
   methods: {
