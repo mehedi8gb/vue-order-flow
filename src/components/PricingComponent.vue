@@ -72,7 +72,7 @@ export default {
     async fetchPrice() {
       this.loading = true;
       try {
-        const response = await axios.post(`${process.env.VUE_APP_BACKOFFICE_API_BASE_URL}/checkout/calculate-price`, {
+        const response = await axios.post(`${process.env.VUE_APP_BACKOFFICE_API_BASE_URL}/checkout/calculate-order-price`, {
           product_name: this.productName,
           product_details: this.productDetails
         });
