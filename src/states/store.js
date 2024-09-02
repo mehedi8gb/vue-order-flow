@@ -20,12 +20,14 @@ const store = createStore({
       comment: "",
       fileUpload: "",
       files: [],
+      price: 0.0,
+      quantity: 25,
       design: {
-        slides: "doubleSided",
+        slides: "Double-Sided",
         orientation: "portrait",
-        paperThickness: "gsm170",
+        paperThickness: "170 gsm",
         paperType: "silkMatt",
-        finishedSize: "a4Size",
+        finishedSize: "A4",
       },
     },
     yourDetails: {
@@ -38,6 +40,10 @@ const store = createStore({
     },
   },
   mutations: {
+    // update price
+    setPrice(state, price) {
+      state.productDetails.price = price;
+    },
     setFileAttached(state, cond) {
       state.productDetails.fileUpload = cond;
     },
@@ -71,6 +77,10 @@ const store = createStore({
     },
   },
   actions: {
+    // update price
+    updatePrice({ commit }, price) {
+      commit("setPrice", price);
+    },
     async fetchAndGenerateSessionId({ commit }) {
       try {
         let sessionId = localStorage.getItem("sessionId");
