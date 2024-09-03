@@ -7,7 +7,7 @@
       </div>
       <div class="card-body bg-light">
         <loading v-model:active="getPricingComponentLoading" :can-cancel="false" :is-full-page="false"
-                 :loader="'bars'"/>
+                 :loader="'bars'" :color="'blue'"/>
         <ul class="list-unstyled mb-0">
           <li class="d-flex justify-content-between border-bottom py-1">
             <strong class="text-muted">Quantity:</strong> <span>{{ productDetails.quantity }}</span>
