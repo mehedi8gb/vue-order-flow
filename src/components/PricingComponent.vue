@@ -6,7 +6,7 @@
         <h5 class="mb-0">{{ productName }}</h5>
       </div>
       <div class="card-body bg-light">
-        <loading v-model:active="loading" :can-cancel="false" :is-full-page="false"
+        <loading v-model:active="getPricingComponentLoading" :can-cancel="false" :is-full-page="false"
                  :loader="'bars'"/>
         <ul class="list-unstyled mb-0">
           <li class="d-flex justify-content-between border-bottom py-1">
@@ -46,11 +46,11 @@ export default {
   },
   data() {
     return {
-      loading: false
+      loaded: false,
     };
   },
   computed: {
-    ...mapGetters(['getProductDetails']),
+    ...mapGetters(['getProductDetails', 'getPricingComponentLoading', 'getPricingComponentLoaded']),
     productName() {
       return this.getProductDetails.productName || 'Product';
     },
@@ -71,9 +71,10 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['updatePrice']),
+    ...mapActions(['updatePrice', 'updatePricingComponentLoading', 'updatePricingComponentLoaded']),
     async fetchPrice() {
-      this.loading = true;
+      this.loaded = true;
+      this.updatePricingComponentLoading(true);
       try {
         const response = await axios.post(`${process.env.VUE_APP_BACKOFFICE_API_BASE_URL}/checkout/calculate-order-price`, {
           product_name: this.productName,
@@ -84,7 +85,7 @@ export default {
       } catch (error) {
         console.error('Error fetching price:', error);
       } finally {
-        this.loading = false; // Set loading state to false
+        this.updatePricingComponentLoading(false);
       }
     }
   },
@@ -94,11 +95,14 @@ export default {
       handler() {
         this.fetchPrice();
       },
-      deep: true // Watch for nested changes
+      deep: true
     }
   },
   mounted() {
-    this.fetchPrice();
+    if (this.$route.name === 'ProductDetails' && !this.getPricingComponentLoaded) {
+      this.fetchPrice();
+      this.updatePricingComponentLoaded(true);
+    }
   }
 };
 </script>
