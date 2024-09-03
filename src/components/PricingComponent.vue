@@ -1,32 +1,35 @@
 <template>
-  <div class="pricing-card card border-light shadow-sm mt-4">
-    <div class="card-header bg-primary text-white text-center rounded-top">
-      <h5 class="mb-0">{{ productName }}</h5>
-    </div>
-    <div class="card-body bg-light">
-      <loading v-model:active="loading" :can-cancel="false" :is-full-page="false"
-               :loader="'bars'"/>
-      <ul class="list-unstyled mb-0">
-        <li class="d-flex justify-content-between border-bottom py-1">
-          <strong class="text-muted">Quantity:</strong> <span>{{ productDetails.quantity }}</span>
-        </li>
-        <li class="d-flex justify-content-between border-bottom py-1">
-          <strong class="text-muted">Size:</strong> <span>{{ productDetails.size }}</span>
-        </li>
-        <li class="d-flex justify-content-between border-bottom py-1">
-          <strong class="text-muted">orientation:</strong> <span>{{ productDetails.side }}</span>
-        </li>
-        <li class="d-flex justify-content-between border-bottom py-1">
-          <strong class="text-muted">Paper Thickness:</strong> <span>{{ productDetails.paper_thickness }}</span>
-        </li>
-        <li class="d-flex justify-content-between border-bottom py-1">
-          <strong class="text-muted">Paper Type:</strong> <span>{{ productDetails.paper_type }}</span>
-        </li>
-        <li class="d-flex justify-content-between border-bottom py-1">
-          <strong class="text-muted">Price:</strong> <span>{{ getPrice }}</span>
-        </li>
+  <!-- Sticky pricing card -->
+  <div class="position-sticky m-4 mt-5" style="top: 20px;">
+    <div class="pricing-card card border-light shadow-sm">
+      <div class="card-header bg-primary text-white text-center rounded-top">
+        <h5 class="mb-0">{{ productName }}</h5>
+      </div>
+      <div class="card-body bg-light">
+        <loading v-model:active="getPricingComponentLoading" :can-cancel="false" :is-full-page="false"
+                 :loader="'bars'" :color="'blue'"/>
+        <ul class="list-unstyled mb-0">
+          <li class="d-flex justify-content-between border-bottom py-1">
+            <strong class="text-muted">Quantity:</strong> <span>{{ productDetails.quantity }}</span>
+          </li>
+          <li class="d-flex justify-content-between border-bottom py-1">
+            <strong class="text-muted">Size:</strong> <span>{{ productDetails.size }}</span>
+          </li>
+          <li class="d-flex justify-content-between border-bottom py-1">
+            <strong class="text-muted">orientation:</strong> <span>{{ productDetails.side }}</span>
+          </li>
+          <li class="d-flex justify-content-between border-bottom py-1">
+            <strong class="text-muted">Paper Thickness:</strong> <span>{{ productDetails.paper_thickness }}</span>
+          </li>
+          <li class="d-flex justify-content-between border-bottom py-1">
+            <strong class="text-muted">Paper Type:</strong> <span>{{ productDetails.paper_type }}</span>
+          </li>
+          <li class="d-flex justify-content-between border-bottom py-1">
+            <strong class="text-muted">Price:</strong> <span>{{ getPrice }}</span>
+          </li>
 
-      </ul>
+        </ul>
+      </div>
     </div>
   </div>
 </template>
@@ -43,11 +46,11 @@ export default {
   },
   data() {
     return {
-      loading: false
+      loaded: false,
     };
   },
   computed: {
-    ...mapGetters(['getProductDetails']),
+    ...mapGetters(['getProductDetails', 'getPricingComponentLoading', 'getPricingComponentLoaded']),
     productName() {
       return this.getProductDetails.productName || 'Product';
     },
@@ -68,9 +71,10 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['updatePrice']),
+    ...mapActions(['updatePrice', 'updatePricingComponentLoading', 'updatePricingComponentLoaded']),
     async fetchPrice() {
-      this.loading = true;
+      this.loaded = true;
+      this.updatePricingComponentLoading(true);
       try {
         const response = await axios.post(`${process.env.VUE_APP_BACKOFFICE_API_BASE_URL}/checkout/calculate-order-price`, {
           product_name: this.productName,
@@ -81,7 +85,7 @@ export default {
       } catch (error) {
         console.error('Error fetching price:', error);
       } finally {
-        this.loading = false; // Set loading state to false
+        this.updatePricingComponentLoading(false);
       }
     }
   },
@@ -91,11 +95,14 @@ export default {
       handler() {
         this.fetchPrice();
       },
-      deep: true // Watch for nested changes
+      deep: true
     }
   },
   mounted() {
-    this.fetchPrice();
+    if (this.$route.name === 'ProductDetails' && !this.getPricingComponentLoaded) {
+      this.fetchPrice();
+      this.updatePricingComponentLoaded(true);
+    }
   }
 };
 </script>
