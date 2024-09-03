@@ -53,6 +53,47 @@
                   </div>
                 </div>
               </div>
+
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="quantity">Quantity
+                    <i class="fa fa-info-circle" aria-hidden="true" style="color: black"></i>
+                  </label>
+                  <select class="form-control" v-model="productDetails.quantity" id="quantity">
+                    <option v-for="quantity in quantityOptions" :key="quantity" :value="quantity.value">
+                      {{ quantity.label }}
+                    </option>
+                  </select>
+                  <div v-if="errors['productDetails.quantity']" class="text-danger">
+                    {{ errors['productDetails.quantity'][0] }}
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="silkMatt">Paper Type
+                    <i class="fa fa-info-circle" aria-hidden="true" style="color: black"></i>
+                  </label>
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio"
+                           v-model="productDetails.design.paperType" name="paperType" value="silkMatt"
+                           id="silkMatt"/>
+                    <label class="form-check-label" for="silkMatt">Silk (Matt)</label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio"
+                           v-model="productDetails.design.paperType" name="paperType" value="gloss"
+                           id="gloss"/>
+                    <label class="form-check-label" for="gloss">Gloss</label>
+                  </div>
+                  <div v-if="errors['productDetails.design.paperType']" class="text-danger">{{
+                      errors['productDetails.design.paperType'][0]
+                    }}
+                  </div>
+                </div>
+              </div>
+
               <div class="col-md-6">
                 <div class="form-group">
                   <label for="portrait">Orientation</label>
@@ -72,6 +113,7 @@
                   </div>
                 </div>
               </div>
+
               <div class="col-md-6">
                 <div class="form-group">
                   <label for="gsm130">Paper Thickness
@@ -119,45 +161,7 @@
                   </div>
                 </div>
               </div>
-              <div class="col-md-6">
-                <div class="form-group">
-                  <label for="silkMatt">Paper Type
-                    <i class="fa fa-info-circle" aria-hidden="true" style="color: black"></i>
-                  </label>
-                  <div class="form-check">
-                    <input class="form-check-input" type="radio"
-                           v-model="productDetails.design.paperType" name="paperType" value="silkMatt"
-                           id="silkMatt"/>
-                    <label class="form-check-label" for="silkMatt">Silk (Matt)</label>
-                  </div>
-                  <div class="form-check">
-                    <input class="form-check-input" type="radio"
-                           v-model="productDetails.design.paperType" name="paperType" value="gloss"
-                           id="gloss"/>
-                    <label class="form-check-label" for="gloss">Gloss</label>
-                  </div>
-                  <div v-if="errors['productDetails.design.paperType']" class="text-danger">{{
-                      errors['productDetails.design.paperType'][0]
-                    }}
-                  </div>
-                </div>
 
-                 <div class="form-group">
-                  <label for="quantity">Quantity
-                    <i class="fa fa-info-circle" aria-hidden="true" style="color: black"></i>
-                  </label>
-                  <select class="form-control" v-model="productDetails.quantity" id="quantity">
-                    <option v-for="quantity in quantityOptions" :key="quantity" :value="quantity.value">
-                      {{ quantity.label }}
-                    </option>
-                  </select>
-                  <div v-if="errors['productDetails.quantity']" class="text-danger">
-                    {{ errors['productDetails.quantity'][0] }}
-                  </div>
-                </div>
-
-
-              </div>
               <div class="col-md-6">
                 <div class="form-group">
                   <label for="a6Size">Finished Size
