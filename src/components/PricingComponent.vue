@@ -1,32 +1,35 @@
 <template>
-  <div class="pricing-card card border-light shadow-sm mt-4">
-    <div class="card-header bg-primary text-white text-center rounded-top">
-      <h5 class="mb-0">{{ productName }}</h5>
-    </div>
-    <div class="card-body bg-light">
-      <loading v-model:active="loading" :can-cancel="false" :is-full-page="false"
-               :loader="'bars'"/>
-      <ul class="list-unstyled mb-0">
-        <li class="d-flex justify-content-between border-bottom py-1">
-          <strong class="text-muted">Quantity:</strong> <span>{{ productDetails.quantity }}</span>
-        </li>
-        <li class="d-flex justify-content-between border-bottom py-1">
-          <strong class="text-muted">Size:</strong> <span>{{ productDetails.size }}</span>
-        </li>
-        <li class="d-flex justify-content-between border-bottom py-1">
-          <strong class="text-muted">orientation:</strong> <span>{{ productDetails.side }}</span>
-        </li>
-        <li class="d-flex justify-content-between border-bottom py-1">
-          <strong class="text-muted">Paper Thickness:</strong> <span>{{ productDetails.paper_thickness }}</span>
-        </li>
-        <li class="d-flex justify-content-between border-bottom py-1">
-          <strong class="text-muted">Paper Type:</strong> <span>{{ productDetails.paper_type }}</span>
-        </li>
-        <li class="d-flex justify-content-between border-bottom py-1">
-          <strong class="text-muted">Price:</strong> <span>{{ getPrice }}</span>
-        </li>
+  <!-- Sticky pricing card -->
+  <div class="position-sticky m-4 mt-5" style="top: 20px;">
+    <div class="pricing-card card border-light shadow-sm">
+      <div class="card-header bg-primary text-white text-center rounded-top">
+        <h5 class="mb-0">{{ productName }}</h5>
+      </div>
+      <div class="card-body bg-light">
+        <loading v-model:active="loading" :can-cancel="false" :is-full-page="false"
+                 :loader="'bars'"/>
+        <ul class="list-unstyled mb-0">
+          <li class="d-flex justify-content-between border-bottom py-1">
+            <strong class="text-muted">Quantity:</strong> <span>{{ productDetails.quantity }}</span>
+          </li>
+          <li class="d-flex justify-content-between border-bottom py-1">
+            <strong class="text-muted">Size:</strong> <span>{{ productDetails.size }}</span>
+          </li>
+          <li class="d-flex justify-content-between border-bottom py-1">
+            <strong class="text-muted">orientation:</strong> <span>{{ productDetails.side }}</span>
+          </li>
+          <li class="d-flex justify-content-between border-bottom py-1">
+            <strong class="text-muted">Paper Thickness:</strong> <span>{{ productDetails.paper_thickness }}</span>
+          </li>
+          <li class="d-flex justify-content-between border-bottom py-1">
+            <strong class="text-muted">Paper Type:</strong> <span>{{ productDetails.paper_type }}</span>
+          </li>
+          <li class="d-flex justify-content-between border-bottom py-1">
+            <strong class="text-muted">Price:</strong> <span>{{ getPrice }}</span>
+          </li>
 
-      </ul>
+        </ul>
+      </div>
     </div>
   </div>
 </template>

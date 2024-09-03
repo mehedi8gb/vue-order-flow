@@ -279,7 +279,7 @@
         </form>
 
       </div>
-      <div class="col-md-4 d-flex align-items-stretch mb-4">
+      <div class="col-md-4">
         <PricingComponent/>
       </div>
     </div>
