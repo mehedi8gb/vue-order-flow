@@ -163,19 +163,6 @@ export default {
   data() {
     return {
       isLoadingValidation: false,
-      data: null,
-      // form: {
-      //   deliveryOption: '',
-      //   deliveryAddressResponse: '',
-      //   deliveryDeadline: '',
-      //   postcode: '',
-      //   nameNumber: '',
-      //   addressLine2: '',
-      //   townCity: '',
-      // },
-      // username: 'OliuChowdhury788333',
-      // key: '8MD1-0O7H-H2TI-FFAL',
-      // errors: {},
       form: {
         postcode: '',
         nameNumber: '',
@@ -186,10 +173,9 @@ export default {
       addresses: [], // To store list of addresses from the first API call
       selectedAddressId: '', // Stores the selected address ID
       errors: {}, // Error handling
-      // apiUrl: 'https://api.postcodes4u.com', // Example API base URL
       username: 'OliuChowdhury788333', // Example API username
       key: '8MD1-0O7H-H2TI-FFAL', // Example API key
-      apiUrl: 'https://services.3xsoftware.co.uk/Search/ByPostcode/json',
+      apiUrl: 'https://new-backoffice.test/api/address-lookup',
       callback: 'Pc4uSearchEnd',
       deliveryOptions: [
         {
@@ -307,10 +293,11 @@ export default {
      lookUp() {
       if (this.form.postcode) {
         axios
-          .get(`${this.apiUrl}?username=${this.username}&key=${this.key}&postcode=${this.form.postcode}&callback=${this.callback}`)
+          .get(`${this.apiUrl}?username=${this.username}&key=${this.key}&postcode=${this.form.postcode}`)
           .then(response => {
             // Assuming the address summaries come from "Summaries"
             this.addresses = response.data.Summaries;
+            toast.success('please select an address from the dropdown.');
             if (this.addresses.length === 0) {
               toast.error('No addresses found for this postcode.');
             }
@@ -326,12 +313,11 @@ export default {
     getAddressDetails() {
       if (this.selectedAddressId) {
         axios
-          .get(`${this.apiUrl}/details`, {
+          .get(`${this.apiUrl}/address-details`, {
             params: {
               username: this.username,
               key: this.key,
               id: this.selectedAddressId,
-              callback: 'Pc4uSearchIdEnd'
             }
           })
           .then(response => {
@@ -344,6 +330,7 @@ export default {
 
             // Clear addresses after selection
             this.addresses = [];
+            toast.success('Address filled with selected address details.');
           })
           .catch(error => {
             console.error("There was an error fetching the full address details!", error);
@@ -354,46 +341,6 @@ export default {
     showAddressForm() {
       return this.form.nameNumber || this.addresses.length > 0;
     }
-
-
-    // lookUp() {
-    //   if (this.form.postcode) {
-    //     axios
-    //         .get(`${this.apiUrl}?username=${this.username}&key=${this.key}&postcode=${this.form.postcode}`)
-    //         .then(response => {
-    //           this.data = response.data;
-    //           console.log(this.data);
-    //           this.form.deliveryAddressResponse = 'error';
-    //           this.updateDeliveryAddressResponse(this.form.deliveryAddressResponse);
-    //
-    //         })
-    //         .catch(error => {
-    //           console.error("There was an error fetching the data!", error);
-    //           toast.error("There was an error fetching the data!");
-    //           this.data = 'error';
-    //           this.form.deliveryAddressResponse = 'error';
-    //           this.updateDeliveryAddressResponse(this.form.deliveryAddressResponse);
-    //         });
-    //   } else {
-    //     toast.error("Please enter a postcode!");
-    //     this.form.deliveryAddressResponse = 'incomplete';
-    //     this.updateDeliveryAddressResponse(this.form.deliveryAddressResponse);
-    //   }
-    // },
-    // showAddressForm() {
-    //   const isAddressResponseError = this.form.deliveryAddressResponse === 'error' || this.form.deliveryAddressResponse === 'incomplete';
-    //
-    //   const hasErrors = [
-    //     'deliveryDetails.deliveryOption',
-    //     'deliveryDetails.deliveryDeadline',
-    //     'deliveryDetails.nameNumber',
-    //     'deliveryDetails.townCity',
-    //     'deliveryDetails.postcode'
-    //   ].some(field => this.errors[field] && this.errors[field].length > 0);
-    //
-    //   return isAddressResponseError || hasErrors || this.getAddressLookup;
-    // }
-
   },
   mounted() {
     this.$nextTick(() => {
