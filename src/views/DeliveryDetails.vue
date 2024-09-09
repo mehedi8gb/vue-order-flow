@@ -77,7 +77,7 @@
                 </div>
 
                 <!-- Address Dropdown -->
-                <div v-if="addresses.length > 0" class="form-group mt-3">
+                <div v-if="addresses?.length > 0" class="form-group mt-3">
                   <label for="addressSelect" class="form-label">Select an Address</label>
                   <select v-model="selectedAddressId" @change="getAddressDetails" class="form-control"
                           id="addressSelect">
@@ -176,7 +176,6 @@ export default {
       username: 'OliuChowdhury788333', // Example API username
       key: '8MD1-0O7H-H2TI-FFAL', // Example API key
       apiUrl: 'https://new-backoffice.test/api/address-lookup',
-      callback: 'Pc4uSearchEnd',
       deliveryOptions: [
         {
           id: 'priorityTomorrow',
@@ -250,15 +249,14 @@ export default {
           value: 'I have a custom delivery deadline',
           label: 'I have a custom delivery deadline'
         }
-      ]
-
+      ],
     };
   },
   computed: {
-    ...mapGetters(['getDeliveryDetails', 'getErrors', 'getAddressLookup']),
+    ...mapGetters(['getDeliveryDetails', 'getErrors', 'getAddressLookup', "getIsLookupSuccess"]),
   },
   methods: {
-    ...mapActions(['updateDeliveryDetails', 'updateDeliveryAddressResponse', 'clearErrors', 'setErrors']),
+    ...mapActions(['updateDeliveryDetails', 'updateDeliveryAddressResponse', 'clearErrors', 'setErrors', 'updateIsLookupSuccess']),
     saveDetails() {
       this.isLoadingValidation = true;
       this.updateDeliveryDetails(this.form);
@@ -290,22 +288,34 @@ export default {
       }
     },
 
-     lookUp() {
+    lookUp() {
       if (this.form.postcode) {
         axios
-          .get(`${this.apiUrl}?username=${this.username}&key=${this.key}&postcode=${this.form.postcode}`)
-          .then(response => {
-            // Assuming the address summaries come from "Summaries"
-            this.addresses = response.data.Summaries;
-            toast.success('please select an address from the dropdown.');
-            if (this.addresses.length === 0) {
-              toast.error('No addresses found for this postcode.');
-            }
-          })
-          .catch(error => {
-            console.error("There was an error fetching the data!", error);
-            toast.error("There was an error fetching the data!");
-          });
+            .get(`${this.apiUrl}?username=${this.username}&key=${this.key}&postcode=${this.form.postcode}`)
+            .then(response => {
+              // Check if response contains error information
+              if (response.data.Error) {
+                // Handle error response from server
+                const errorDescription = response.data.Error.Description || "Unknown error occurred.";
+                toast.error(`Error: ${errorDescription}`);
+                this.updateIsLookupSuccess(false);
+              } else {
+                // Handle successful response
+                this.addresses = response.data.Summaries || [];
+                toast.success('Please select an address from the dropdown.');
+                 this.updateIsLookupSuccess(true);
+              }
+            })
+            .catch(error => {
+              console.error("There was an error fetching the data!", error);
+              if (error.response && error.response.data && error.response.data.Error) {
+                const errorDescription = error.response.data.Error.Description || "An error occurred.";
+                toast.error(`Error: ${errorDescription}`);
+              } else {
+                toast.error("There was an error fetching the data!");
+              }
+               this.updateIsLookupSuccess(false);
+            });
       } else {
         toast.error("Please enter a postcode!");
       }
@@ -313,33 +323,33 @@ export default {
     getAddressDetails() {
       if (this.selectedAddressId) {
         axios
-          .get(`${this.apiUrl}/address-details`, {
-            params: {
-              username: this.username,
-              key: this.key,
-              id: this.selectedAddressId,
-            }
-          })
-          .then(response => {
-            const address = response.data.Address;
-            // Populate the form fields
-            this.form.nameNumber = address.BuildingNumber + ' ' + address.PrimaryStreet;
-            this.form.addressLine2 = address.Line2;
-            this.form.townCity = address.PostTown;
-            this.form.postcode = address.Postcode;
+            .get(`${this.apiUrl}/address-details`, {
+              params: {
+                username: this.username,
+                key: this.key,
+                id: this.selectedAddressId,
+              }
+            })
+            .then(response => {
+              const address = response.data.Address;
+              // Populate the form fields
+              this.form.nameNumber = address.BuildingNumber + ' ' + address.PrimaryStreet;
+              this.form.addressLine2 = address.Line2;
+              this.form.townCity = address.PostTown;
+              this.form.postcode = address.Postcode;
 
-            // Clear addresses after selection
-            this.addresses = [];
-            toast.success('Address filled with selected address details.');
-          })
-          .catch(error => {
-            console.error("There was an error fetching the full address details!", error);
-            toast.error("Error fetching full address details.");
-          });
+              // Clear addresses after selection
+              this.addresses = [];
+              toast.success('Address filled with selected address details.');
+            })
+            .catch(error => {
+              console.error("There was an error fetching the full address details!", error);
+              toast.error("Error fetching full address details.");
+            });
       }
     },
     showAddressForm() {
-      return this.form.nameNumber || this.addresses.length > 0;
+      return this.form.nameNumber || this.addresses?.length > 0 || this.getIsLookupSuccess === false;
     }
   },
   mounted() {
