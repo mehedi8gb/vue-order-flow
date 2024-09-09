@@ -6,6 +6,7 @@ const store = createStore({
         sessionId: null,
         deliveryDetails: {
             deliveryAddressResponse: null,
+            isLookupSuccessful: true,
             showAddressLookup: false,
             deliveryDeadline: "",
             postcode: "",
@@ -63,6 +64,9 @@ const store = createStore({
         },
         setDeliveryDetails(state, details) {
             state.deliveryDetails = details;
+        },
+        setIsLookupSuccess(state, cond) {
+            state.deliveryDetails.isLookupSuccess = cond;
         },
         setDeliveryAddressResponse(state, response) {
             state.deliveryDetails.deliveryAddressResponse = response;
@@ -142,6 +146,9 @@ const store = createStore({
         updateDeliveryDetails({commit}, details) {
             commit("setDeliveryDetails", details);
         },
+        updateIsLookupSuccess({commit}, cond) {
+            commit("setIsLookupSuccess", cond);
+        },
         updateDeliveryAddressResponse({commit}, response) {
             commit("setDeliveryAddressResponse", response);
         },
@@ -172,6 +179,7 @@ const store = createStore({
         getPricingComponentLoading: (state) => state.pricingComponent.loading,
         getPricingComponentLoaded: (state) => state.pricingComponent.loaded,
         getDeliveryDetails: (state) => state.deliveryDetails,
+        getIsLookupSuccess: (state) => state.deliveryDetails.isLookupSuccess,
         getProductDetails: (state) => state.productDetails,
         getYourDetails: (state) => state.yourDetails,
         getAddressLookup: (state) => state.deliveryDetails.showAddressLookup,
