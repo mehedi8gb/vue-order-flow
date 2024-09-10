@@ -175,7 +175,7 @@ export default {
       errors: {}, // Error handling
       username: 'OliuChowdhury788333', // Example API username
       key: '8MD1-0O7H-H2TI-FFAL', // Example API key
-      apiUrl: 'https://new-backoffice.test/api/address-lookup',
+      apiUrl: `${process.env.VUE_APP_BACKOFFICE_API_BASE_URL}/address-lookup`,
       deliveryOptions: [
         {
           id: 'priorityTomorrow',
