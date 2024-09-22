@@ -28,41 +28,69 @@
                    :loader="'bars'"/>
 
           <div class="card-body m-3 pb-5">
-
-            <label>When would you like to receive your item?*</label>
-            <small class="d-block mb-3 px-2 text-muted">
-              To receive express same-day delivery, please continue to fill out the form and let us know
-              your preferred delivery time in the comment section.
-            </small>
-
-            <!-- Display error message from Vuex state -->
-            <div v-if="errors['deliveryDetails.deliveryOption']" class="alert alert-danger" role="alert">
-              {{ errors['deliveryDetails.deliveryOption'][0] }}
-            </div>
-
-            <!-- Radio button options loop -->
-            <div class="form-check" v-for="option in deliveryOptions" :key="option.id">
-              <input v-model="form.deliveryOption" class="form-check-input" type="radio" :id="option.id"
-                     :name="option.name" :value="option.value">
-              <label class="form-check-label" :for="option.id">
-                {{ option.label }}
-              </label>
-            </div>
-
-            <div v-if="form.deliveryOption === 'I have a custom delivery deadline'" class="form-group mt-4">
-              <label for="deliveryDeadline" class="form-label">What is your delivery deadline?</label><br>
-              <small class="form-text text-muted">You can describe deadline here.</small>
-              <div class="input-group">
-                <input v-model="form.deliveryDeadline" type="text" class="form-control"
-                       :class="{ 'is-invalid': errors['deliveryDetails.deliveryDeadline'] }"
-                       name="deliveryDeadline" placeholder="Enter delivery deadline">
-                <div v-if="errors['deliveryDetails.deliveryDeadline']" class="invalid-feedback">
-                  {{ errors['deliveryDetails.deliveryDeadline'][0] }}
+            <transition name="slide">
+              <!-- Conditional rendering based on loading state -->
+              <div class="custom-radio-placeholder-container">
+                <h2 class="custom-radio-title">Select Delivery Option</h2>
+                <div class="custom-radio-options">
+                  <!-- Placeholder skeletons for delivery options -->
+                  <div class="loading-container">
+                    <loading
+                        v-model:active="isLoadingOptions"
+                        :can-cancel="false"
+                        :is-full-page="false"
+                        :loader="'bars'"
+                        class="custom-loading-bar"/>
+                  </div>
+                  <div v-if="isLoadingOptions" class="custom-radio-options">
+                    <div v-for="n in 3" :key="n" class="custom-radio-placeholder">
+                      <div class="custom-radio-input-placeholder"></div>
+                      <div class="custom-radio-label-placeholder">
+                        <div class="custom-radio-content-placeholder">
+                          <div class="d-flex align-items-center">
+                            <span class="custom-radio-checkmark-placeholder"></span>
+                            <div>
+                              <div class="custom-radio-text-placeholder mb-1"></div>
+                              <div class="custom-radio-subtext-placeholder mb-1"></div>
+                            </div>
+                          </div>
+                          <div class="custom-radio-price-placeholder"></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div v-else class="custom-radio-options">
+                    <div v-for="option in deliveryOptions" :key="option.value" class="custom-radio-option">
+                      <input
+                          v-model="form.deliveryOption"
+                          type="radio"
+                          :id="option.value"
+                          name="deliveryOption"
+                          :value="option.value"
+                          class="custom-radio-input"
+                      />
+                      <label :for="option.value" class="custom-radio-label">
+                        <div class="custom-radio-content">
+                          <div class="d-flex align-items-center">
+                            <span class="custom-radio-checkmark"></span>
+                            <div>
+                              <p class="custom-radio-text mb-0">{{ option.label }}</p>
+                              <p class="custom-radio-subtext mb-0">Additional Cost: £{{ option.cost }}</p>
+                            </div>
+                          </div>
+                          <div class="custom-radio-price">£{{ option.cost }}</div>
+                        </div>
+                        <div v-if="form.deliveryOption === option.value" class="custom-radio-badge">
+                          Selected
+                        </div>
+                      </label>
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
+            </transition>
 
-            <div id="address-lockup">
+            <div id="address-lockup" class="custom-radio-container mt-3">
               <div class="form-group mt-4">
                 <label for="postcode" class="form-label">Delivery Address</label><br>
                 <small class="form-text text-muted">Enter postcode and click the Lookup button.</small>
@@ -149,6 +177,7 @@ import {mapActions, mapGetters} from 'vuex';
 
 import Loading from 'vue-loading-overlay';
 import 'vue-loading-overlay/dist/css/index.css';
+// import {CheckIcon} from 'lucide-vue-next'
 
 import axios from 'axios';
 import toast from '@/utils/toast';
@@ -159,10 +188,13 @@ export default {
   components: {
     PricingComponent,
     Loading,
+    // CheckIcon
   },
   data() {
     return {
       isLoadingValidation: false,
+      isLoadingOptions: false,
+      deliveryOptions: [],
       form: {
         postcode: '',
         nameNumber: '',
@@ -176,80 +208,6 @@ export default {
       username: 'OliuChowdhury788333', // Example API username
       key: '8MD1-0O7H-H2TI-FFAL', // Example API key
       apiUrl: `${process.env.VUE_APP_BACKOFFICE_API_BASE_URL}/address-lookup`,
-      deliveryOptions: [
-        {
-          id: 'priorityTomorrow',
-          name: 'deliveryOption',
-          value: 'Priority service tomorrow',
-          label: 'Priority service tomorrow'
-        },
-        {
-          id: 'superExpressToday',
-          name: 'deliveryOption',
-          value: 'Super Express Same Day Delivery (by 6 pm today) *£££ express charges may apply',
-          label: 'Super Express Same Day Delivery (by 6 pm today) *£££ express charges may apply'
-        },
-        {
-          id: 'superExpressNight',
-          name: 'deliveryOption',
-          value: 'Super Express Night Delivery (by 11:59 pm today) *£££ express charges may apply',
-          label: 'Super Express Night Delivery (by 11:59 pm today) *£££ express charges may apply'
-        },
-        {
-          id: 'expressTomorrow1030am',
-          name: 'deliveryOption',
-          value: 'Express Delivery Tomorrow by 10:30 am *£££ express charges may apply',
-          label: 'Express Delivery Tomorrow by 10:30 am *£££ express charges may apply'
-        },
-        {
-          id: 'expressTomorrow1pm',
-          name: 'deliveryOption',
-          value: 'Express Delivery Tomorrow by 1 pm *£££ express charges may apply',
-          label: 'Express Delivery Tomorrow by 1 pm *£££ express charges may apply'
-        },
-        {
-          id: 'expressTomorrow6pm',
-          name: 'deliveryOption',
-          value: 'Express Delivery Tomorrow by 6 pm *££ express charges may apply',
-          label: 'Express Delivery Tomorrow by 6 pm *££ express charges may apply'
-        },
-        {
-          id: 'priorityTomorrow1159pm',
-          name: 'deliveryOption',
-          value: 'Priority Delivery Tomorrow by 11:59 pm',
-          label: 'Priority Delivery Tomorrow by 11:59 pm'
-        },
-        {
-          id: 'standard2days',
-          name: 'deliveryOption',
-          value: 'Standard 2 Working Days Delivery',
-          label: 'Standard 2 Working Days Delivery'
-        },
-        {
-          id: 'standard3days',
-          name: 'deliveryOption',
-          value: 'Standard 3 Working Days Delivery',
-          label: 'Standard 3 Working Days Delivery'
-        },
-        {
-          id: 'standard4days',
-          name: 'deliveryOption',
-          value: 'Standard 4 Working Days Delivery',
-          label: 'Standard 4 Working Days Delivery'
-        },
-        {
-          id: 'standard35days',
-          name: 'deliveryOption',
-          value: 'Standard (3-5 working days)',
-          label: 'Standard (3-5 working days)'
-        },
-        {
-          id: 'customDeadline',
-          name: 'deliveryOption',
-          value: 'I have a custom delivery deadline',
-          label: 'I have a custom delivery deadline'
-        }
-      ],
     };
   },
   computed: {
@@ -261,6 +219,17 @@ export default {
       this.isLoadingValidation = true;
       this.updateDeliveryDetails(this.form);
       this.validateData();
+    },
+    async fetchDeliveryOptions() {
+      try {
+        this.isLoadingOptions = true;
+        const response = await axios.get(`${process.env.VUE_APP_BACKOFFICE_API_BASE_URL}/checkout/delivery/options`);
+        this.deliveryOptions = response.data; // Assuming the response contains an array of options
+      } catch (error) {
+        console.error("Error fetching delivery options:", error);
+      } finally {
+        this.isLoadingOptions = false;
+      }
     },
     async validateData() {
       this.clearErrors();
@@ -303,7 +272,7 @@ export default {
                 // Handle successful response
                 this.addresses = response.data.Summaries || [];
                 toast.success('Please select an address from the dropdown.');
-                 this.updateIsLookupSuccess(true);
+                this.updateIsLookupSuccess(true);
               }
             })
             .catch(error => {
@@ -314,7 +283,7 @@ export default {
               } else {
                 toast.error("There was an error fetching the data!");
               }
-               this.updateIsLookupSuccess(false);
+              this.updateIsLookupSuccess(false);
             });
       } else {
         toast.error("Please enter a postcode!");
@@ -353,6 +322,7 @@ export default {
     }
   },
   mounted() {
+    this.fetchDeliveryOptions();
     this.$nextTick(() => {
       this.errors = this.getErrors;
       const details = this.getDeliveryDetails;
@@ -364,9 +334,241 @@ export default {
 };
 </script>
 
-<style>
+
+<style scoped>
 /* Add your global styles here */
 body {
   padding-top: 20px !important;
 }
+
+/* Custom Radio Button Styles */
+.custom-radio-container {
+  margin: 0 auto;
+  padding: 1.5rem;
+  background-color: #ffffff;
+  border-radius: 0.75rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  animation: slideDown 0.3s ease-out;
+}
+
+.custom-radio-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 1.5rem;
+  color: #1f2937;
+}
+
+.custom-radio-options {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.custom-radio-option {
+  position: relative;
+}
+
+.custom-radio-label {
+  display: block;
+  position: relative;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  border: 2px solid #e5e7eb;
+  transition: all 0.3s ease-in-out;
+  cursor: pointer;
+}
+
+.custom-radio-label:hover {
+  border-color: #93c5fd;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.custom-radio-input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.custom-radio-input:checked + .custom-radio-label {
+  border-color: transparent;
+  background: linear-gradient(to right, #3b82f6, #8b5cf6);
+  color: #ffffff;
+  transform: scale(1.03);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+.custom-radio-checkmark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 50%;
+  border: 2px solid #d1d5db;
+  margin-right: 0.75rem;
+  transition: all 0.3s ease-in-out;
+}
+
+.custom-radio-input:checked + .custom-radio-label .custom-radio-checkmark {
+  border-color: #ffffff;
+  background-color: #ffffff;
+}
+
+.custom-radio-input:checked + .custom-radio-label .custom-radio-checkmark::after {
+  content: '\2713';
+  display: block;
+  color: #3b82f6;
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.custom-radio-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.custom-radio-text {
+  font-weight: 500;
+}
+
+.custom-radio-subtext {
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+.custom-radio-input:checked + .custom-radio-label .custom-radio-subtext {
+  color: #bfdbfe;
+}
+
+.custom-radio-price {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #3b82f6;
+  transition: color 0.3s ease-in-out;
+}
+
+.custom-radio-input:checked + .custom-radio-label .custom-radio-price {
+  color: #ffffff;
+}
+
+.custom-radio-badge {
+  position: absolute;
+  top: -0.5rem;
+  right: -0.5rem;
+  background-color: #fbbf24;
+  color: #92400e;
+  font-size: 0.75rem;
+  font-weight: bold;
+  padding: 0.25rem 0.5rem;
+  border-radius: 9999px;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+}
+
+/* Skeleton Placeholder Styles */
+.custom-radio-placeholder-container {
+  margin: 0 auto;
+  padding: 1.5rem;
+  background-color: #ffffff;
+  border-radius: 0.75rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  animation: slideDown 0.3s ease-out;
+  position: relative; /* Ensure the loading bar stays within the container */
+}
+
+.custom-radio-placeholder {
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+  border: 2px solid #f3f4f6;
+  border-radius: 0.5rem;
+  gap: 0.75rem;
+  transition: all 0.3s ease-in-out;
+  cursor: not-allowed;
+}
+
+.custom-radio-input-placeholder {
+  width: 1.5rem;
+  height: 1.5rem;
+  background-color: #e5e7eb;
+  border-radius: 50%;
+}
+
+.custom-radio-content-placeholder {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.custom-radio-checkmark-placeholder {
+  width: 1.5rem;
+  height: 1.5rem;
+  background-color: #e5e7eb;
+  border-radius: 50%;
+  margin-right: 0.75rem;
+}
+
+.custom-radio-text-placeholder,
+.custom-radio-subtext-placeholder,
+.custom-radio-price-placeholder {
+  height: 0.875rem;
+  background-color: #e5e7eb;
+  border-radius: 0.25rem;
+}
+
+.custom-radio-text-placeholder {
+  width: 40%;
+  margin-bottom: 0.5rem;
+}
+
+.custom-radio-subtext-placeholder {
+  width: 30%;
+  margin-bottom: 0.5rem;
+}
+
+.custom-radio-price-placeholder {
+  width: 15%;
+}
+
+/* Confining the loading bar to the placeholder container */
+.loading-container {
+  position: relative;
+  width: 100%; /* Occupies the full width of the container */
+  height: 3px; /* Adjust to match the desired height */
+  overflow: hidden; /* Ensures the loading animation is confined */
+  margin-bottom: 1rem; /* Adds space between loading bar and placeholders */
+}
+
+.custom-loading-bar {
+  position: absolute;
+  top: 0; /* Ensure it starts at the top of the loading container */
+  width: 100%;
+  height: 3px; /* Match the container height */
+  background-color: #3b82f6;
+  animation: loadingAnimation 1s linear infinite;
+}
+
+/* Animation for loading bar */
+@keyframes loadingAnimation {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* Animation */
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-1rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 </style>
