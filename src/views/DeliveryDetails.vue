@@ -60,6 +60,11 @@
                     </div>
                   </div>
                   <div v-else class="custom-radio-options">
+                    <div v-if="errors['deliveryDetails.deliveryOption']"
+                         class="alert alert-danger p-3 mb-4 text-red-600 bg-red-100 border border-red-200 rounded"
+                         role="alert">
+                      {{ errors['deliveryDetails.deliveryOption'][0] }}
+                    </div>
                     <div v-for="option in deliveryOptions" :key="option.value" class="custom-radio-option">
                       <input
                           v-model="form.deliveryOption"
@@ -68,7 +73,7 @@
                           name="deliveryOption"
                           :value="option.value"
                           class="custom-radio-input"
-                      />
+                          @change="pushDeliveryOption(option)"/>
                       <label :for="option.value" class="custom-radio-label">
                         <div class="custom-radio-content">
                           <div class="d-flex align-items-center">
@@ -194,13 +199,15 @@ export default {
     return {
       isLoadingValidation: false,
       isLoadingOptions: false,
+      previousDeliveryOption: '',
       deliveryOptions: [],
       form: {
-        postcode: '',
-        nameNumber: '',
-        addressLine2: '',
-        townCity: '',
-        deliveryAddressResponse: '',
+        deliveryOption: 'same_day', // or 'next_day', depending on your test
+        postcode: '94105', // Example postcode
+        nameNumber: '500', // House or building number
+        addressLine2: 'Pier 70 Boulevard', // Additional address information
+        townCity: 'San Francisco', // City name
+        deliveryAddressResponse: '', // This can be filled after a successful response from the API
       },
       addresses: [], // To store list of addresses from the first API call
       selectedAddressId: '', // Stores the selected address ID
@@ -211,15 +218,91 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['getDeliveryDetails', 'getErrors', 'getAddressLookup', "getIsLookupSuccess"]),
+    ...mapGetters([
+      'getProductDetails',
+      'getDeliveryDetails',
+      'getDeliveryOption',
+      'getPrice',
+      'getErrors',
+      'getAddressLookup',
+      "getIsLookupSuccess",
+      "getPreviousOption"
+    ]),
+    productDetails() {
+      return {
+        productName: this.getProductDetails.productName || 'Product',
+        quantity: this.getProductDetails.quantity,
+        size: this.getProductDetails.design.finishedSize || 'Unknown',
+        side: this.getProductDetails.design.slides || 'Unknown',
+        paper_thickness: this.getProductDetails.design.paperThickness || 'Unknown',
+        paper_type: this.getProductDetails.design.paperType || 'Unknown',
+      };
+    },
   },
   methods: {
-    ...mapActions(['updateDeliveryDetails', 'updateDeliveryAddressResponse', 'clearErrors', 'setErrors', 'updateIsLookupSuccess']),
+    ...mapActions([
+      'updateDeliveryOption',
+      'updatePreviousOption',
+      'updateDeliveryFee',
+      'updatePrice',
+      'updateDeliveryDetails',
+      'updateDeliveryAddressResponse',
+      'clearErrors',
+      'setErrors',
+      'updateIsLookupSuccess'
+    ]),
     saveDetails() {
       this.isLoadingValidation = true;
       this.updateDeliveryDetails(this.form);
       this.validateData();
     },
+    pushDeliveryOption(selectedValue) {
+      console.log('Selected Delivery Option:', selectedValue.value);
+      const payload = {
+        address: `${this.form.nameNumber}, ${this.form.addressLine2}, ${this.form.townCity}, ${this.form.postcode}`, // Combine the address components
+        delivery_slot: selectedValue.value, // Assuming you have a variable for the selected delivery slot
+        // delivery_date: this.selectedDeliveryDate, // Assuming you have a variable for the selected delivery date
+        base_price: this.getPrice, // Assuming you have a variable for the base price
+        productDetails: this.productDetails
+      };
+
+      axios.post(`${process.env.VUE_APP_BACKOFFICE_API_BASE_URL}/checkout/calculate-delivery-price`, payload)
+          .then(response => {
+            console.log('Delivery price calculated:', response.data);
+            this.updatePrice(response.data.total_price);
+            this.updateDeliveryFee(response.data.additional_cost);
+            this.updateDeliveryOption(selectedValue);
+            this.updatePreviousOption(selectedValue);
+          })
+          .catch(error => {
+            console.error('Error calculating delivery price:', error);
+          });
+
+      // First, log the previous delivery option
+      // console.log('Prev Selected Delivery Option:', this.getPreviousOption.value);
+      //
+      // // Check if the selected value is different from the current one
+      // if (this.form.deliveryOption === selectedValue.value) {
+      //   // Find the previous option and its cost
+      //   let oldPrice = this.getPrice;
+      //
+      //   // If there is a previous option, remove its cost
+      //   if (this.getPreviousOption) {
+      //     const previousOption = this.deliveryOptions.find(option => option.value === this.getPreviousOption.value);
+      //     oldPrice -= previousOption ? previousOption.cost : 0;
+      //   }
+      //   this.updateDeliveryOption(selectedValue);
+      //   // Log the selected delivery option
+      //   console.log('Selected Delivery Option:', this.getDeliveryOption.value);
+      //
+      //   // Update the price with the new delivery option's cost
+      //   this.updatePrice(oldPrice + selectedValue.cost);
+      //
+      //   // Update the previous delivery option to the current one
+      //   this.updatePreviousOption(selectedValue);
+    },
+
+
     async fetchDeliveryOptions() {
       try {
         this.isLoadingOptions = true;
@@ -256,7 +339,6 @@ export default {
         this.isLoadingValidation = false;
       }
     },
-
     lookUp() {
       if (this.form.postcode) {
         axios
@@ -320,8 +402,12 @@ export default {
     showAddressForm() {
       return this.form.nameNumber || this.addresses?.length > 0 || this.getIsLookupSuccess === false;
     }
-  },
+  }
+  ,
   mounted() {
+    if (this.form.deliveryOption) {
+      this.previousDeliveryOption = this.getDeliveryOption; // Set initial previous option
+    }
     this.fetchDeliveryOptions();
     this.$nextTick(() => {
       this.errors = this.getErrors;
@@ -331,7 +417,8 @@ export default {
       }
     });
   }
-};
+}
+;
 </script>
 
 
@@ -476,6 +563,7 @@ body {
   position: relative; /* Ensure the loading bar stays within the container */
 }
 
+/* Improved Placeholder Styles */
 .custom-radio-placeholder {
   display: flex;
   align-items: center;
@@ -483,10 +571,11 @@ body {
   border: 2px solid #f3f4f6;
   border-radius: 0.5rem;
   gap: 0.75rem;
-  transition: all 0.3s ease-in-out;
-  cursor: not-allowed;
+  position: relative;
+  overflow: hidden; /* Hide overflow for smooth animations */
 }
 
+/* Placeholder for the radio input */
 .custom-radio-input-placeholder {
   width: 1.5rem;
   height: 1.5rem;
@@ -494,6 +583,7 @@ body {
   border-radius: 50%;
 }
 
+/* Content Placeholder */
 .custom-radio-content-placeholder {
   display: flex;
   justify-content: space-between;
@@ -501,6 +591,7 @@ body {
   width: 100%;
 }
 
+/* Checkmark Placeholder */
 .custom-radio-checkmark-placeholder {
   width: 1.5rem;
   height: 1.5rem;
@@ -509,65 +600,66 @@ body {
   margin-right: 0.75rem;
 }
 
+/* Text Placeholders */
 .custom-radio-text-placeholder,
 .custom-radio-subtext-placeholder,
 .custom-radio-price-placeholder {
   height: 0.875rem;
   background-color: #e5e7eb;
   border-radius: 0.25rem;
+  position: relative; /* Allow for pseudo-element */
+  overflow: hidden; /* Ensure overflow is hidden */
 }
 
-.custom-radio-text-placeholder {
-  width: 40%;
-  margin-bottom: 0.5rem;
-}
-
-.custom-radio-subtext-placeholder {
-  width: 30%;
-  margin-bottom: 0.5rem;
-}
-
-.custom-radio-price-placeholder {
-  width: 15%;
-}
-
-/* Confining the loading bar to the placeholder container */
-.loading-container {
-  position: relative;
-  width: 100%; /* Occupies the full width of the container */
-  height: 3px; /* Adjust to match the desired height */
-  overflow: hidden; /* Ensures the loading animation is confined */
-  margin-bottom: 1rem; /* Adds space between loading bar and placeholders */
-}
-
-.custom-loading-bar {
+/* Line effect using pseudo-elements */
+.custom-radio-text-placeholder::after,
+.custom-radio-subtext-placeholder::after,
+.custom-radio-price-placeholder::after {
+  content: '';
   position: absolute;
-  top: 0; /* Ensure it starts at the top of the loading container */
+  top: 50%;
+  left: 0;
+  height: 2px; /* Line thickness */
   width: 100%;
-  height: 3px; /* Match the container height */
-  background-color: #3b82f6;
-  animation: loadingAnimation 1s linear infinite;
+  background-color: rgba(255, 255, 255, 0.5); /* Light line color */
+  transform: translateY(-50%); /* Center the line vertically */
 }
 
-/* Animation for loading bar */
-@keyframes loadingAnimation {
+/* Animation for the line effect */
+@keyframes lineAnimation {
   0% {
-    transform: translateX(-100%);
+    width: 0%;
+  }
+  50% {
+    width: 100%;
   }
   100% {
-    transform: translateX(100%);
+    width: 0%;
   }
 }
 
-/* Animation */
-@keyframes slideDown {
-  from {
-    opacity: 0;
-    transform: translateY(-1rem);
+/* Apply Animation to Line Effect */
+.custom-radio-text-placeholder::after,
+.custom-radio-subtext-placeholder::after,
+.custom-radio-price-placeholder::after {
+  animation: lineAnimation 1.5s infinite ease-in-out;
+  background-color: rgba(255, 255, 255, 0.8); /* Line color */
+}
+
+/* Add Animation to the text placeholders for a glowing effect */
+.custom-radio-text-placeholder,
+.custom-radio-subtext-placeholder,
+.custom-radio-price-placeholder {
+  animation: glow 1.5s infinite alternate;
+}
+
+/* Glow effect */
+@keyframes glow {
+  0% {
+    background-color: #e5e7eb;
   }
-  to {
-    opacity: 1;
-    transform: translateY(0);
+  100% {
+    background-color: #d1d5db;
   }
 }
 

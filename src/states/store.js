@@ -5,14 +5,18 @@ const store = createStore({
     state: {
         sessionId: null,
         deliveryDetails: {
+            DeliveryOption: [],
+            previousDeliveryOption: [],
+            deliveryFee: 0.0,
             deliveryAddressResponse: null,
             isLookupSuccessful: true,
             showAddressLookup: false,
             deliveryDeadline: "",
-            postcode: "",
-            nameNumber: "",
-            addressLine2: "",
-            townCity: "",
+            deliveryOption: 'same_day', // or 'next_day', depending on your test
+            postcode: '94105', // Example postcode
+            nameNumber: '500', // House or building number
+            addressLine2: 'Pier 70 Boulevard', // Additional address information
+            townCity: 'San Francisco',
         },
         productDetails: {
             productName: "Flyers",
@@ -45,6 +49,16 @@ const store = createStore({
         },
     },
     mutations: {
+        // delivery option
+        setDeliveryFee(state, fee) {
+            state.deliveryDetails.deliveryFee = fee;
+        },
+        setDeliveryOption(state, option) {
+            state.deliveryDetails.DeliveryOption = option;
+        },
+        setPreviousOption(state, option) {
+            state.deliveryDetails.previousDeliveryOption = option
+        },
         // pricing component
         setPricingComponentLoading(state, loading) {
             state.pricingComponent.loading = loading;
@@ -92,6 +106,16 @@ const store = createStore({
         },
     },
     actions: {
+        // delivery option
+        updateDeliveryOption({commit}, option) {
+            commit("setDeliveryOption", option);
+        },
+        updateDeliveryFee({commit}, fee) {
+            commit("setDeliveryFee", fee);
+        },
+        updatePreviousOption({commit}, option) {
+            commit("setPreviousOption", option);
+        },
         // pricing component
         updatePricingComponentLoading({commit}, loading) {
             commit("setPricingComponentLoading", loading);
@@ -185,6 +209,10 @@ const store = createStore({
         getAddressLookup: (state) => state.deliveryDetails.showAddressLookup,
         getErrors: (state) => state.errors,
         getSessionId: (state) => state.sessionId,
+        getDeliveryOption: (state) => state.deliveryDetails.DeliveryOption,
+        getPreviousOption: (state) => state.deliveryDetails.previousDeliveryOption,
+        getPrice: (state) => state.productDetails.price,
+        getDeliveryFee: (state) => state.deliveryDetails.deliveryFee,
     },
 });
 

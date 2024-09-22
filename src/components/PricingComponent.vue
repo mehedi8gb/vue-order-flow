@@ -27,6 +27,12 @@
 
         <!-- Price Section -->
         <div class="price-section border-top mt-3 pt-2 position-relative">
+          <div v-if="getDeliveryOption" class="d-flex justify-content-between align-items-center">
+            <span class="h6 text-muted">Delivery Fee:</span>
+            <div class="d-flex align-items-center ml-2">
+              <span class="h6 price-value">{{ getDeliveryFee }}</span>
+            </div>
+          </div>
           <div class="d-flex justify-content-between align-items-center">
             <span class="h6 text-muted">Price:</span>
             <div class="d-flex align-items-center ml-2">
@@ -60,7 +66,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['getProductDetails', 'getPricingComponentLoading', 'getPricingComponentLoaded']),
+    ...mapGetters(['getProductDetails', 'getPricingComponentLoading', 'getPricingComponentLoaded', 'getDeliveryOption', 'getDeliveryFee']),
     productName() {
       return this.getProductDetails.productName || 'Product';
     },
@@ -106,7 +112,13 @@ export default {
         this.fetchPrice();
       },
       deep: true
-    }
+    },
+    // deliveryDetails: {
+    //   handler() {
+    //     this.fetchDeliveryPrice();
+    //   },
+    //   deep: true
+    // },
   },
   mounted() {
     if (this.$route.name === 'ProductDetails' && !this.getPricingComponentLoaded) {
