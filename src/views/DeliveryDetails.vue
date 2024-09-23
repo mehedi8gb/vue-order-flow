@@ -28,7 +28,71 @@
                    :loader="'bars'"/>
 
           <div class="card-body m-3 pb-5">
-            <transition name="slide">
+            <div id="address-lockup" class="custom-radio-container mb-3">
+              <div class="form-group mt-4">
+                <label for="postcode" class="form-label">Delivery Address</label><br>
+                <small class="form-text text-muted">Enter postcode and click the Lookup button.</small>
+                <div class="input-group">
+                  <input v-model="form.postcode" type="text" class="form-control"
+                         :class="{ 'is-invalid': errors['deliveryDetails.postcode'] }" name="postcode"
+                         placeholder="Enter postcode...">
+                  <button class="btn btn-warning" type="button" @click="lookUp">Look Up</button>
+                  <div v-if="errors['deliveryDetails.postcode']" class="invalid-feedback">
+                    {{ errors['deliveryDetails.postcode'][0] }}
+                  </div>
+                </div>
+
+                <!-- Address Dropdown -->
+                <div v-if="addresses?.length > 0" class="form-group mt-3">
+                  <label for="addressSelect" class="form-label">Select an Address</label>
+                  <select v-model="selectedAddressId" @change="getAddressDetails" class="form-control"
+                          id="addressSelect">
+                    <option disabled value="">Select an address...</option>
+                    <option v-for="address in addresses" :key="address.Id" :value="address.Id">
+                      {{ address.StreetAddress }}, {{ address.Place }}
+                    </option>
+                  </select>
+                </div>
+
+                <!-- Show Address Form when lookup is done -->
+                <div v-if="showAddressForm()">
+                  <div class="row mt-4">
+                    <div class="form-group mb-3 col-md-6">
+                      <label for="nameNumber" class="form-label">Name/Number and Street</label>
+                      <input v-model="form.nameNumber" type="text" class="form-control"
+                             :class="{ 'is-invalid': errors['deliveryDetails.nameNumber'] }"
+                             id="nameNumber" placeholder="Enter name/number and street"/>
+                      <div v-if="errors['deliveryDetails.nameNumber']" class="invalid-feedback">
+                        {{ errors['deliveryDetails.nameNumber'][0] }}
+                      </div>
+                    </div>
+
+                    <div class="form-group mb-3 col-md-6">
+                      <label for="addressLine2" class="form-label">Address Line 2</label>
+                      <input v-model="form.addressLine2" type="text" class="form-control"
+                             :class="{ 'is-invalid': errors['deliveryDetails.addressLine2'] }"
+                             id="addressLine2" placeholder="Enter address line 2"/>
+                      <div v-if="errors['deliveryDetails.addressLine2']" class="invalid-feedback">
+                        {{ errors['deliveryDetails.addressLine2'][0] }}
+                      </div>
+                    </div>
+
+                    <div class="form-group mb-3">
+                      <label for="townCity" class="form-label">Town/City</label>
+                      <input v-model="form.townCity" type="text" class="form-control"
+                             :class="{ 'is-invalid': errors['deliveryDetails.townCity'] }" id="townCity"
+                             placeholder="Enter town/city"/>
+                      <div v-if="errors['deliveryDetails.townCity']" class="invalid-feedback">
+                        {{ errors['deliveryDetails.townCity'][0] }}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+            <transition v-if="showDeliveryOptions()" name="slide">
               <!-- Conditional rendering based on loading state -->
               <div class="custom-radio-placeholder-container">
                 <h2 class="custom-radio-title">Select Delivery Option</h2>
@@ -95,69 +159,6 @@
               </div>
             </transition>
 
-            <div id="address-lockup" class="custom-radio-container mt-3">
-              <div class="form-group mt-4">
-                <label for="postcode" class="form-label">Delivery Address</label><br>
-                <small class="form-text text-muted">Enter postcode and click the Lookup button.</small>
-                <div class="input-group">
-                  <input v-model="form.postcode" type="text" class="form-control"
-                         :class="{ 'is-invalid': errors['deliveryDetails.postcode'] }" name="postcode"
-                         placeholder="Enter postcode...">
-                  <button class="btn btn-warning" type="button" @click="lookUp">Look Up</button>
-                  <div v-if="errors['deliveryDetails.postcode']" class="invalid-feedback">
-                    {{ errors['deliveryDetails.postcode'][0] }}
-                  </div>
-                </div>
-
-                <!-- Address Dropdown -->
-                <div v-if="addresses?.length > 0" class="form-group mt-3">
-                  <label for="addressSelect" class="form-label">Select an Address</label>
-                  <select v-model="selectedAddressId" @change="getAddressDetails" class="form-control"
-                          id="addressSelect">
-                    <option disabled value="">Select an address...</option>
-                    <option v-for="address in addresses" :key="address.Id" :value="address.Id">
-                      {{ address.StreetAddress }}, {{ address.Place }}
-                    </option>
-                  </select>
-                </div>
-
-                <!-- Show Address Form when lookup is done -->
-                <div v-if="showAddressForm()">
-                  <div class="row mt-4">
-                    <div class="form-group mb-3 col-md-6">
-                      <label for="nameNumber" class="form-label">Name/Number and Street</label>
-                      <input v-model="form.nameNumber" type="text" class="form-control"
-                             :class="{ 'is-invalid': errors['deliveryDetails.nameNumber'] }"
-                             id="nameNumber" placeholder="Enter name/number and street"/>
-                      <div v-if="errors['deliveryDetails.nameNumber']" class="invalid-feedback">
-                        {{ errors['deliveryDetails.nameNumber'][0] }}
-                      </div>
-                    </div>
-
-                    <div class="form-group mb-3 col-md-6">
-                      <label for="addressLine2" class="form-label">Address Line 2</label>
-                      <input v-model="form.addressLine2" type="text" class="form-control"
-                             :class="{ 'is-invalid': errors['deliveryDetails.addressLine2'] }"
-                             id="addressLine2" placeholder="Enter address line 2"/>
-                      <div v-if="errors['deliveryDetails.addressLine2']" class="invalid-feedback">
-                        {{ errors['deliveryDetails.addressLine2'][0] }}
-                      </div>
-                    </div>
-
-                    <div class="form-group mb-3">
-                      <label for="townCity" class="form-label">Town/City</label>
-                      <input v-model="form.townCity" type="text" class="form-control"
-                             :class="{ 'is-invalid': errors['deliveryDetails.townCity'] }" id="townCity"
-                             placeholder="Enter town/city"/>
-                      <div v-if="errors['deliveryDetails.townCity']" class="invalid-feedback">
-                        {{ errors['deliveryDetails.townCity'][0] }}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
 
             <div class="my-4 d-flex justify-content-between align-items-center">
               <router-link :to="{ name: 'ProductDetails' }" class="btn btn-outline-secondary btn-md">
@@ -203,10 +204,10 @@ export default {
       deliveryOptions: [],
       form: {
         deliveryOption: 'same_day', // or 'next_day', depending on your test
-        postcode: '94105', // Example postcode
-        nameNumber: '500', // House or building number
-        addressLine2: 'Pier 70 Boulevard', // Additional address information
-        townCity: 'San Francisco', // City name
+        postcode: 'AA901XX', // Example postcode
+        nameNumber: '', // House or building number
+        addressLine2: '', // Additional address information
+        townCity: '', // City name
         deliveryAddressResponse: '', // This can be filled after a successful response from the API
       },
       addresses: [], // To store list of addresses from the first API call
@@ -249,21 +250,27 @@ export default {
       'updateDeliveryAddressResponse',
       'clearErrors',
       'setErrors',
-      'updateIsLookupSuccess'
+      'updateIsLookupSuccess',
+      'updatePricingComponentLoading',
+      'fetchPrice'
     ]),
     saveDetails() {
       this.isLoadingValidation = true;
       this.updateDeliveryDetails(this.form);
       this.validateData();
     },
+    showDeliveryOptions() {
+      return this.form.townCity && this.form.addressLine2 && this.form.nameNumber && this.form.postcode;
+    },
     pushDeliveryOption(selectedValue) {
+      this.updatePricingComponentLoading(true);
       console.log('Selected Delivery Option:', selectedValue.value);
       const payload = {
         address: `${this.form.nameNumber}, ${this.form.addressLine2}, ${this.form.townCity}, ${this.form.postcode}`, // Combine the address components
         delivery_slot: selectedValue.value, // Assuming you have a variable for the selected delivery slot
         // delivery_date: this.selectedDeliveryDate, // Assuming you have a variable for the selected delivery date
         base_price: this.getPrice, // Assuming you have a variable for the base price
-        productDetails: this.productDetails
+        productDetails: this.getProductDetails
       };
 
       axios.post(`${process.env.VUE_APP_BACKOFFICE_API_BASE_URL}/checkout/calculate-delivery-price`, payload)
@@ -273,6 +280,7 @@ export default {
             this.updateDeliveryFee(response.data.additional_cost);
             this.updateDeliveryOption(selectedValue);
             this.updatePreviousOption(selectedValue);
+            this.updatePricingComponentLoading(false);
           })
           .catch(error => {
             console.error('Error calculating delivery price:', error);
@@ -392,6 +400,8 @@ export default {
               // Clear addresses after selection
               this.addresses = [];
               toast.success('Address filled with selected address details.');
+              // this.updatePricingComponentLoading(true);
+              this.fetchPrice();
             })
             .catch(error => {
               console.error("There was an error fetching the full address details!", error);
@@ -402,9 +412,9 @@ export default {
     showAddressForm() {
       return this.form.nameNumber || this.addresses?.length > 0 || this.getIsLookupSuccess === false;
     }
-  }
-  ,
+  },
   mounted() {
+    this.fetchPrice();
     if (this.form.deliveryOption) {
       this.previousDeliveryOption = this.getDeliveryOption; // Set initial previous option
     }

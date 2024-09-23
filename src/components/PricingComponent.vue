@@ -30,7 +30,12 @@
           <div v-if="getDeliveryOption" class="d-flex justify-content-between align-items-center">
             <span class="h6 text-muted">Delivery Fee:</span>
             <div class="d-flex align-items-center ml-2">
-              <span class="h6 price-value">{{ getDeliveryFee }}</span>
+                <span v-if="getPricingComponentLoading" class="spinner-dots">
+                <div></div>
+                <div></div>
+                <div></div>
+              </span>
+              <span v-else class="h6 price-value">{{ getDeliveryCost }}</span>
             </div>
           </div>
           <div class="d-flex justify-content-between align-items-center">
@@ -84,26 +89,32 @@ export default {
         style: 'currency',
         currency: 'GBP',
       }).format(this.getProductDetails.price);
+    },
+    getDeliveryCost() {
+      return new Intl.NumberFormat('en-UK', {
+        style: 'currency',
+        currency: 'GBP',
+      }).format(this.getDeliveryFee);
     }
   },
   methods: {
-    ...mapActions(['updatePrice', 'updatePricingComponentLoading', 'updatePricingComponentLoaded']),
-    async fetchPrice() {
-      this.loaded = true;
-      this.updatePricingComponentLoading(true);
-      try {
-        const response = await axios.post(`${process.env.VUE_APP_BACKOFFICE_API_BASE_URL}/checkout/calculate-order-price`, {
-          product_name: this.productName,
-          product_details: this.productDetails
-        });
-        await this.updatePrice(response.data.price);
-        console.log('Price fetched:', response.data.price);
-      } catch (error) {
-        console.error('Error fetching price:', error);
-      } finally {
-        this.updatePricingComponentLoading(false);
-      }
-    }
+    ...mapActions(['updatePrice', 'updatePricingComponentLoading', 'updatePricingComponentLoaded', 'fetchPrice']),
+    // async fetchPrice() {
+    //   this.loaded = true;
+    //   this.updatePricingComponentLoading(true);
+    //   try {
+    //     const response = await axios.post(`${process.env.VUE_APP_BACKOFFICE_API_BASE_URL}/checkout/calculate-order-price`, {
+    //       product_name: this.productName,
+    //       product_details: this.productDetails
+    //     });
+    //     await this.updatePrice(response.data.price);
+    //     console.log('Price fetched:', response.data.price);
+    //   } catch (error) {
+    //     console.error('Error fetching price:', error);
+    //   } finally {
+    //     this.updatePricingComponentLoading(false);
+    //   }
+    // }
   },
   watch: {
     // Watch for changes in the product details and trigger price fetch

@@ -1,5 +1,6 @@
 // store.js
 import {createStore} from "vuex";
+import axios from "axios";
 
 const store = createStore({
     state: {
@@ -12,11 +13,11 @@ const store = createStore({
             isLookupSuccessful: true,
             showAddressLookup: false,
             deliveryDeadline: "",
-            deliveryOption: 'same_day', // or 'next_day', depending on your test
-            postcode: '94105', // Example postcode
-            nameNumber: '500', // House or building number
-            addressLine2: 'Pier 70 Boulevard', // Additional address information
-            townCity: 'San Francisco',
+            deliveryOption: '', // or 'next_day', depending on your test
+            postcode: '', // Example postcode
+            nameNumber: '', // House or building number
+            addressLine2: '', // Additional address information
+            townCity: '',
         },
         productDetails: {
             productName: "Flyers",
@@ -106,6 +107,22 @@ const store = createStore({
         },
     },
     actions: {
+        // store.js or a specific module
+        async fetchPrice({dispatch}) {
+            dispatch('updatePricingComponentLoading', true);
+            try {
+                const response = await axios.post(`${process.env.VUE_APP_BACKOFFICE_API_BASE_URL}/checkout/calculate-order-price`, {
+                    product_name: this.state.productDetails.productName,
+                    product_details: this.state.productDetails
+                });
+                await dispatch('updatePrice', response.data.price);
+                console.log('Price fetched:', response.data.price);
+            } catch (error) {
+                console.error('Error fetching price:', error);
+            } finally {
+                dispatch('updatePricingComponentLoading', false);
+            }
+        },
         // delivery option
         updateDeliveryOption({commit}, option) {
             commit("setDeliveryOption", option);
