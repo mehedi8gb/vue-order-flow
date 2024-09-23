@@ -57,7 +57,6 @@
 
 <script>
 import {mapActions, mapGetters} from 'vuex';
-import axios from 'axios';
 // import Loading from "vue-loading-overlay";
 
 export default {
