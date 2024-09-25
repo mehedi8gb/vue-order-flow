@@ -189,6 +189,8 @@ import axios from 'axios';
 import toast from '@/utils/toast';
 import PricingComponent from "@/components/PricingComponent.vue";
 
+axios.defaults.withCredentials = true;
+
 export default {
   name: 'DeliveryDetails',
   components: {
@@ -227,7 +229,8 @@ export default {
       'getErrors',
       'getAddressLookup',
       "getIsLookupSuccess",
-      "getPreviousOption"
+      "getPreviousOption",
+        "getSessionId"
     ]),
     productDetails() {
       return {
@@ -246,13 +249,15 @@ export default {
       'updatePreviousOption',
       'updateDeliveryFee',
       'updatePrice',
+      'updateTotalPrice',
       'updateDeliveryDetails',
       'updateDeliveryAddressResponse',
       'clearErrors',
       'setErrors',
       'updateIsLookupSuccess',
       'updatePricingComponentLoading',
-      'fetchPrice'
+      'fetchPrice',
+      'updatePricingComponentDeliveryFeeLoading'
     ]),
     saveDetails() {
       this.isLoadingValidation = true;
@@ -263,51 +268,31 @@ export default {
       return this.form.townCity && this.form.addressLine2 && this.form.nameNumber && this.form.postcode;
     },
     pushDeliveryOption(selectedValue) {
+      this.updatePricingComponentDeliveryFeeLoading(true);
       this.updatePricingComponentLoading(true);
       console.log('Selected Delivery Option:', selectedValue.value);
       const payload = {
         address: `${this.form.nameNumber}, ${this.form.addressLine2}, ${this.form.townCity}, ${this.form.postcode}`, // Combine the address components
-        delivery_slot: selectedValue.value, // Assuming you have a variable for the selected delivery slot
-        // delivery_date: this.selectedDeliveryDate, // Assuming you have a variable for the selected delivery date
+        delivery_slot: selectedValue.value,
         base_price: this.getPrice, // Assuming you have a variable for the base price
-        productDetails: this.getProductDetails
+        productDetails: this.getProductDetails,
+        sessionId: this.getSessionId
       };
 
       axios.post(`${process.env.VUE_APP_BACKOFFICE_API_BASE_URL}/checkout/calculate-delivery-price`, payload)
           .then(response => {
             console.log('Delivery price calculated:', response.data);
-            this.updatePrice(response.data.total_price);
-            this.updateDeliveryFee(response.data.additional_cost);
+            this.updatePrice(response.data.basePrice);
+            this.updateTotalPrice(response.data.totalPrice);
+            this.updateDeliveryFee(response.data.additionalCost);
             this.updateDeliveryOption(selectedValue);
             this.updatePreviousOption(selectedValue);
+            this.updatePricingComponentDeliveryFeeLoading(false);
             this.updatePricingComponentLoading(false);
           })
           .catch(error => {
             console.error('Error calculating delivery price:', error);
           });
-
-      // First, log the previous delivery option
-      // console.log('Prev Selected Delivery Option:', this.getPreviousOption.value);
-      //
-      // // Check if the selected value is different from the current one
-      // if (this.form.deliveryOption === selectedValue.value) {
-      //   // Find the previous option and its cost
-      //   let oldPrice = this.getPrice;
-      //
-      //   // If there is a previous option, remove its cost
-      //   if (this.getPreviousOption) {
-      //     const previousOption = this.deliveryOptions.find(option => option.value === this.getPreviousOption.value);
-      //     oldPrice -= previousOption ? previousOption.cost : 0;
-      //   }
-      //   this.updateDeliveryOption(selectedValue);
-      //   // Log the selected delivery option
-      //   console.log('Selected Delivery Option:', this.getDeliveryOption.value);
-      //
-      //   // Update the price with the new delivery option's cost
-      //   this.updatePrice(oldPrice + selectedValue.cost);
-      //
-      //   // Update the previous delivery option to the current one
-      //   this.updatePreviousOption(selectedValue);
     },
 
 

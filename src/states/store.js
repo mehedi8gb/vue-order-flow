@@ -2,6 +2,8 @@
 import {createStore} from "vuex";
 import axios from "axios";
 
+axios.defaults.withCredentials = true;
+
 const store = createStore({
     state: {
         sessionId: null,
@@ -27,6 +29,7 @@ const store = createStore({
             fileUpload: "",
             files: [],
             price: 0.0,
+            totalPrice: 0.0,
             quantity: 25,
             design: {
                 slides: "Double-Sided",
@@ -42,6 +45,7 @@ const store = createStore({
         pricingComponent: {
             loading: false,
             loaded: false,
+            deliveryFeeLoading: false,
         },
         errors: {
             productDetails: {
@@ -64,12 +68,18 @@ const store = createStore({
         setPricingComponentLoading(state, loading) {
             state.pricingComponent.loading = loading;
         },
+        setPricingComponentDeliveryFeeLoading(state, loading) {
+            state.pricingComponent.deliveryFeeLoading = loading;
+        },
         setPricingComponentLoaded(state, loaded) {
             state.pricingComponent.loaded = loaded;
         },
         // update price
         setPrice(state, price) {
             state.productDetails.price = price;
+        },
+        setTotalPrice(state, price) {
+            state.productDetails.totalPrice = price;
         },
         setFileAttached(state, cond) {
             state.productDetails.fileUpload = cond;
@@ -113,9 +123,11 @@ const store = createStore({
             try {
                 const response = await axios.post(`${process.env.VUE_APP_BACKOFFICE_API_BASE_URL}/checkout/calculate-order-price`, {
                     product_name: this.state.productDetails.productName,
-                    product_details: this.state.productDetails
+                    product_details: this.state.productDetails,
+                    sessionId: this.state.sessionId
                 });
                 await dispatch('updatePrice', response.data.price);
+                await dispatch('updateTotalPrice', response.data.totalPrice);
                 console.log('Price fetched:', response.data.price);
             } catch (error) {
                 console.error('Error fetching price:', error);
@@ -140,9 +152,15 @@ const store = createStore({
         updatePricingComponentLoaded({commit}, loaded) {
             commit("setPricingComponentLoaded", loaded);
         },
+        updatePricingComponentDeliveryFeeLoading({commit}, loaded) {
+            commit("setPricingComponentDeliveryFeeLoading", loaded);
+        },
         // update price
         updatePrice({commit}, price) {
             commit("setPrice", price);
+        },
+        updateTotalPrice({commit}, price) {
+            commit("setTotalPrice", price);
         },
         async fetchAndGenerateSessionId({commit}) {
             try {
@@ -218,6 +236,7 @@ const store = createStore({
     },
     getters: {
         getPricingComponentLoading: (state) => state.pricingComponent.loading,
+        getPricingComponentDeliveryFeeLoading: (state) => state.pricingComponent.deliveryFeeLoading,
         getPricingComponentLoaded: (state) => state.pricingComponent.loaded,
         getDeliveryDetails: (state) => state.deliveryDetails,
         getIsLookupSuccess: (state) => state.deliveryDetails.isLookupSuccess,
@@ -229,6 +248,7 @@ const store = createStore({
         getDeliveryOption: (state) => state.deliveryDetails.DeliveryOption,
         getPreviousOption: (state) => state.deliveryDetails.previousDeliveryOption,
         getPrice: (state) => state.productDetails.price,
+        getTotalPrice: (state) => state.productDetails.totalPrice,
         getDeliveryFee: (state) => state.deliveryDetails.deliveryFee,
     },
 });
