@@ -2,8 +2,6 @@
 import {createStore} from "vuex";
 import axios from "axios";
 
-axios.defaults.withCredentials = true;
-
 const store = createStore({
     state: {
         sessionId: null,

@@ -189,8 +189,6 @@ import axios from 'axios';
 import toast from '@/utils/toast';
 import PricingComponent from "@/components/PricingComponent.vue";
 
-axios.defaults.withCredentials = true;
-
 export default {
   name: 'DeliveryDetails',
   components: {
