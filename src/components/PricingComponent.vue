@@ -1,6 +1,6 @@
 <template>
   <!-- Sticky pricing card -->
-  <div class="position-sticky m-4 mt-5" style="top: 20px;">
+  <div class="position-sticky mt-5 ms-1" style="top: 15px;">
     <div class="pricing-card card border-light shadow-lg rounded-lg">
       <div class="card-header bg-primary text-white text-center rounded-top">
         <h5 class="mb-0">{{ productName }}</h5>
@@ -8,22 +8,30 @@
       <div class="card-body bg-gradient-light">
         <!-- Pricing Details -->
         <ul class="list-unstyled mb-0">
-          <li class="d-flex justify-content-between border-bottom py-1">
-            <strong class="text-muted">Quantity:</strong> <span>{{ productDetails.quantity }}</span>
+          <li class="d-flex justify-content-between border-bottom py-2">
+            <strong class="text-muted">Quantity:</strong>
+            <span>{{ productDetails.quantity }}</span>
           </li>
-          <li class="d-flex justify-content-between border-bottom py-1">
-            <strong class="text-muted">Size:</strong> <span>{{ productDetails.size }}</span>
+          <li class="d-flex justify-content-between border-bottom py-2">
+            <strong class="text-muted">Size:</strong>
+            <span>{{ productDetails.size }}</span>
           </li>
-          <li class="d-flex justify-content-between border-bottom py-1">
-            <strong class="text-muted">Orientation:</strong> <span>{{ productDetails.side }}</span>
+          <li class="d-flex justify-content-between border-bottom py-2">
+            <strong class="text-muted">Orientation:</strong>
+            <span class="ms-2">{{ productDetails.side }}</span>
           </li>
-          <li class="d-flex justify-content-between border-bottom py-1">
-            <strong class="text-muted">Paper Thickness:</strong> <span>{{ productDetails.paper_thickness }}</span>
+          <li class="d-flex justify-content-between border-bottom py-2">
+            <strong class="text-muted">Paper Thickness:</strong>
+            <span>{{ productDetails.paper_thickness }}</span>
           </li>
-          <li class="d-flex justify-content-between border-bottom py-1">
-            <strong class="text-muted">Paper Type:</strong> <span>{{ productDetails.paper_type }}</span>
+          <li class="d-flex justify-content-between border-bottom py-2">
+            <strong class="text-muted">Paper Type:</strong>
+            <span class="ms-2">
+      {{ productDetails.paper_type === 'silkMatt' ? 'Silk (Matt finish)' : productDetails.paper_type }}
+    </span>
           </li>
         </ul>
+
 
         <!-- Price Section -->
         <div class="price-section border-top mt-3 pt-2">
@@ -111,7 +119,7 @@ export default {
     // Watch for changes in the product details and trigger price fetch
     productDetails: {
       handler() {
-        this.$store.dispatch('fetchPrice', { fromSession: false });
+        this.$store.dispatch('fetchPrice', {fromSession: false});
       },
       deep: true
     },
