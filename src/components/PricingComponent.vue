@@ -111,7 +111,7 @@ export default {
     // Watch for changes in the product details and trigger price fetch
     productDetails: {
       handler() {
-        this.fetchPrice();
+        this.$store.dispatch('fetchPrice', { fromSession: false });
       },
       deep: true
     },

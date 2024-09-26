@@ -118,13 +118,19 @@ const store = createStore({
     },
     actions: {
         // store.js or a specific module
-        async fetchPrice({dispatch}) {
+        async fetchPrice({dispatch}, {fromSession} = {}) {
+            // Use default value `true` only when `fromSession` is `undefined` (not `null` or `false`).
+            if (typeof fromSession === 'undefined') {
+                fromSession = true;
+            }
+            console.log('fetch price: fromSession:', fromSession);
             dispatch('updatePricingComponentLoading', true);
             try {
                 const response = await axios.post(`${process.env.VUE_APP_BACKOFFICE_API_BASE_URL}/checkout/calculate-order-price`, {
                     product_name: this.state.productDetails.productName,
                     product_details: this.state.productDetails,
-                    sessionId: this.state.sessionId
+                    sessionId: this.state.sessionId,
+                    fromSession: fromSession,
                 });
                 await dispatch('updatePrice', response.data.price);
                 await dispatch('updateTotalPrice', response.data.totalPrice);
