@@ -1,31 +1,30 @@
 <template>
   <div class="container">
-    <div class="d-flex pb-lg-4">
-      <div class="col-md-2" style="width: 200px">
+    <div class="pricing-sticky ms-2" style="top: 25px;">
+      <!-- PricingComponent for mobile (below the form, visible on mobile) -->
+      <MobilePricingComponent/>
+    </div>
+    <div class="row pb-lg-4">
+      <!-- Left Sidebar (200px width) -->
+      <div class="d-none d-lg-block col-lg-2 position-relative">
         <div class="position-absolute bg-secondary rounded text-white d-flex justify-content-center align-items-center"
              style="width: 150px; height: 100px; top: 52px; left: 34px">
           <span class="bg-white text-dark rounded text-center px-2 py-1">Flyers</span>
         </div>
       </div>
-      <div class="col-md-8 border rounded mt-5" style="border-color: rgb(185, 185, 185)">
+
+      <!-- Main Form Area (Stack on smaller screens) -->
+      <div class="col-md-7 col-12 border rounded mt-5" style="border-color: rgb(185, 185, 185)">
         <div class="position-relative" style="top: -14px; margin-left: 40px">
           <div class="d-flex justify-content-between">
             <div class="position-relative">
-                            <span class="position-absolute bg-white" style="white-space: nowrap; z-index: 100">delivery
-                                details</span>
-            </div>
-            <div class="position-relative">
-              <button type="button" class="btn btn-danger rounded-circle position-absolute"
-                      style="z-index: 100">
-                <span>&times;</span>
-              </button>
+              <span class="position-absolute bg-white" style="white-space: nowrap; z-index: 100">delivery details</span>
             </div>
           </div>
         </div>
 
         <form @submit.prevent="saveDetails">
-          <loading v-model:active="isLoadingValidation" :can-cancel="false" :is-full-page="false"
-                   :loader="'bars'"/>
+          <loading v-model:active="isLoadingValidation" :can-cancel="false" :is-full-page="false" :loader="'bars'"/>
 
           <div class="card-body m-3 pb-5">
             <div id="address-lockup" class="custom-radio-container mb-3">
@@ -91,20 +90,14 @@
               </div>
             </div>
 
-
+            <!-- Delivery Options Section -->
             <transition v-if="showDeliveryOptions()" name="slide">
-              <!-- Conditional rendering based on loading state -->
               <div class="custom-radio-placeholder-container">
                 <h2 class="custom-radio-title">Select Delivery Option</h2>
                 <div class="custom-radio-options">
-                  <!-- Placeholder skeletons for delivery options -->
                   <div class="loading-container">
-                    <loading
-                        v-model:active="isLoadingOptions"
-                        :can-cancel="false"
-                        :is-full-page="false"
-                        :loader="'bars'"
-                        class="custom-loading-bar"/>
+                    <loading v-model:active="isLoadingOptions" :can-cancel="false" :is-full-page="false"
+                             :loader="'bars'" class="custom-loading-bar"/>
                   </div>
                   <div v-if="isLoadingOptions" class="custom-radio-options">
                     <div v-for="n in 3" :key="n" class="custom-radio-placeholder">
@@ -130,14 +123,8 @@
                       {{ errors['deliveryDetails.deliveryOption'][0] }}
                     </div>
                     <div v-for="option in deliveryOptions" :key="option.value" class="custom-radio-option">
-                      <input
-                          v-model="form.deliveryOption"
-                          type="radio"
-                          :id="option.value"
-                          name="deliveryOption"
-                          :value="option.value"
-                          class="custom-radio-input"
-                          @change="pushDeliveryOption(option)"/>
+                      <input v-model="form.deliveryOption" type="radio" :id="option.value" name="deliveryOption"
+                             :value="option.value" class="custom-radio-input" @change="pushDeliveryOption(option)"/>
                       <label :for="option.value" class="custom-radio-label">
                         <div class="custom-radio-content">
                           <div class="d-flex align-items-center">
@@ -159,24 +146,26 @@
               </div>
             </transition>
 
-
             <div class="my-4 d-flex justify-content-between align-items-center">
               <router-link :to="{ name: 'ProductDetails' }" class="btn btn-outline-secondary btn-md">
                 Previous
               </router-link>
 
-              <input type="submit" @click.prevent="saveDetails" value="Next"
-                     class="btn btn-block btn-primary">
+              <input type="submit" @click.prevent="saveDetails" value="Next" class="btn btn-block btn-primary">
             </div>
           </div>
         </form>
       </div>
-      <div class="col-md-4">
+
+      <!-- Pricing Component (Stack on smaller screens) -->
+      <div class="col-12 col-md-5 col-lg-3 d-none d-md-block">
         <PricingComponent/>
       </div>
+
     </div>
   </div>
 </template>
+
 
 <script>
 import {mapActions, mapGetters} from 'vuex';
@@ -188,10 +177,12 @@ import 'vue-loading-overlay/dist/css/index.css';
 import axios from 'axios';
 import toast from '@/utils/toast';
 import PricingComponent from "@/components/PricingComponent.vue";
+import MobilePricingComponent from "@/components/MobilePricingComponent.vue";
 
 export default {
   name: 'DeliveryDetails',
   components: {
+    MobilePricingComponent,
     PricingComponent,
     Loading,
     // CheckIcon
@@ -228,7 +219,7 @@ export default {
       'getAddressLookup',
       "getIsLookupSuccess",
       "getPreviousOption",
-        "getSessionId"
+      "getSessionId"
     ]),
     productDetails() {
       return {
