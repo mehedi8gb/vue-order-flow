@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <div class="pricing-sticky ms-2" style="top: 25px;">
+    <div class="pricing-sticky ms-2" style="top: 15px;">
       <!-- PricingComponent for mobile (below the form, visible on mobile) -->
       <MobilePricingComponent/>
     </div>
