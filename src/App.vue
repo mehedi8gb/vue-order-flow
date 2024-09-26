@@ -42,7 +42,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
 @import './assets/css/variables.css';
 @import './assets/css/global-form.css';
 @import './assets/css/error.css';
@@ -61,4 +61,9 @@ body {
   padding-top: 20px !important;
 }
 
+.pricing-sticky {
+  position: sticky;
+  top: 0;
+  z-index: 1020;
+}
 </style>
