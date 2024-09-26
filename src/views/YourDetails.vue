@@ -1,32 +1,28 @@
 <template>
   <div class="container">
-    <!-- <HeaderComponent></HeaderComponent> -->
-    <div class="d-flex">
-      <div class="col-md-2" style="width: 200px">
+    <div class="pricing-sticky ms-2" style="top: 25px;">
+      <!-- PricingComponent for mobile (below the form, visible on mobile) -->
+      <MobilePricingComponent/>
+    </div>
+    <div class="row">
+      <div class="d-none d-lg-block col-lg-2 position-relative">
         <div class="position-absolute bg-secondary rounded text-white d-flex justify-content-center align-items-center"
-             style="width: 150px; height: 100px; top: 52px; left: 34px">
+             style="width: 150px; height: 100px; top: 52px; left: 34px;">
           <span class="bg-white text-dark rounded text-center px-2 py-1">Flyers</span>
         </div>
       </div>
-      <div class="col-md-8 border rounded mt-5" style="border-color: rgb(185, 185, 185)">
-        <div class="position-relative" style="top: -14px; margin-left: 40px">
+      <div class="col-md-7 col-12 border rounded mt-5" style="border-color: rgb(185, 185, 185);">
+        <div class="position-relative" style="top: -14px; margin-left: 40px;">
           <div class="d-flex justify-content-between">
             <div class="position-relative">
-                            <span class="position-absolute bg-white" style="white-space: nowrap; z-index: 100">Final
-                                preview</span>
-            </div>
-            <div class="position-relative">
-              <button type="button" class="btn btn-danger rounded-circle position-absolute"
-                      style="z-index: 100">
-                <span>&times;</span>
-              </button>
+              <span class="position-absolute bg-white" style="white-space: nowrap; z-index: 100;">Final preview</span>
             </div>
           </div>
         </div>
         <form @submit.prevent="saveDetails">
           <div class="card-body m-3 pb-5">
             <div class="row g-3 px-3">
-              <div class="form-group mt-4">
+              <div class="form-group col-12">
                 <label for="inputName">Your Name*</label>
                 <input type="text" class="form-control"
                        :class="{ 'is-invalid': errors['yourDetails.name'] }" id="inputName"
@@ -36,7 +32,7 @@
                 </div>
               </div>
 
-              <div class="row mt-2">
+              <div class="row col-12">
                 <div class="form-group col-md-6">
                   <label for="inputEmail">Your Email*</label>
                   <input type="email" class="form-control"
@@ -58,7 +54,7 @@
                 </div>
               </div>
 
-              <div class="form-group">
+              <div class="form-group col-12">
                 <label for="inputPhone">Your Phone Number*</label>
                 <input type="tel" class="form-control"
                        :class="{ 'is-invalid': errors['yourDetails.phone'] }" id="inputPhone"
@@ -68,7 +64,7 @@
                 </div>
               </div>
 
-              <div class="form-group">
+              <div class="form-group col-12">
                 <label>Who will receive the order?*</label>
                 <div class="form-check">
                   <input class="form-check-input" type="radio" name="recipient" id="myself"
@@ -85,7 +81,7 @@
                 </div>
               </div>
 
-              <div v-if="form.whoWillReceive == 'someone_else'" class="form-group">
+              <div v-if="form.whoWillReceive == 'someone_else'" class="col-12">
                 <div class="form-group">
                   <label for="recipientName">Recipient's name? *</label>
                   <input type="text" class="form-control"
@@ -107,9 +103,8 @@
                 </div>
               </div>
 
-              <div class="form-group">
-                <label for="additionalInstructions">Any further instructions or details?
-                  (optional)</label>
+              <div class="form-group col-12">
+                <label for="additionalInstructions">Any further instructions or details? (optional)</label>
                 <textarea v-model="form.additionalInstructions" class="form-control"
                           :class="{ 'is-invalid': errors['yourDetails.additionalInstructions'] }"
                           id="additionalInstructions" rows="3"></textarea>
@@ -138,20 +133,22 @@
           </div>
         </form>
       </div>
-      <div class="col-md-4">
+      <div class="col-12 col-md-5 col-lg-3 d-none d-md-block">
         <PricingComponent/>
       </div>
     </div>
   </div>
 </template>
 
+
 <script>
 import {mapActions, mapGetters} from 'vuex';
 import PricingComponent from "@/components/PricingComponent.vue";
+import MobilePricingComponent from "@/components/MobilePricingComponent.vue";
 
 export default {
   name: 'YourDetails',
-  components: {PricingComponent},
+  components: {MobilePricingComponent, PricingComponent},
 
   data() {
     return {
