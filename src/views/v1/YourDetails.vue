@@ -184,7 +184,42 @@ export default {
 </script>
 
 <style>
-body {
-    padding-top: 20px !important;
-}
+//.options-placeholder {
+//  height: 75px; /* Set height to match expected option height */
+//  position: relative; /* Position relative for absolute positioning of loader */
+//}
+//
+//.loading {
+//  position: absolute;
+//  top: 50%; /* Center vertically */
+//  left: 50%; /* Center horizontally */
+//  transform: translate(-50%, -50%); /* Offset for centering */
+//  width: 30px; /* Set width as per your loading animation */
+//  height: 30px; /* Set height as per your loading animation */
+//}
+//
+//.slide-enter-active, .slide-leave-active {
+//  transition: transform 0.5s ease, opacity 0.5s ease;
+//}
+//
+//.slide-enter, .slide-leave-to {
+//  transform: translateX(-100%);
+//  opacity: 0;
+//}
+//
+//.slide-enter-to, .slide-leave {
+//  transform: translateX(0);
+//  opacity: 1;
+//}
+//
+//.group:hover .form-check-input:checked + label span {
+//  border-color: #3b82f6; /* Tailwind's blue-500 color */
+//  background-color: #eff6ff; /* Tailwind's blue-100 color */
+//}
+//
+//.group .form-check-input:checked + label span {
+//  border-color: #1d4ed8; /* Tailwind's blue-700 color */
+//  background-color: #93c5fd; /* Tailwind's blue-300 color */
+//}
+
 </style>

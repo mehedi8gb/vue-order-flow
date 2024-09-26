@@ -26,10 +26,21 @@
         </ul>
 
         <!-- Price Section -->
-        <div class="price-section border-top mt-3 pt-2 position-relative">
-          <div class="d-flex justify-content-between align-items-center">
-            <span class="h6 text-muted">Price:</span>
-            <div class="d-flex align-items-center ml-2">
+        <div class="price-section border-top mt-3 pt-2">
+          <div v-if="getDeliveryOption" class="d-flex justify-content-between align-items-center">
+            <span class="h6 text-muted">Delivery Fee:</span>
+            <div class="d-flex align-items-center ms-2">
+              <span v-if="getPricingComponentDeliveryFeeLoading" class="spinner-dots">
+                <div></div>
+                <div></div>
+                <div></div>
+              </span>
+              <span v-else class="h6 price-value">{{ getDeliveryCost }}</span>
+            </div>
+          </div>
+          <div class="d-flex justify-content-between align-items-center mt-2">
+            <span class="h6 text-muted">Product Price:</span>
+            <div class="d-flex align-items-center ms-2">
               <span v-if="getPricingComponentLoading" class="spinner-dots">
                 <div></div>
                 <div></div>
@@ -39,6 +50,17 @@
             </div>
           </div>
         </div>
+
+        <!-- Total Price Section -->
+        <div class="total-section mt-3 pt-3 border-top text-center">
+          <span class="h6 text-muted">Total:</span>
+          <span v-if="getPricingComponentLoading" class="spinner-dots ms-2">
+            <div></div>
+            <div></div>
+            <div></div>
+          </span>
+          <span v-else class="h5 total-value ms-2">{{ getTotalCost }}</span>
+        </div>
       </div>
     </div>
   </div>
@@ -46,21 +68,11 @@
 
 <script>
 import {mapActions, mapGetters} from 'vuex';
-import axios from 'axios';
-// import Loading from "vue-loading-overlay";
 
 export default {
   name: 'PricingComponent',
-  components: {
-    // Loading,
-  },
-  data() {
-    return {
-      loaded: false,
-    };
-  },
   computed: {
-    ...mapGetters(['getProductDetails', 'getPricingComponentLoading', 'getPricingComponentLoaded']),
+    ...mapGetters(['getTotalPrice', 'getPricingComponentDeliveryFeeLoading', 'getProductDetails', 'getPricingComponentLoading', 'getPricingComponentLoaded', 'getDeliveryOption', 'getDeliveryFee']),
     productName() {
       return this.getProductDetails.productName || 'Product';
     },
@@ -78,35 +90,31 @@ export default {
         style: 'currency',
         currency: 'GBP',
       }).format(this.getProductDetails.price);
+    },
+    getDeliveryCost() {
+      return new Intl.NumberFormat('en-UK', {
+        style: 'currency',
+        currency: 'GBP',
+      }).format(this.getDeliveryFee);
+    },
+    getTotalCost() {
+      return new Intl.NumberFormat('en-UK', {
+        style: 'currency',
+        currency: 'GBP',
+      }).format(this.getProductDetails.totalPrice);
     }
   },
   methods: {
-    ...mapActions(['updatePrice', 'updatePricingComponentLoading', 'updatePricingComponentLoaded']),
-    async fetchPrice() {
-      this.loaded = true;
-      this.updatePricingComponentLoading(true);
-      try {
-        const response = await axios.post(`${process.env.VUE_APP_BACKOFFICE_API_BASE_URL}/checkout/calculate-order-price`, {
-          product_name: this.productName,
-          product_details: this.productDetails
-        });
-        await this.updatePrice(response.data.price);
-        console.log('Price fetched:', response.data.price);
-      } catch (error) {
-        console.error('Error fetching price:', error);
-      } finally {
-        this.updatePricingComponentLoading(false);
-      }
-    }
+    ...mapActions(['fetchPrice', 'updatePricingComponentLoaded']),
   },
   watch: {
     // Watch for changes in the product details and trigger price fetch
     productDetails: {
       handler() {
-        this.fetchPrice();
+        this.$store.dispatch('fetchPrice', { fromSession: false });
       },
       deep: true
-    }
+    },
   },
   mounted() {
     if (this.$route.name === 'ProductDetails' && !this.getPricingComponentLoaded) {
@@ -118,28 +126,29 @@ export default {
 </script>
 
 <style scoped>
+/* General Styles */
 .pricing-card {
-  max-width: 100%; /* Ensure card does not exceed its container */
-  display: inline-block; /* Fit content naturally */
-  border-radius: 0.75rem; /* Rounded corners for a modern look */
+  max-width: 100%;
+  display: inline-block;
+  border-radius: 0.75rem;
 }
 
 .card-header {
-  border-bottom: 2px solid #0056b3; /* Darker border for header */
+  border-bottom: 2px solid #0056b3;
 }
 
 .card-body {
-  font-size: 0.875rem; /* Slightly smaller font size */
+  font-size: 0.875rem;
 }
 
 .card-body ul {
-  padding-left: 0; /* Remove default padding */
+  padding-left: 0;
 }
 
 .card-body li {
-  overflow: hidden; /* Ensure content does not overflow list items */
-  white-space: nowrap; /* Prevent text wrapping */
-  text-overflow: ellipsis; /* Add ellipsis for overflowing text */
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .pricing-card {
@@ -156,6 +165,7 @@ export default {
   background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
 }
 
+/* Price Section */
 .price-section {
   border-top: 1px solid #dee2e6;
   padding-top: 10px;
@@ -167,34 +177,18 @@ export default {
   color: #343a40;
 }
 
-.spinner-border {
-  color: #0078d4;
+.total-section {
+  border-top: 1px solid #dee2e6;
+  padding-top: 15px;
 }
 
-.text-muted {
-  color: #6c757d;
+.total-value {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #343a40;
 }
 
-.card-header {
-  border-radius: .25rem .25rem 0 0;
-}
-
-.card-body {
-  padding: 1rem;
-}
-
-.rounded-lg {
-  border-radius: .5rem;
-}
-
-.shadow-lg {
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
-}
-
-.border-light {
-  border-color: #f8f9fa;
-}
-
+/* Spinner Styles */
 .spinner-dots {
   display: inline-block;
   width: 61px;
@@ -208,7 +202,7 @@ export default {
   width: 13px;
   height: 13px;
   border-radius: 50%;
-  background: blue; /* Change color to match your design */
+  background: blue;
   animation: spinner-dots 1.2s infinite ease-in-out;
 }
 

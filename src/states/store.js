@@ -1,18 +1,25 @@
 // store.js
 import {createStore} from "vuex";
+import axios from "axios";
+
+axios.defaults.withCredentials = true;
 
 const store = createStore({
     state: {
         sessionId: null,
         deliveryDetails: {
+            DeliveryOption: [],
+            previousDeliveryOption: [],
+            deliveryFee: 0.0,
             deliveryAddressResponse: null,
             isLookupSuccessful: true,
             showAddressLookup: false,
             deliveryDeadline: "",
-            postcode: "",
-            nameNumber: "",
-            addressLine2: "",
-            townCity: "",
+            deliveryOption: '', // or 'next_day', depending on your test
+            postcode: '', // Example postcode
+            nameNumber: '', // House or building number
+            addressLine2: '', // Additional address information
+            townCity: '',
         },
         productDetails: {
             productName: "Flyers",
@@ -22,6 +29,7 @@ const store = createStore({
             fileUpload: "",
             files: [],
             price: 0.0,
+            totalPrice: 0.0,
             quantity: 25,
             design: {
                 slides: "Double-Sided",
@@ -37,6 +45,7 @@ const store = createStore({
         pricingComponent: {
             loading: false,
             loaded: false,
+            deliveryFeeLoading: false,
         },
         errors: {
             productDetails: {
@@ -45,9 +54,22 @@ const store = createStore({
         },
     },
     mutations: {
+        // delivery option
+        setDeliveryFee(state, fee) {
+            state.deliveryDetails.deliveryFee = fee;
+        },
+        setDeliveryOption(state, option) {
+            state.deliveryDetails.DeliveryOption = option;
+        },
+        setPreviousOption(state, option) {
+            state.deliveryDetails.previousDeliveryOption = option
+        },
         // pricing component
         setPricingComponentLoading(state, loading) {
             state.pricingComponent.loading = loading;
+        },
+        setPricingComponentDeliveryFeeLoading(state, loading) {
+            state.pricingComponent.deliveryFeeLoading = loading;
         },
         setPricingComponentLoaded(state, loaded) {
             state.pricingComponent.loaded = loaded;
@@ -55,6 +77,9 @@ const store = createStore({
         // update price
         setPrice(state, price) {
             state.productDetails.price = price;
+        },
+        setTotalPrice(state, price) {
+            state.productDetails.totalPrice = price;
         },
         setFileAttached(state, cond) {
             state.productDetails.fileUpload = cond;
@@ -92,6 +117,40 @@ const store = createStore({
         },
     },
     actions: {
+        // store.js or a specific module
+        async fetchPrice({dispatch}, {fromSession} = {}) {
+            // Use default value `true` only when `fromSession` is `undefined` (not `null` or `false`).
+            if (typeof fromSession === 'undefined') {
+                fromSession = true;
+            }
+            console.log('fetch price: fromSession:', fromSession);
+            dispatch('updatePricingComponentLoading', true);
+            try {
+                const response = await axios.post(`${process.env.VUE_APP_BACKOFFICE_API_BASE_URL}/checkout/calculate-order-price`, {
+                    product_name: this.state.productDetails.productName,
+                    product_details: this.state.productDetails,
+                    sessionId: this.state.sessionId,
+                    fromSession: fromSession,
+                });
+                await dispatch('updatePrice', response.data.price);
+                await dispatch('updateTotalPrice', response.data.totalPrice);
+                console.log('Price fetched:', response.data.price);
+            } catch (error) {
+                console.error('Error fetching price:', error);
+            } finally {
+                dispatch('updatePricingComponentLoading', false);
+            }
+        },
+        // delivery option
+        updateDeliveryOption({commit}, option) {
+            commit("setDeliveryOption", option);
+        },
+        updateDeliveryFee({commit}, fee) {
+            commit("setDeliveryFee", fee);
+        },
+        updatePreviousOption({commit}, option) {
+            commit("setPreviousOption", option);
+        },
         // pricing component
         updatePricingComponentLoading({commit}, loading) {
             commit("setPricingComponentLoading", loading);
@@ -99,9 +158,15 @@ const store = createStore({
         updatePricingComponentLoaded({commit}, loaded) {
             commit("setPricingComponentLoaded", loaded);
         },
+        updatePricingComponentDeliveryFeeLoading({commit}, loaded) {
+            commit("setPricingComponentDeliveryFeeLoading", loaded);
+        },
         // update price
         updatePrice({commit}, price) {
             commit("setPrice", price);
+        },
+        updateTotalPrice({commit}, price) {
+            commit("setTotalPrice", price);
         },
         async fetchAndGenerateSessionId({commit}) {
             try {
@@ -177,6 +242,7 @@ const store = createStore({
     },
     getters: {
         getPricingComponentLoading: (state) => state.pricingComponent.loading,
+        getPricingComponentDeliveryFeeLoading: (state) => state.pricingComponent.deliveryFeeLoading,
         getPricingComponentLoaded: (state) => state.pricingComponent.loaded,
         getDeliveryDetails: (state) => state.deliveryDetails,
         getIsLookupSuccess: (state) => state.deliveryDetails.isLookupSuccess,
@@ -185,6 +251,11 @@ const store = createStore({
         getAddressLookup: (state) => state.deliveryDetails.showAddressLookup,
         getErrors: (state) => state.errors,
         getSessionId: (state) => state.sessionId,
+        getDeliveryOption: (state) => state.deliveryDetails.DeliveryOption,
+        getPreviousOption: (state) => state.deliveryDetails.previousDeliveryOption,
+        getPrice: (state) => state.productDetails.price,
+        getTotalPrice: (state) => state.productDetails.totalPrice,
+        getDeliveryFee: (state) => state.deliveryDetails.deliveryFee,
     },
 });
 
