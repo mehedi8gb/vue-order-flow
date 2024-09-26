@@ -327,8 +327,6 @@ import FilePondPluginImagePreview from "filepond-plugin-image-preview";
 import Toast from '../utils/toast.js';
 import PricingComponent from "@/components/PricingComponent.vue";
 
-axios.defaults.withCredentials = true;
-
 // Create a FilePond component instance
 const FilePond = vueFilePond(FilePondPluginFileValidateSize, FilePondPluginFileEncode, FilePondPluginImagePreview);
 
