@@ -31,7 +31,7 @@
 
           <div class="card-body m-3 pb-5">
             <div class="row g-3">
-              <div class="col-md-6 col-12">
+              <div :id="'designSlides'" class="col-md-6 col-12">
                 <div class="form-group">
                   <label for="singleSided">Sides</label>
                   <div class="form-check">
@@ -217,7 +217,7 @@
               </div>
             </div>
 
-            <div v-if="productDetails.hasDesignFile === '1'" class="form-group mt-4">
+            <div :id="'fileUpload'" v-if="productDetails.hasDesignFile === '1'" class="form-group mt-4">
               <label for="fileUpload" style="margin-bottom: 5px">Upload Design File (multiple files allowed)
                 [optional]</label>
               <file-pond v-model="productDetails.fileUpload" ref="pond" name="fileUpload"
@@ -312,6 +312,7 @@ export default {
   },
   data() {
     return {
+      shouldClearErrors: true,
       errors: {},
       isLoadingValidation: false,
       fileResponse: [
@@ -583,6 +584,24 @@ export default {
       ];
     },
   },
+  beforeRouteEnter(to, from, next) {
+    // Check if the previous route was 'OrderSuccess'
+    if (from.name === 'OrderSuccess') {
+      next(vm => {
+        vm.shouldClearErrors = false;
+      });
+    } else {
+      next();
+    }
+  },
+  mounted() {
+    if (this.shouldClearErrors) {
+      this.clearErrors();
+    }
+    this.removePQINAText();
+    this.errors = this.getErrors;
+    console.log('ProductDetails created', this.$refs.uploadedFilesList.files);
+  },
   methods: {
     ...mapActions([
       'fetchAndGenerateSessionId',
@@ -637,7 +656,7 @@ export default {
           // this.$refs.pond.removeFiles();
 
           this.productDetails.fileUpload = 'file uploaded';
-          this.$refs.uploadedFilesList.fetchFiles();
+          await this.$refs.uploadedFilesList.fetchFiles();
         } else {
           console.log('No new files to upload.');
         }
@@ -695,12 +714,6 @@ export default {
       // Optionally, stop observing after a certain time or condition
       setTimeout(() => observer.disconnect(), 5000); // Stop observing after 5 seconds
     },
-  },
-  mounted() {
-    this.clearErrors();
-    this.removePQINAText();
-    this.errors = this.getErrors;
-    console.log('ProductDetails created', this.$refs.uploadedFilesList.files);
   }
 };
 </script>
