@@ -1,23 +1,29 @@
 <template>
   <div>
     <div class="container">
-      <CustomLoading :show="isLoading" :texts="loadingTexts" @finished="onLoadingFinished" />
+      <CustomLoading :show="isLoading" :texts="loadingTexts" @finished="onLoadingFinished"/>
 
       <transition name="fade" @after-leave="onTransitionEnd">
         <div class="card-container" v-if="!isLoading && orderSuccess" key="order-success">
           <div class="text-center">
-            <h1 class="card-title">Order Successful!</h1>
-            <p class="card-text">Thank you for your order.</p>
-            <p class="card-text">Your order will be processed shortly.</p>
+            <h1 class="card-title">Order Quotation Created!</h1>
+            <p class="card-text">Thank you for your interest in our services.</p>
+            <p class="card-text">Your order quotation is being processed.</p>
             <!-- Display the Order ID -->
             <p class="card-text mt-3">
               <strong>Order ID:</strong> {{ response.data.order.order_id }}
             </p>
-            <p v-if="invoiceUrl"><a class="btn btn-secondary" :href="invoiceUrl">View Invoice</a></p>
+            <p v-if="invoiceUrl">
+              <a class="btn btn-secondary" :href="invoiceUrl">View Quotation</a>
+            </p>
+            <p v-if="agreementUrl">
+              <a class="btn btn-secondary" :href="agreementUrl">Proceed to Payment</a>
+            </p>
             <router-link to="/" class="btn btn-primary">Back to Home</router-link>
           </div>
         </div>
       </transition>
+
 
       <transition name="fade" @after-leave="onTransitionEnd">
         <div v-if="orderFailed" class="card-container" key="order-failed">
@@ -35,8 +41,9 @@
 
 <script>
 import axios from 'axios';
-import { mapActions, mapGetters } from 'vuex';
+import {mapActions, mapGetters} from 'vuex';
 import CustomLoading from '@/components/CustomLoading.vue';
+import {nextTick} from "vue";
 
 export default {
   name: 'OrderSuccess',
@@ -50,6 +57,7 @@ export default {
       orderSuccess: false,
       orderFailed: false,
       invoiceUrl: null,
+      agreementUrl: null,
       loadingTexts: [
         'Checking submitted data...',
         'Processing your order...',
@@ -65,7 +73,6 @@ export default {
     ...mapActions(['setErrors', 'clearErrors', 'updateAddressLookup']),
     async makeOrderRequest() {
       this.isLoading = true;
-      this.clearErrors();
       this.updateAddressLookup(true);
       try {
         const payload = {
@@ -77,7 +84,8 @@ export default {
 
         this.response = await axios.post(`${process.env.VUE_APP_BACKOFFICE_API_BASE_URL}/checkout/order`, payload);
         if (this.response.status === 201) {
-          this.invoiceUrl = this.response.data.invoice_url; // Assume these URLs are returned
+          this.invoiceUrl = this.response.data.invoice_url;
+          this.agreementUrl = this.response.data.agreement_url;
           this.orderSuccess = true;
           this.isLoading = false;
           this.$store.dispatch('clearSessionId');
@@ -94,24 +102,65 @@ export default {
     },
     handleValidationError(errors) {
       // Pass errors to the relevant page/component
-      this.clearErrors();
       this.setErrors(errors);
-      // Dynamically detect which page the error belongs to and redirect
+
+      // Define the mappings for each route and error key to scrollable IDs
+      const errorIdMaps = {
+        YourDetails: {
+          'yourDetails.someField': 'yourDetailsField',
+          // Add other mappings specific to 'YourDetails' page here
+        },
+        DeliveryDetails: {
+          'deliveryDetails.someField': 'deliveryDetailsField',
+          // Add other mappings specific to 'DeliveryDetails' page here
+        },
+        ProductDetails: {
+          'productDetails.hasDesignFile': 'hasDesignFile',
+          'productDetails.fileUpload': 'fileUpload',
+          'productDetails.productName': 'productName',
+          'productDetails.design.slides': 'designSlides',
+          'productDetails.design.orientation': 'designOrientation',
+          'productDetails.design.paperThickness': 'paperThickness',
+          'productDetails.design.paperType': 'paperType',
+          'productDetails.design.finishedSize': 'finishedSize',
+        },
+        // Add other routes and their respective error mappings here if needed
+      };
+
+      // Get the first error key
       const errorKeys = Object.keys(errors);
       if (errorKeys.length) {
         const firstErrorKey = errorKeys[0];
         console.log('First error key:', firstErrorKey);
+
+        // Determine the route and error ID map based on the error key prefix
+        let targetRoute = null;
+        let targetId = null;
+
         if (firstErrorKey.startsWith('yourDetails')) {
-          this.$router.push({ name: 'YourDetails' });
+          targetRoute = 'YourDetails';
+          targetId = errorIdMaps.YourDetails[firstErrorKey];
+        } else if (firstErrorKey.startsWith('deliveryDetails')) {
+          targetRoute = 'DeliveryDetails';
+          targetId = errorIdMaps.DeliveryDetails[firstErrorKey];
+        } else if (firstErrorKey.startsWith('productDetails')) {
+          targetRoute = 'ProductDetails';
+          targetId = errorIdMaps.ProductDetails[firstErrorKey];
         }
-        else if (firstErrorKey.startsWith('deliveryDetails')) {
-          this.$router.push({ name: 'DeliveryDetails' });
-        }
-        else if (firstErrorKey.startsWith('productDetails')) {
-          this.$router.push({ name: 'ProductDetails' });
+
+        // Redirect to the route and scroll to the specific element
+        if (targetRoute && targetId) {
+          this.$router.push({ name: targetRoute }).then(() => {
+            // Wait until the route is fully loaded and the component is rendered
+            nextTick(() => {
+              const element = document.getElementById(targetId);
+              if (element) element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            });
+          });
         }
       }
-    },
+    }
+
   },
   mounted() {
     this.clearErrors();
