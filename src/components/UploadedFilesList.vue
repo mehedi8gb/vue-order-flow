@@ -10,7 +10,7 @@
                             :can-cancel="false" :is-full-page="false" :loader="'bars'" />
                     </div>
                 </div>
-                <div v-if="files.length" class="file-list">
+                <div v-if="files?.length" class="file-list">
                     <div v-for="file in files" :key="file.id" class="file-item">
                         <template v-if="isImage(file.file_path)">
                             <img :src="file.file_url" alt="File preview" class="file-preview" />
@@ -75,7 +75,7 @@
                         </div>
                     </div>
                 </div>
-                <div v-if="files.length == 0 && !isLoading">
+                <div v-if="files?.length == 0 && !isLoading">
                     <p class="no-files-message">No files uploaded yet.</p>
                 </div>
                 <div v-else>
@@ -138,7 +138,7 @@ export default {
                     }
                 });
                 this.files = this.fileResponse.data.data || [];
-                if (this.files.length > 0) {
+                if (this.files?.length > 0) {
                     this.hasFileAttached('yes');
                     this.clearErrors();
                 }
