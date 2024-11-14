@@ -600,7 +600,6 @@ export default {
     }
     this.removePQINAText();
     this.errors = this.getErrors;
-    console.log('ProductDetails created', this.$refs.uploadedFilesList.files);
   },
   methods: {
     ...mapActions([

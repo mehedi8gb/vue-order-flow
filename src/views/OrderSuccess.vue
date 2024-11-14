@@ -6,18 +6,15 @@
       <transition name="fade" @after-leave="onTransitionEnd">
         <div class="card-container" v-if="!isLoading && orderSuccess" key="order-success">
           <div class="text-center">
-            <h1 class="card-title">Order Quotation Created!</h1>
-            <p class="card-text">Thank you for your interest in our services.</p>
+            <h1 class="card-title">Quotation Request Received.</h1>
+            <p class="card-text">Thank you for choosing our services.</p>
             <p class="card-text">Your order quotation is being processed.</p>
             <!-- Display the Order ID -->
             <p class="card-text mt-3">
-              <strong>Order ID:</strong> {{ response.data.order.order_id }}
+              <strong>Enquiry Reference</strong> #{{ getQuotationResponse.order.order_id }}
             </p>
-            <p v-if="invoiceUrl">
-              <a class="btn btn-secondary" :href="invoiceUrl">View Quotation</a>
-            </p>
-            <p v-if="agreementUrl">
-              <a class="btn btn-secondary" :href="agreementUrl">Proceed to Payment</a>
+            <p>
+              <a class="btn" style="background: #F5CD47" target="_blank" :href="getQuotationResponse.agreement_url">Proceed to Payment</a>
             </p>
             <router-link to="/" class="btn btn-primary">Back to Home</router-link>
           </div>
@@ -52,7 +49,7 @@ export default {
   },
   data() {
     return {
-      response: null,
+      response: this.getQuotationResponse,
       isLoading: false,
       orderSuccess: false,
       orderFailed: false,
@@ -67,10 +64,10 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['getDeliveryDetails', 'getProductDetails', 'getYourDetails', 'getErrors']),
+    ...mapGetters(['getDeliveryDetails', 'getProductDetails', 'getYourDetails', 'getErrors', 'getQuotationCreated', 'getQuotationResponse']),
   },
   methods: {
-    ...mapActions(['setErrors', 'clearErrors', 'updateAddressLookup']),
+    ...mapActions(['setErrors', 'clearErrors', 'updateAddressLookup', 'updateQuotationCreated', 'updateQuotationResponse']),
     async makeOrderRequest() {
       this.isLoading = true;
       this.updateAddressLookup(true);
@@ -82,10 +79,11 @@ export default {
           yourDetails: this.getYourDetails,
         };
 
-        this.response = await axios.post(`${process.env.VUE_APP_BACKOFFICE_API_BASE_URL}/checkout/order`, payload);
-        if (this.response.status === 201) {
-          this.invoiceUrl = this.response.data.invoice_url;
-          this.agreementUrl = this.response.data.agreement_url;
+        const response = await axios.post(`${process.env.VUE_APP_BACKOFFICE_API_BASE_URL}/checkout/order`, payload);
+        if (response.status === 201) {
+          this.updateQuotationCreated(true);
+          this.updateQuotationResponse(response.data);
+
           this.orderSuccess = true;
           this.isLoading = false;
           this.$store.dispatch('clearSessionId');
@@ -150,11 +148,11 @@ export default {
 
         // Redirect to the route and scroll to the specific element
         if (targetRoute && targetId) {
-          this.$router.push({ name: targetRoute }).then(() => {
+          this.$router.push({name: targetRoute}).then(() => {
             // Wait until the route is fully loaded and the component is rendered
             nextTick(() => {
               const element = document.getElementById(targetId);
-              if (element) element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+              if (element) element.scrollIntoView({behavior: 'smooth', block: 'center'});
             });
           });
         }
@@ -163,8 +161,13 @@ export default {
 
   },
   mounted() {
+    this.response = this.getQuotationResponse;
     this.clearErrors();
-    this.makeOrderRequest();
+    if (!this.getQuotationCreated) {
+      this.makeOrderRequest();
+    } else {
+      this.orderSuccess = true;
+    }
   },
 };
 </script>
