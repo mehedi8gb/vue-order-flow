@@ -6,15 +6,15 @@
       <transition name="fade" @after-leave="onTransitionEnd">
         <div class="card-container" v-if="!isLoading && orderSuccess" key="order-success">
           <div class="text-center">
-            <h1 class="card-title">Order Quotation Created!</h1>
-            <p class="card-text">Thank you for your interest in our services.</p>
+            <h1 class="card-title">Quotation Request Received.</h1>
+            <p class="card-text">Thank you for choosing our services.</p>
             <p class="card-text">Your order quotation is being processed.</p>
             <!-- Display the Order ID -->
             <p class="card-text mt-3">
-              <strong>Order ID:</strong> {{ getQuotationResponse.order.order_id }}
+              <strong>Enquiry Reference</strong> #{{ getQuotationResponse.order.order_id }}
             </p>
             <p>
-              <a class="btn btn-secondary" target="_blank" :href="getQuotationResponse.agreement_url">Proceed to Payment</a>
+              <a class="btn" style="background: #F5CD47" target="_blank" :href="getQuotationResponse.agreement_url">Proceed to Payment</a>
             </p>
             <router-link to="/" class="btn btn-primary">Back to Home</router-link>
           </div>
