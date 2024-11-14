@@ -4,6 +4,8 @@ import axios from "axios";
 
 const store = createStore({
     state: {
+        quotationCreated: false,
+        quotationResponse: null,
         sessionId: null,
         deliveryDetails: {
             DeliveryOption: [],
@@ -52,6 +54,13 @@ const store = createStore({
         },
     },
     mutations: {
+        // quotation
+        setQuotationResponse(state, response) {
+            state.quotationResponse = response;
+        },
+        setQuotationCreated(state, cond) {
+            state.quotationCreated = cond;
+        },
         // delivery option
         setDeliveryFee(state, fee) {
             state.deliveryDetails.deliveryFee = fee;
@@ -115,6 +124,13 @@ const store = createStore({
         },
     },
     actions: {
+        // quotation
+        updateQuotationResponse({commit}, response) {
+            commit("setQuotationResponse", response);
+        },
+        updateQuotationCreated({commit}, cond) {
+            commit("setQuotationCreated", cond);
+        },
         // store.js or a specific module
         async fetchPrice({dispatch}, {fromSession} = {}) {
             // Use default value `true` only when `fromSession` is `undefined` (not `null` or `false`).
@@ -239,6 +255,8 @@ const store = createStore({
         },
     },
     getters: {
+        getQuotationResponse: (state) => state.quotationResponse,
+        getQuotationCreated: (state) => state.quotationCreated,
         getPricingComponentLoading: (state) => state.pricingComponent.loading,
         getPricingComponentDeliveryFeeLoading: (state) => state.pricingComponent.deliveryFeeLoading,
         getPricingComponentLoaded: (state) => state.pricingComponent.loaded,
